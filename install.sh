@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# Install the Pendo Novus skills into a coding agent.
+#
+#   ./install.sh              show every option
+#   ./install.sh claude       Claude Code
+#   ./install.sh gemini       Gemini CLI
+#   ./install.sh codex        Codex CLI
+#   ./install.sh devin [dir]  copy the skill into a repo for Devin to pick up
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_URL="https://github.com/pendo-io/novus-plugin"
+
+claude_install() {
+  cat <<EOF
+Claude Code — run these:
+
+  claude plugin marketplace add pendo-io/novus-plugin
+  claude plugin install novus@pendo
+
+Or from this clone:
+
+  claude plugin marketplace add $ROOT
+  claude plugin install novus@pendo
+
+Restart Claude Code, then ask for a UX review. On the first Novus tool call
+Claude opens a browser to sign in to Pendo and pick a subscription + app.
+EOF
+}
+
+gemini_install() {
+  cat <<EOF
+Gemini CLI — run one of these:
+
+  gemini extensions install $REPO_URL
+  gemini extensions link $ROOT      # development: symlink this clone
+
+Restart Gemini CLI, then ask for a UX review.
+EOF
+}
+
+codex_install() {
+  local target="$HOME/.agents/skills/ux-review"
+  mkdir -p "$HOME/.agents/skills"
+  ln -sfn "$ROOT/skills/ux-review" "$target"
+  cat <<EOF
+Codex CLI — linked the skill at user scope:
+
+  $target -> $ROOT/skills/ux-review
+
+Restart Codex, then ask for a UX review.
+
+To install as a plugin instead (skills + the Novus MCP server together), open
+the plugin browser with /plugins and add this directory as a marketplace source:
+
+  $ROOT
+
+Either way, add the Novus MCP server for Pendo-backed findings:
+
+  codex mcp add novus --transport streamable-http --url https://novus-api.pendo.io/mcp
+EOF
+}
+
+devin_install() {
+  local dest="${1:-}"
+  if [[ -z "$dest" ]]; then
+    echo "Usage: ./install.sh devin <path-to-repo>" >&2
+    exit 1
+  fi
+  if [[ ! -d "$dest" ]]; then
+    echo "Not a directory: $dest" >&2
+    exit 1
+  fi
+  mkdir -p "$dest/.agents/skills"
+  cp -R "$ROOT/skills/ux-review" "$dest/.agents/skills/"
+  cat <<EOF
+Copied the skill to $dest/.agents/skills/ux-review
+
+Commit it. Devin discovers skills under .agents/skills/ in every connected
+repository — there is nothing else to install.
+EOF
+}
+
+case "${1:-}" in
+  claude) claude_install ;;
+  gemini) gemini_install ;;
+  codex) codex_install ;;
+  devin) devin_install "${2:-}" ;;
+  "")
+    claude_install
+    echo
+    gemini_install
+    echo
+    echo "Codex CLI — run: ./install.sh codex"
+    echo "Devin        — run: ./install.sh devin <path-to-repo>"
+    ;;
+  *)
+    echo "Unknown host: $1 (expected claude, gemini, codex, or devin)" >&2
+    exit 1
+    ;;
+esac

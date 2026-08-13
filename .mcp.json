@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "novus": {
+      "type": "http",
+      "url": "https://novus-api.pendo.io/mcp"
+    }
+  }
+}

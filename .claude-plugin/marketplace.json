@@ -1,0 +1,18 @@
+{
+  "name": "pendo",
+  "description": "Pendo skills for coding agents",
+  "owner": {
+    "name": "Pendo",
+    "url": "https://novus.pendo.io"
+  },
+  "plugins": [
+    {
+      "name": "novus",
+      "source": "./",
+      "displayName": "Pendo Novus",
+      "description": "Pre-PR UX review of your local changes, backed by Pendo product analytics.",
+      "category": "code-review",
+      "tags": ["pendo", "ux", "product-analytics"]
+    }
+  ]
+}

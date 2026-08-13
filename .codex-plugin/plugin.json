@@ -1,0 +1,6 @@
+{
+  "name": "novus",
+  "version": "0.1.0",
+  "description": "Novus skills for Codex. Ships ux-review: a pre-PR UX review of your local changes, backed by Novus product analytics.",
+  "skills": "./skills/"
+}
