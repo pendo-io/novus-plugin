@@ -30,21 +30,33 @@ without reinstalling.
 
 ## Codex CLI
 
-Two paths, depending on whether you want the MCP server bundled.
+```bash
+codex plugin marketplace add pendo-io/novus-plugin
+codex plugin add novus@pendo
+```
 
-**Skill only** — links `skills/ux-review` into `~/.agents/skills/`, where Codex looks at user scope:
+Restart Codex. This installs the skill and registers the `novus` MCP server in one step — `codex mcp list` should show
+`novus` as enabled, not logged in. Verified on codex-cli 0.146.0.
+
+From a local clone instead:
+
+```bash
+codex plugin marketplace add ~/Code/pendo/novus-plugin
+codex plugin add novus@pendo
+```
+
+Codex resolves the marketplace from `.claude-plugin/marketplace.json` — it prefers `.agents/plugins/marketplace.json`
+and falls back to the Claude manifest, which is why there is no Codex-specific marketplace file here. The plugin itself
+comes from `.codex-plugin/plugin.json`.
+
+**Fallback for Codex builds without `codex plugin`** — links `skills/ux-review` into `~/.agents/skills/`, where Codex
+looks at user scope:
 
 ```bash
 ./install.sh codex
 ```
 
-**Skill plus MCP server** — open the plugin browser and add this directory as a marketplace source:
-
-```
-/plugins
-```
-
-Either way, connect Novus for Novus-backed findings:
+That installs the skill only, so add the MCP server yourself:
 
 ```bash
 codex mcp add novus --transport streamable-http --url https://novus-api.pendo.io/mcp

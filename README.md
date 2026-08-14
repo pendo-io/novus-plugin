@@ -23,7 +23,7 @@ It does **not** post anything to GitHub or Bitbucket. That is the existing Novus
 | --- | --- |
 | Claude Code | `claude plugin marketplace add pendo-io/novus-plugin` then `claude plugin install novus@pendo` |
 | Gemini CLI | `gemini extensions install https://github.com/pendo-io/novus-plugin` |
-| Codex CLI | `./install.sh codex` |
+| Codex CLI | `codex plugin marketplace add pendo-io/novus-plugin` then `codex plugin add novus@pendo` |
 | Devin | `./install.sh devin <path-to-repo>`, then commit |
 
 Or clone and run `./install.sh` with no arguments to see all of them.

@@ -45,20 +45,26 @@ codex_install() {
   mkdir -p "$HOME/.agents/skills"
   ln -sfn "$ROOT/skills/ux-review" "$target"
   cat <<EOF
-Codex CLI — linked the skill at user scope:
+Codex CLI — preferred, installs the skill and the Novus MCP server together:
+
+  codex plugin marketplace add pendo-io/novus-plugin
+  codex plugin add novus@pendo
+
+Or from this clone:
+
+  codex plugin marketplace add $ROOT
+  codex plugin add novus@pendo
+
+Fallback for Codex builds without \`codex plugin\` — linked the skill at user
+scope, skill only:
 
   $target -> $ROOT/skills/ux-review
 
-Restart Codex, then ask for a UX review.
-
-To install as a plugin instead (skills + the Novus MCP server together), open
-the plugin browser with /plugins and add this directory as a marketplace source:
-
-  $ROOT
-
-Either way, add the Novus MCP server for Pendo-backed findings:
+On that path, add the Novus MCP server yourself:
 
   codex mcp add novus --transport streamable-http --url https://novus-api.pendo.io/mcp
+
+Restart Codex, then ask for a UX review.
 EOF
 }
 
@@ -92,7 +98,8 @@ case "${1:-}" in
     echo
     gemini_install
     echo
-    echo "Codex CLI — run: ./install.sh codex"
+    echo "Codex CLI    — run: codex plugin marketplace add pendo-io/novus-plugin"
+    echo "               then: codex plugin add novus@pendo"
     echo "Devin        — run: ./install.sh devin <path-to-repo>"
     ;;
   *)
