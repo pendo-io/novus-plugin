@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { spawnSync } from "node:child_process";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import { validateDecisionRecord } from "./validate-steering-decision.mjs";
 
@@ -554,4 +559,588 @@ test("rejects a null current objective outside ESCALATE", () => {
     validateDecisionRecord(record).join("\n"),
     /currentObjective may be null only when decision is ESCALATE/,
   );
+});
+
+function candidate(statement, executionAuthority, sourceIds) {
+  return { statement, executionAuthority, sourceIds };
+}
+
+function objectiveV2(objectiveName, overrides = {}) {
+  return {
+    id: null,
+    objective: objectiveName,
+    statement: "Work on " + objectiveName,
+    reason: "Decision-relevant reason",
+    resumeCondition: null,
+    ...overrides,
+  };
+}
+
+function validV2Record(overrides = {}) {
+  return {
+    schemaVersion: 2,
+    runId: "run-v2-1",
+    generatedAt: "2026-08-17T12:00:00Z",
+    mode: "autonomous-steering",
+    scope: {
+      application: "Novus Production",
+      window: "30 days",
+      candidateObjectives: [
+        candidate("Improve guide authoring reliability", "current-scope", ["git:branch:guide-fix"]),
+        candidate("Improve setup recovery", "recommend-only", ["novus:signal:setup-friction"]),
+      ],
+    },
+    currentObjective: {
+      id: null,
+      statement: "Improve guide authoring reliability",
+      inferred: true,
+      confidence: "high",
+      sources: [
+        {
+          kind: "branch",
+          sourceId: "git:branch:guide-fix",
+          summary: "The active branch and diff address Guide reliability.",
+        },
+      ],
+    },
+    priorDecision: null,
+    decision: "CONTINUE",
+    thesis: "Continue the active Guide reliability work and measure the merged correction.",
+    confidence: "high",
+    evidence: [
+      {
+        claim: "The current branch addresses Guide reliability.",
+        kind: "fact",
+        layer: "built",
+        sourceId: "git:branch:guide-fix",
+        windowOrStatus: "current branch",
+        confidence: "high",
+      },
+    ],
+    alternatives: [
+      {
+        objective: "Improve setup recovery",
+        disposition: "not selected",
+        reason: "The current bounded work is ready for validation.",
+      },
+    ],
+    planDelta: {
+      activate: [],
+      continue: [objectiveV2("Improve guide authoring reliability")],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+    expectedOutcome: {
+      primary: "Guide edit reliability",
+      direction: "increase",
+      leadingIndicators: ["Omitted steps remain intact"],
+      validationDate: "2026-08-31",
+      validationReason: null,
+      invalidationCondition: "Reliability does not improve after exposure.",
+    },
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "applied",
+      reason: "The host plan was updated within the active assignment.",
+      requiredApproval: null,
+    },
+    escalation: null,
+    ...overrides,
+  };
+}
+
+test("accepts a v2 decision whose current objective was inferred from engineering context", () => {
+  assert.deepEqual(validateDecisionRecord(validV2Record()), []);
+});
+
+test("requires inferred objectives to preserve their evidence sources", () => {
+  const record = validV2Record({
+    currentObjective: {
+      id: null,
+      statement: "Improve guide authoring reliability",
+      inferred: true,
+      confidence: "high",
+      sources: [],
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /currentObjective.sources must contain at least one inference source/,
+  );
+});
+
+test("requires the inferred current objective to be one of the discovered candidates", () => {
+  const record = validV2Record({
+    currentObjective: {
+      id: null,
+      statement: "Rewrite the billing platform",
+      inferred: true,
+      confidence: "high",
+      sources: [
+        {
+          kind: "branch",
+          sourceId: "git:branch:guide-fix",
+          summary: "The active branch and diff address Guide reliability.",
+        },
+      ],
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /currentObjective.statement must exactly match a candidate objective/,
+  );
+});
+
+test("accepts a recommended SWITCH that is proposed instead of applied", () => {
+  const record = validV2Record({
+    decision: "SWITCH",
+    evidence: [
+      {
+        claim: "Setup friction is severe.",
+        kind: "fact",
+        layer: "experienced",
+        sourceId: "novus:signal:setup-friction",
+        windowOrStatus: "30 days",
+        confidence: "high",
+      },
+      {
+        claim: "The current Guide correction is blocked.",
+        kind: "fact",
+        layer: "shipping",
+        sourceId: "github:pr:guide-blocked",
+        windowOrStatus: "blocked",
+        confidence: "high",
+      },
+    ],
+    planDelta: {
+      activate: [objectiveV2("Improve setup recovery")],
+      continue: [],
+      narrow: [],
+      defer: [
+        objectiveV2("Improve guide authoring reliability", {
+          resumeCondition: "Resume when the Guide dependency is unblocked.",
+        }),
+      ],
+      addValidation: [],
+    },
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "proposed",
+      reason: "The alternative was discovered outside the active assignment.",
+      requiredApproval: "Confirm switching from Guide reliability to Setup recovery.",
+    },
+  });
+
+  assert.deepEqual(validateDecisionRecord(record), []);
+});
+
+test("rejects applying a SWITCH to a recommend-only objective", () => {
+  const record = validV2Record({
+    decision: "SWITCH",
+    evidence: [
+      {
+        claim: "Setup friction is severe.",
+        kind: "fact",
+        layer: "experienced",
+        sourceId: "novus:signal:setup-friction",
+        windowOrStatus: "30 days",
+        confidence: "high",
+      },
+      {
+        claim: "The current Guide correction is blocked.",
+        kind: "fact",
+        layer: "shipping",
+        sourceId: "github:pr:guide-blocked",
+        windowOrStatus: "blocked",
+        confidence: "high",
+      },
+    ],
+    planDelta: {
+      activate: [objectiveV2("Improve setup recovery")],
+      continue: [],
+      narrow: [],
+      defer: [
+        objectiveV2("Improve guide authoring reliability", {
+          resumeCondition: "Resume when the Guide dependency is unblocked.",
+        }),
+      ],
+      addValidation: [],
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /applied SWITCH requires explicit-choice authority for the activated objective/,
+  );
+});
+
+test("rejects an applied decision that still requires approval", () => {
+  const record = validV2Record({
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "applied",
+      reason: "The host plan was updated within the active assignment.",
+      requiredApproval: "Approve the plan change.",
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /applied internal plan changes cannot require approval/,
+  );
+});
+
+test("accepts a blocked v2 ESCALATE when engineering context cannot resolve current work", () => {
+  const record = validV2Record({
+    scope: {
+      application: "Novus Production",
+      window: "current task",
+      candidateObjectives: [],
+    },
+    currentObjective: null,
+    decision: "ESCALATE",
+    evidence: [
+      {
+        claim: "No task, plan, branch, issue, PR, diff, or conversation identifies the current work.",
+        kind: "fact",
+        layer: "constraint",
+        sourceId: "engineering-context-scan",
+        windowOrStatus: "current task",
+        confidence: "high",
+      },
+    ],
+    alternatives: [],
+    planDelta: {
+      activate: [],
+      continue: [],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "blocked",
+      reason: "Current work cannot be inferred safely.",
+      requiredApproval: "Identify the work or decision this task should advance.",
+    },
+    escalation: {
+      reason: "Current work cannot be inferred safely.",
+      decisionNeeded: "Identify the work or decision this task should advance.",
+      requiredAuthority: "Caller task clarification.",
+    },
+  });
+
+  assert.deepEqual(validateDecisionRecord(record), []);
+});
+
+test("requires v2 authority to explain the plan change status", () => {
+  const record = validV2Record({
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "applied",
+      requiredApproval: null,
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /authority.reason must be a non-empty string/,
+  );
+});
+
+test("requires approval when a recommend-only SWITCH is proposed", () => {
+  const record = validV2Record({
+    decision: "SWITCH",
+    evidence: [
+      {
+        claim: "Setup friction is severe.",
+        kind: "fact",
+        layer: "experienced",
+        sourceId: "novus:signal:setup-friction",
+        windowOrStatus: "30 days",
+        confidence: "high",
+      },
+      {
+        claim: "The current Guide correction is blocked.",
+        kind: "fact",
+        layer: "shipping",
+        sourceId: "github:pr:guide-blocked",
+        windowOrStatus: "blocked",
+        confidence: "high",
+      },
+    ],
+    planDelta: {
+      activate: [objectiveV2("Improve setup recovery")],
+      continue: [],
+      narrow: [],
+      defer: [
+        objectiveV2("Improve guide authoring reliability", {
+          resumeCondition: "Resume when the Guide dependency is unblocked.",
+        }),
+      ],
+      addValidation: [],
+    },
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "proposed",
+      reason: "The alternative was discovered outside the active assignment.",
+      requiredApproval: null,
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /recommend-only SWITCH requires authority.requiredApproval/,
+  );
+});
+
+test("accepts a proposed START when no work is active and one candidate is recommended", () => {
+  const record = validV2Record({
+    scope: {
+      application: "Novus Production",
+      window: "30 days",
+      candidateObjectives: [
+        candidate("Improve setup recovery", "recommend-only", ["novus:signal:setup-friction"]),
+        candidate("Improve guide authoring reliability", "recommend-only", ["novus:signal:guide-friction"]),
+      ],
+    },
+    currentObjective: null,
+    decision: "START",
+    thesis: "Start with Setup recovery because it has the strongest reachable customer burden.",
+    evidence: [
+      {
+        claim: "Setup friction is severe.",
+        kind: "fact",
+        layer: "experienced",
+        sourceId: "novus:signal:setup-friction",
+        windowOrStatus: "30 days",
+        confidence: "high",
+      },
+      {
+        claim: "Setup recovery is the highest-priority ready roadmap item.",
+        kind: "fact",
+        layer: "planned",
+        sourceId: "linear:initiative:setup-recovery",
+        windowOrStatus: "current cycle",
+        confidence: "high",
+      },
+    ],
+    alternatives: [
+      {
+        objective: "Improve guide authoring reliability",
+        disposition: "not selected",
+        reason: "Setup has the stronger direct friction signal.",
+      },
+    ],
+    planDelta: {
+      activate: [objectiveV2("Improve setup recovery")],
+      continue: [],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "proposed",
+      reason: "The caller asked for guidance, not implementation.",
+      requiredApproval: null,
+    },
+  });
+
+  assert.deepEqual(validateDecisionRecord(record), []);
+});
+
+test("requires START to activate exactly one candidate and have no current objective", () => {
+  const withCurrent = validV2Record({ decision: "START" });
+  const currentErrors = validateDecisionRecord(withCurrent).join("\n");
+  assert.match(currentErrors, /START requires currentObjective to be null/);
+  assert.match(currentErrors, /START must activate exactly one objective/);
+
+  const withoutActivation = validV2Record({
+    currentObjective: null,
+    decision: "START",
+    planDelta: {
+      activate: [],
+      continue: [],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+  });
+  assert.match(
+    validateDecisionRecord(withoutActivation).join("\n"),
+    /START must activate exactly one objective/,
+  );
+});
+
+test("requires explicit-choice authority before an agent applies START", () => {
+  const record = validV2Record({
+    scope: {
+      application: "Novus Production",
+      window: "30 days",
+      candidateObjectives: [
+        candidate("Improve setup recovery", "recommend-only", ["novus:signal:setup-friction"]),
+      ],
+    },
+    currentObjective: null,
+    decision: "START",
+    alternatives: [],
+    planDelta: {
+      activate: [objectiveV2("Improve setup recovery")],
+      continue: [],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /applied START requires explicit-choice authority for the activated objective/,
+  );
+});
+
+test("requires START to use independent product evidence", () => {
+  const record = validV2Record({
+    scope: {
+      application: "Novus Production",
+      window: "30 days",
+      candidateObjectives: [
+        candidate("Improve setup recovery", "recommend-only", ["novus:signal:setup-friction"]),
+      ],
+    },
+    currentObjective: null,
+    decision: "START",
+    alternatives: [],
+    evidence: [
+      {
+        claim: "Setup friction is severe.",
+        kind: "fact",
+        layer: "experienced",
+        sourceId: "novus:signal:setup-friction",
+        windowOrStatus: "30 days",
+        confidence: "high",
+      },
+    ],
+    planDelta: {
+      activate: [objectiveV2("Improve setup recovery")],
+      continue: [],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "proposed",
+      reason: "The caller asked for guidance, not implementation.",
+      requiredApproval: null,
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /START requires at least two independent evidence layers and sources/,
+  );
+});
+
+test("requires START to leave non-activation plan arrays empty", () => {
+  const record = validV2Record({
+    currentObjective: null,
+    decision: "START",
+    planDelta: {
+      activate: [objectiveV2("Improve guide authoring reliability")],
+      continue: [objectiveV2("Improve guide authoring reliability")],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /START may only populate planDelta.activate and planDelta.addValidation/,
+  );
+});
+
+test("requires START to compare its selection with a different candidate", () => {
+  const record = validV2Record({
+    scope: {
+      application: "Novus Production",
+      window: "30 days",
+      candidateObjectives: [
+        candidate("Improve setup recovery", "recommend-only", ["novus:signal:setup-friction"]),
+        candidate("Improve guide authoring reliability", "recommend-only", ["novus:signal:guide-friction"]),
+      ],
+    },
+    currentObjective: null,
+    decision: "START",
+    evidence: [
+      {
+        claim: "Setup friction is severe.",
+        kind: "fact",
+        layer: "experienced",
+        sourceId: "novus:signal:setup-friction",
+        windowOrStatus: "30 days",
+        confidence: "high",
+      },
+      {
+        claim: "Setup recovery is roadmap-ready.",
+        kind: "fact",
+        layer: "planned",
+        sourceId: "linear:initiative:setup-recovery",
+        windowOrStatus: "current cycle",
+        confidence: "high",
+      },
+    ],
+    alternatives: [
+      {
+        objective: "Improve setup recovery",
+        disposition: "selected",
+        reason: "This incorrectly repeats the selected candidate.",
+      },
+    ],
+    planDelta: {
+      activate: [objectiveV2("Improve setup recovery")],
+      continue: [],
+      narrow: [],
+      defer: [],
+      addValidation: [],
+    },
+    authority: {
+      externalMutationsAllowed: false,
+      internalPlanChangeStatus: "proposed",
+      reason: "The caller asked for guidance, not implementation.",
+      requiredApproval: null,
+    },
+  });
+
+  assert.match(
+    validateDecisionRecord(record).join("\n"),
+    /START alternatives must include a candidate different from the activated objective/,
+  );
+});
+
+test("runs CLI validation when the installed script is reached through a symlink", () => {
+  const testDirectory = mkdtempSync(join(tmpdir(), "build-alignment-validator-"));
+  try {
+    const realScript = fileURLToPath(
+      new URL("./validate-steering-decision.mjs", import.meta.url),
+    );
+    const linkedScript = join(testDirectory, "validate-steering-decision.mjs");
+    const decisionFile = join(testDirectory, "decision.json");
+    symlinkSync(realScript, linkedScript);
+    writeFileSync(decisionFile, JSON.stringify(validV2Record()), "utf8");
+
+    const result = spawnSync(process.execPath, [linkedScript, decisionFile], {
+      encoding: "utf8",
+    });
+
+    assert.equal(result.status, 0);
+    assert.equal(result.stdout.trim(), "Decision record is valid.");
+  } finally {
+    rmSync(testDirectory, { recursive: true, force: true });
+  }
 });

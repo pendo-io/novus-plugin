@@ -11,11 +11,13 @@ Novus MCP tool names are namespaced differently by each host. Match on the tool-
 | Establish product areas | `listProductAreas`, `getProductAreaMembers`, `getMemory` | Use product areas and product-wiki memory as the normalization spine. |
 | Find goals, launches, and tracked surfaces | `listArtifactsByType`, `getArtifact`, `getRelatedArtifacts` | Useful artifact types include goals, launches, pages, features, track events, funnels, journeys, and product wikis. |
 
-## Begin autonomous runs with the mandate
+## Begin autonomous runs with engineering context
 
-Before product queries, capture the current objective, authorized alternatives, internal plan, fixed constraints, definition of done, and prior build-alignment-decision.json when available.
+Before product queries, infer the active work from the task, terminal condition, in-progress plan step, linked issue or PR, branch, worktree, diff, and relevant recent conversation or commits. Preserve stable IDs and summarize why each source supports the inferred objective. One explicit assignment is sufficient; otherwise prefer two compatible sources. Do not use commit volume or file recency as proof of importance.
 
-Treat the prior decision as evidence about steering stability, not product reality. Extract its decision, thesis, validation date, invalidation condition, deferred work, and material-new-evidence list. Do not reverse it merely because the same evidence was summarized differently.
+Build candidate objectives from the current work plus the strongest alternatives surfaced by Novus, roadmap, and delivery evidence. Mark current-scope, explicit-choice, and recommend-only authority separately. Discovery is not execution authority.
+
+Read prior build-alignment-decision.json when available. Treat it as steering-stability evidence, not product reality. Extract its decision, thesis, validation date, invalidation condition, deferred work, and material-new-evidence list. Do not reverse it merely because the same evidence was summarized differently.
 
 ## Planned layer
 
@@ -77,7 +79,7 @@ Use the narrowest metric that answers the investment question. Do not narrate ev
 4. Build a provisional planned/built/experienced comparison.
 5. Deepen only the strongest one to three candidate mismatches with metrics, issue detail, PR evidence, audience, or feedback.
 6. Verify the final recommendation against the strongest alternative and other active goals.
-7. In autonomous mode, verify that the alternative is inside the authorized objective set and compare the proposed decision with the prior decision.
+7. In autonomous mode, classify the strongest alternative's execution authority and compare the proposed decision with the prior decision. A discovered alternative can be recommended without being authorized for execution.
 
 ## Evidence honesty
 

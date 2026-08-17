@@ -1,4 +1,4 @@
 interface:
   display_name: "Build Alignment"
-  short_description: "Keep autonomous engineering work aligned"
-  default_prompt: "Use $build-alignment to verify my current engineering objective, adjust only my internal plan when evidence warrants it, and set the next validation checkpoint."
+  short_description: "Decide what engineering work matters next"
+  default_prompt: "Use $build-alignment to infer what I am working on and tell me the highest-value next engineering move."

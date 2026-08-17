@@ -1,6 +1,6 @@
 ---
 name: build-alignment
-description: Compare planned product investment, shipped engineering work, and customer experience to identify where engineering effort can create the most customer value. Use for roadmap-versus-reality reviews, investment decisions, post-ship outcome analysis, or when an autonomous agent must verify its active engineering objective, adjust only its own internal plan, and define the next validation checkpoint using Novus, Linear/Jira, and GitHub evidence.
+description: Infer what an engineer or agent is currently building, compare it with product plans, shipped work, and customer experience, then decide what to continue, narrow, pause, or recommend next. Use for natural questions such as “what should I work on next?”, “is this PR still worth finishing?”, roadmap-versus-reality reviews, post-ship impact checks, investment decisions, or autonomous plan steering using repository context, Novus, Linear/Jira, and GitHub evidence. Callers do not need product-management terminology or a structured objective prompt.
 ---
 
 # Build Alignment
@@ -14,7 +14,7 @@ Do not produce a generic delivery or analytics dashboard. Lead with the most con
 - Use real evidence. Never invent allocation, customer pain, metrics, roadmap intent, shipped work, or causality.
 - Separate verified facts, correlations, and Novus hypotheses. Treat timing between a ship and metric movement as a hypothesis unless stronger evidence establishes causality.
 - Keep external systems read-only. Require separate explicit authorization before creating, editing, moving, or reprioritizing issues, projects, goals, pull requests, code, deployments, or production state.
-- In autonomous steering mode, the agent may change only its own internal plan and only within objectives the user already authorized.
+- In autonomous steering mode, the agent may change only its own internal plan. It may apply current-scope changes and explicitly authorized choices; discovered work outside that authority remains a recommendation.
 - Estimate engineering investment only at the team or product-area level. Never assess individual productivity.
 - Never use lines of code, commit count, raw PR count, or hours as investment proxies. Use scope and complexity bands, connected work, planned capacity, contributors involved, rework, and maintenance/feature/platform classification.
 - Prefer relative labels such as low, medium, and high when the sources do not support an exact percentage.
@@ -29,11 +29,29 @@ Do not produce a generic delivery or analytics dashboard. Lead with the most con
 
 Use **review mode** when a human asks for analysis, a portfolio decision, or a shareable report. Complete the workflow and render the human decision surface.
 
-Use **autonomous steering mode** when an agent must verify or revise its active objective or internal plan. Read [references/autonomous-steering.md](references/autonomous-steering.md) before gathering evidence. Preserve the user's objective and authorized scope as hard constraints. Complete the comparison workflow, then emit and validate a steering decision instead of defaulting to HTML.
+Use **autonomous steering mode** when an engineer asks what to do next, asks whether current work is still worthwhile, or an agent must verify or revise its internal plan. Read [references/autonomous-steering.md](references/autonomous-steering.md) before gathering evidence. Infer the active work from engineering context; do not require the caller to translate it into an objective or authorization schema. Complete the comparison workflow, then emit and validate a steering decision instead of defaulting to HTML.
 
-The current objective must be one explicit, active objective and must also appear verbatim in the authorized objective set. A list of authorized options does not identify which one is current. If either the single current objective or authorized objective set is missing or ambiguous, do not invent or reframe it. Use review mode, or return ESCALATE with no plan change when autonomous steering was explicitly requested.
+Treat explicit user instructions as the highest-authority evidence, not as a required input format. Ask one plain-language question only when the available task, plan, issue, PR, branch, diff, conversation, and recent-commit context supports materially different interpretations. Otherwise record the inferred current objective, its sources, and confidence. When no work is active and the caller asks what to do next, discover candidates and use START. When context is ambiguous and the ambiguity would change the decision, return ESCALATE with no plan change.
 
-### 2. Resolve the scope
+### 2. Resolve current work, candidates, and scope
+
+Infer the current engineering objective before querying product evidence. Inspect, in order:
+
+1. the caller's task and terminal condition;
+2. the active plan and in-progress step;
+3. assigned or linked issues and pull requests;
+4. the branch, worktree, uncommitted diff, and changed capability;
+5. relevant recent conversation and commits.
+
+Prefer one explicit assignment or two compatible context sources. A branch name or commit count alone is weak evidence. State the objective in plain outcome-oriented language, record whether it was inferred, preserve stable source IDs, and set high, medium, or low resolution confidence.
+
+Build the candidate set rather than asking the caller to provide it. Include the current objective plus the strongest credible alternatives found in Novus, the connected roadmap, and delivery context. Mark each candidate:
+
+- `current-scope` when it is a reversible continuation, narrowing, pause, or validation step inside the active assignment;
+- `explicit-choice` when the caller explicitly allowed the agent to choose among named or clearly bounded tasks;
+- `recommend-only` when evidence surfaced it but the caller did not authorize executing it.
+
+Evaluating a candidate does not grant authority to execute it. A better `recommend-only` candidate may produce a proposed SWITCH, but never an applied one.
 
 Identify one application, one analysis window, and the requested portfolio scope.
 
@@ -122,24 +140,24 @@ Write one claim-first, quantified investment thesis. State:
 
 Respect work state. Do not casually stop in-flight work. Frame tradeoffs as planning-cycle choices, and surface conflicts with other active goals or deliberate bets.
 
-In autonomous steering mode, compare the current objective only with already-authorized alternatives. Choose exactly one of CONTINUE, NARROW, PAUSE, SWITCH, or ESCALATE using the burden and stability rules in autonomous-steering.md. Never silently discard deferred work.
+In autonomous steering mode, compare the inferred current objective with the strongest discovered candidate. Choose exactly one of START, CONTINUE, NARROW, PAUSE, SWITCH, or ESCALATE using the burden and stability rules in autonomous-steering.md. Use START only when no work is active. Separate the evidence-backed decision from whether its internal plan delta was applied, proposed, or blocked. Never silently discard deferred work or treat a recommendation as execution authority.
 
 ### 9. Render or record the result
 
 Read [references/output-contract.md](references/output-contract.md) immediately before writing.
 
 - In review mode, create a shareable standalone HTML report when the host can write files, unless the user asks for response-only Markdown.
-- In autonomous steering mode, write the exact build-alignment-decision.json that will be reported, validate that file with scripts/validate-steering-decision.mjs, and apply only the valid internal plan delta when a plan mechanism exists. Include the validator result in the concise summary. Never claim validation from inspection alone. Do not create HTML unless requested.
+- In autonomous steering mode, write the exact build-alignment-decision.json that will be reported. Resolve the validator relative to this SKILL.md's directory, not the caller's repository, then validate the decision file with scripts/validate-steering-decision.mjs. Apply only a valid and authorized internal plan delta when a plan mechanism exists. Include the validator result in the concise summary. Never claim validation from inspection alone. Do not create HTML unless requested.
 - Keep the recommendation or steering decision in the response.
 - Offer draft external actions, but never execute them under this skill's authority.
 
 ## Degraded modes
 
-- **Novus MCP unavailable:** In review mode, stop and explain that customer-experience evidence is required. In autonomous mode, return ESCALATE without changing the active objective.
+- **Novus MCP unavailable:** In review mode, stop and explain that customer-experience evidence is required. In autonomous mode, current-scope CONTINUE, NARROW, PAUSE, or validation work may proceed when engineering context is strong; never SWITCH based only on repository activity. Otherwise ESCALATE.
 - **Linear/Jira unavailable:** Compare built versus experienced, mark planned investment unavailable, and phrase the conclusion as `cannot confirm this is on the roadmap`.
 - **GitHub unavailable:** Use completed issues and PR provenance already present in Novus signals; lower confidence in built investment.
 - **Sparse product-area taxonomy:** Build a provisional map from wiki, artifacts, paths, issue labels, and signals; disclose weak mappings.
-- **Broken analytics:** Recommend minimum instrumentation repair. In autonomous mode, NARROW to that repair only when it is already authorized; otherwise ESCALATE.
+- **Broken analytics:** Recommend minimum instrumentation repair. Apply it only when it fits current scope or an explicit choice; otherwise keep it proposed.
 - **Sparse evidence:** Return a smaller, lower-confidence analysis instead of generic portfolio advice.
 - **Conflicting evidence:** Show the conflict and prefer the most direct, current source.
 - **Tool failure:** Retry a failed read at most once, then continue with remaining evidence and disclose the limitation.

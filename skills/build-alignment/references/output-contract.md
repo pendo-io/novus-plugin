@@ -90,57 +90,67 @@ Do not create or mutate external work without explicit approval.
 
 ## Autonomous steering contract
 
-Write build-alignment-decision.json before changing the internal plan. Validate it with:
+Write schema version 2 build-alignment-decision.json before changing the internal plan. Resolve the validator from the directory containing SKILL.md and run:
 
-    node skills/build-alignment/scripts/validate-steering-decision.mjs build-alignment-decision.json
+    node <skill-directory>/scripts/validate-steering-decision.mjs <decision-file>
 
-The record must contain:
+Do not assume the caller's repository contains the validator. Version 1 records remain valid for backward compatibility, but new runs emit version 2.
 
-- schemaVersion, runId, generatedAt, and mode autonomous-steering;
-- scope with application, window, and authorizedObjectiveSet;
-- currentObjective with id (string or null), statement, and source; its statement must exactly match one member of authorizedObjectiveSet;
+The version 2 record contains:
+
+- schemaVersion 2, runId, generatedAt, and mode autonomous-steering;
+- scope with application, window, and candidateObjectives;
+- currentObjective, inferred from engineering context when not explicit;
 - nullable priorDecision;
-- one decision: CONTINUE, NARROW, PAUSE, SWITCH, or ESCALATE;
+- one decision: START, CONTINUE, NARROW, PAUSE, SWITCH, or ESCALATE;
 - a claim-first thesis and high, medium, or low confidence;
 - decision-relevant evidence with claim, fact/correlation/hypothesis kind, layer, stable sourceId, window or status, and confidence;
-- alternatives as objects with objective, disposition, and reason;
+- alternatives with objective, disposition, and reason;
 - planDelta arrays for activate, continue, narrow, defer, and addValidation;
 - expectedOutcome with direction, leading indicators, invalidation condition, and exactly one of validationDate or validationReason;
-- authority.externalMutationsAllowed set to false and requiredApproval set to a string or null;
+- authority with externalMutationsAllowed, internalPlanChangeStatus, reason, and requiredApproval;
 - nullable escalation details.
 
-Each planDelta item contains objective, statement, and reason, plus nullable id and resumeCondition. objective must exactly match a member of authorizedObjectiveSet; statement describes the resulting internal action.
-All five planDelta keys must be present as arrays, including empty arrays.
+Each candidate objective contains:
 
-Decision invariants:
+- statement in plain outcome-oriented language;
+- executionAuthority: current-scope, explicit-choice, or recommend-only;
+- one or more stable sourceIds showing how it entered the candidate set.
 
-- currentObjective may be null only for ESCALATE when the active objective is absent or ambiguous; authorizedObjectiveSet may be empty only for ESCALATE when the authorization envelope is unknown;
-- when more than one objective is authorized, alternatives includes at least one different authorized objective;
+currentObjective contains id, statement, inferred, confidence, and sources. Each source contains kind, sourceId, and a short summary. Its statement exactly matches one candidate. It is null for START when no work is active and for ESCALATE when active work cannot be resolved safely.
+
+Each planDelta item contains objective, statement, reason, nullable id, and nullable resumeCondition. objective exactly matches a candidate statement; statement describes the resulting internal action. All five planDelta keys remain present, including empty arrays.
+
+Decision and authority invariants:
+
 - CONTINUE names the current objective in continue.
+- START has no current objective, activates exactly one candidate, compares it with a different candidate when available, leaves continue/narrow/defer empty, and cites at least two independent product-evidence layers and sources. An applied START requires `explicit-choice`; a recommend-only START remains proposed.
 - NARROW names the current objective in narrow.
-- PAUSE names the current objective in defer and gives each deferred objective a resume condition.
-- SWITCH activates exactly one different authorized objective, names the current objective in defer, and cites at least two independent evidence layers and sources.
-- ESCALATE activates no replacement and states reason, decisionNeeded, and requiredAuthority.
-- authority.requiredApproval is non-null only for ESCALATE and names the missing approval.
+- PAUSE names the current objective in defer and gives deferred work a resume condition.
+- SWITCH activates exactly one different candidate, defers the current objective, and cites at least two independent evidence layers and sources.
+- An applied SWITCH requires `explicit-choice` authority for the activated candidate.
+- A SWITCH to `recommend-only` is valid only as proposed and names the approval required.
+- ESCALATE activates no replacement, uses blocked status, and states reason, decisionNeeded, requiredAuthority, and requiredApproval.
+- applied means the host plan was actually changed and cannot require approval.
+- proposed means the delta was not applied; the reason may be missing choice authority or no host plan mechanism.
+- externalMutationsAllowed is always false.
 - A reversal of priorDecision lists materially new evidence.
 - Deferred work is never silently deleted.
 
-After validation, apply only the internal plan delta when the host exposes a plan mechanism. If it does not, report the proposed delta without claiming it was applied.
-
-The file, validator input, and reported JSON must be identical. Run the validator against the written file and require exit code 0. Include its exact success line, `Decision record is valid.`, in the response. If validation fails, do not apply the plan delta and do not describe the record as valid.
+The file, validator input, and reported JSON must be identical. Require exit code 0 and include the exact success line, `Decision record is valid.`, in the response. If validation fails, do not apply the plan delta or describe the record as valid.
 
 Return a concise summary:
 
 1. **Decision**
-2. **Internal plan change**
-3. **Strongest evidence**
-4. **Strongest alternative**
-5. **Confidence**
-6. **Next checkpoint**
+2. **What I inferred you are working on**
+3. **What changes now** — applied, proposed, or blocked
+4. **Why** — strongest evidence in plain language
+5. **Better alternative**, when present
+6. **Confidence and next checkpoint**
 7. **Validation**
-8. **Escalation**, only when present
+8. **Question for you**, only when one consequential decision is required
 
-Do not lead an autonomous response with portfolio exposition. The decision record preserves traceability; the response should help the running agent act.
+Do not expose schema vocabulary unless the caller asks for it. Lead with the next useful action, not portfolio exposition. The decision record preserves traceability; the response should read like guidance to a builder.
 
 ## HTML report variant
 
