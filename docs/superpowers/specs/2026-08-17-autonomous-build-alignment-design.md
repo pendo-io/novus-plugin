@@ -180,7 +180,7 @@ Autonomous steering writes build-alignment-decision.json containing:
       }
     }
 
-priorDecision and escalation are nullable. Each planDelta array contains objective-change objects with statement and reason; id and resumeCondition may be null. Deferred items require a non-null resumeCondition.
+priorDecision and escalation are nullable. currentObjective may be null only for ESCALATE when the mandate does not identify an active objective. Each planDelta array contains objective-change objects with objective, statement, and reason; id and resumeCondition may be null. objective exactly matches an authorized objective, while statement describes the resulting internal action. Deferred items require a non-null resumeCondition.
 
 Required invariants:
 
@@ -188,9 +188,10 @@ Required invariants:
 - confidence values are high, medium, or low;
 - evidence kind is fact, correlation, or hypothesis;
 - evidence layer is planned, built, experienced, shipping, or constraint;
-- SWITCH activates exactly one objective and defers at least one;
-- NARROW narrows at least one objective;
-- PAUSE defers work and supplies a resume or validation condition;
+- SWITCH activates exactly one authorized replacement and defers the current objective;
+- NARROW narrows the current objective;
+- PAUSE defers the current objective and supplies a resume or validation condition;
+- CONTINUE preserves the current objective;
 - ESCALATE supplies an escalation object and activates nothing;
 - externalMutationsAllowed is always false;
 - exactly one of validationDate and validationReason is non-null;

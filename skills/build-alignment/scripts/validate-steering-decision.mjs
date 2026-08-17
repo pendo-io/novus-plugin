@@ -19,14 +19,22 @@ function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function hasOwn(value, key) {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
 function requireText(value, path, errors) {
   if (!hasText(value)) errors.push(path + " must be a non-empty string");
 }
 
-function validateObjectiveChange(value, path, errors) {
+function validateObjectiveChange(value, path, authorizedObjectives, errors) {
   if (!isObject(value)) {
     errors.push(path + " must be an object");
     return;
+  }
+  requireText(value.objective, path + ".objective", errors);
+  if (hasText(value.objective) && !authorizedObjectives.includes(value.objective)) {
+    errors.push(path + ".objective must exactly match an authorized objective");
   }
   requireText(value.statement, path + ".statement", errors);
   requireText(value.reason, path + ".reason", errors);
@@ -42,7 +50,7 @@ function validateObjectiveChange(value, path, errors) {
   }
 }
 
-function validatePlanDelta(planDelta, errors) {
+function validatePlanDelta(planDelta, authorizedObjectives, errors) {
   if (!isObject(planDelta)) {
     errors.push("planDelta must be an object");
     return null;
@@ -53,7 +61,12 @@ function validatePlanDelta(planDelta, errors) {
       continue;
     }
     planDelta[key].forEach((item, index) =>
-      validateObjectiveChange(item, "planDelta." + key + "[" + index + "]", errors),
+      validateObjectiveChange(
+        item,
+        "planDelta." + key + "[" + index + "]",
+        authorizedObjectives,
+        errors,
+      ),
     );
   }
   return planDelta;
@@ -86,6 +99,26 @@ function validateEvidence(evidence, errors) {
   return evidence.filter(isObject);
 }
 
+function validateAlternatives(alternatives, authorizedObjectives, errors) {
+  if (!Array.isArray(alternatives)) {
+    errors.push("alternatives must be an array");
+    return;
+  }
+  alternatives.forEach((item, index) => {
+    const path = "alternatives[" + index + "]";
+    if (!isObject(item)) {
+      errors.push(path + " must be an object");
+      return;
+    }
+    requireText(item.objective, path + ".objective", errors);
+    if (hasText(item.objective) && !authorizedObjectives.includes(item.objective)) {
+      errors.push(path + ".objective must exactly match an authorized objective");
+    }
+    requireText(item.disposition, path + ".disposition", errors);
+    requireText(item.reason, path + ".reason", errors);
+  });
+}
+
 function validateExpectedOutcome(value, errors) {
   if (!isObject(value)) {
     errors.push("expectedOutcome must be an object");
@@ -96,6 +129,11 @@ function validateExpectedOutcome(value, errors) {
   requireText(value.invalidationCondition, "expectedOutcome.invalidationCondition", errors);
   if (!Array.isArray(value.leadingIndicators)) {
     errors.push("expectedOutcome.leadingIndicators must be an array");
+  }
+  for (const key of ["validationDate", "validationReason"]) {
+    if (!hasOwn(value, key) || (value[key] !== null && !hasText(value[key]))) {
+      errors.push("expectedOutcome." + key + " must be present as a string or null");
+    }
   }
   const hasDate = hasText(value.validationDate);
   const hasReason = hasText(value.validationReason);
@@ -124,24 +162,45 @@ export function validateDecisionRecord(record) {
   if (record.mode !== "autonomous-steering") {
     errors.push("mode must equal autonomous-steering");
   }
+  let authorizedObjectives = [];
   if (!isObject(record.scope)) {
     errors.push("scope must be an object");
   } else {
     requireText(record.scope.application, "scope.application", errors);
     requireText(record.scope.window, "scope.window", errors);
-    if (
-      !Array.isArray(record.scope.authorizedObjectiveSet) ||
-      record.scope.authorizedObjectiveSet.length === 0 ||
-      record.scope.authorizedObjectiveSet.some((item) => !hasText(item))
-    ) {
-      errors.push("scope.authorizedObjectiveSet must contain non-empty objectives");
+    if (!Array.isArray(record.scope.authorizedObjectiveSet)) {
+      errors.push("scope.authorizedObjectiveSet must be an array");
+    } else if (record.scope.authorizedObjectiveSet.some((item) => !hasText(item))) {
+      errors.push("scope.authorizedObjectiveSet entries must be non-empty objectives");
+    } else if (record.scope.authorizedObjectiveSet.length === 0) {
+      if (record.decision !== "ESCALATE") {
+        errors.push("scope.authorizedObjectiveSet must contain an objective unless decision is ESCALATE");
+      }
+    } else {
+      authorizedObjectives = record.scope.authorizedObjectiveSet;
     }
   }
-  if (!isObject(record.currentObjective)) {
+  if (record.currentObjective === null) {
+    if (record.decision !== "ESCALATE") {
+      errors.push("currentObjective may be null only when decision is ESCALATE");
+    }
+  } else if (!isObject(record.currentObjective)) {
     errors.push("currentObjective must be an object");
   } else {
     requireText(record.currentObjective.statement, "currentObjective.statement", errors);
     requireText(record.currentObjective.source, "currentObjective.source", errors);
+    if (
+      !hasOwn(record.currentObjective, "id") ||
+      (record.currentObjective.id !== null && !hasText(record.currentObjective.id))
+    ) {
+      errors.push("currentObjective.id must be a non-empty string or null");
+    }
+    if (
+      hasText(record.currentObjective.statement) &&
+      !authorizedObjectives.includes(record.currentObjective.statement)
+    ) {
+      errors.push("currentObjective.statement must exactly match an authorized objective");
+    }
   }
   if (!DECISIONS.has(record.decision)) {
     errors.push("decision must be CONTINUE, NARROW, PAUSE, SWITCH, or ESCALATE");
@@ -152,26 +211,57 @@ export function validateDecisionRecord(record) {
   }
 
   const evidence = validateEvidence(record.evidence, errors);
-  if (!Array.isArray(record.alternatives)) {
-    errors.push("alternatives must be an array");
+  validateAlternatives(record.alternatives, authorizedObjectives, errors);
+  if (
+    record.decision !== "ESCALATE" &&
+    authorizedObjectives.length > 1 &&
+    (!Array.isArray(record.alternatives) ||
+      !record.alternatives.some(
+        (item) =>
+          isObject(item) &&
+          authorizedObjectives.includes(item.objective) &&
+          item.objective !== record.currentObjective?.statement,
+      ))
+  ) {
+    errors.push("alternatives must include a different authorized objective");
   }
-  const planDelta = validatePlanDelta(record.planDelta, errors);
+  const planDelta = validatePlanDelta(record.planDelta, authorizedObjectives, errors);
   validateExpectedOutcome(record.expectedOutcome, errors);
 
   if (!isObject(record.authority)) {
     errors.push("authority must be an object");
-  } else if (record.authority.externalMutationsAllowed !== false) {
-    errors.push("authority.externalMutationsAllowed must be false");
+  } else {
+    if (record.authority.externalMutationsAllowed !== false) {
+      errors.push("authority.externalMutationsAllowed must be false");
+    }
+    if (
+      !hasOwn(record.authority, "requiredApproval") ||
+      (record.authority.requiredApproval !== null && !hasText(record.authority.requiredApproval))
+    ) {
+      errors.push("authority.requiredApproval must be a non-empty string or null");
+    }
   }
 
-  if (record.decision === "NARROW" && planDelta?.narrow?.length === 0) {
-    errors.push("NARROW must narrow at least one objective");
+  const currentStatement = isObject(record.currentObjective)
+    ? record.currentObjective.statement
+    : null;
+  const changesCurrent = (items) =>
+    Array.isArray(items) && items.some((item) => item?.objective === currentStatement);
+
+  if (record.decision === "CONTINUE" && !changesCurrent(planDelta?.continue)) {
+    errors.push("CONTINUE must preserve the current objective in planDelta.continue");
+  }
+  if (record.decision === "NARROW" && !changesCurrent(planDelta?.narrow)) {
+    errors.push("NARROW must narrow the current objective");
   }
   if (record.decision === "PAUSE") {
     if (planDelta?.defer?.length === 0) {
       errors.push("PAUSE must defer at least one objective");
     } else if (planDelta.defer.some((item) => !hasText(item?.resumeCondition))) {
       errors.push("PAUSE deferred objectives require resumeCondition");
+    }
+    if (!changesCurrent(planDelta?.defer)) {
+      errors.push("PAUSE must defer the current objective");
     }
   }
   if (record.decision === "SWITCH") {
@@ -180,6 +270,12 @@ export function validateDecisionRecord(record) {
     }
     if (planDelta?.defer?.length === 0) {
       errors.push("SWITCH must defer at least one objective");
+    }
+    if (!changesCurrent(planDelta?.defer)) {
+      errors.push("SWITCH must defer the current objective");
+    }
+    if (planDelta?.activate?.some((item) => item?.objective === currentStatement)) {
+      errors.push("SWITCH must activate a replacement, not the current objective");
     }
     const layers = new Set(
       evidence.filter((item) => SWITCH_LAYERS.has(item.layer)).map((item) => item.layer),
@@ -195,11 +291,22 @@ export function validateDecisionRecord(record) {
   }
   if (record.decision === "ESCALATE") {
     validateEscalation(record.escalation, errors);
+    if (!hasText(record.authority?.requiredApproval)) {
+      errors.push("ESCALATE requires authority.requiredApproval");
+    }
     if ((planDelta?.activate?.length ?? 0) > 0) {
       errors.push("ESCALATE cannot activate a replacement objective");
     }
   } else if (record.escalation !== null) {
     errors.push("escalation must be null unless decision is ESCALATE");
+  }
+  if (
+    record.decision !== "ESCALATE" &&
+    isObject(record.authority) &&
+    hasOwn(record.authority, "requiredApproval") &&
+    record.authority.requiredApproval !== null
+  ) {
+    errors.push("authority.requiredApproval must be null unless decision is ESCALATE");
   }
 
   if (record.priorDecision !== null && record.priorDecision !== undefined) {
