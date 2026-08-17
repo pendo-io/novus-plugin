@@ -1,4 +1,4 @@
-# Autonomous Build Alignment
+# What's Next steering contract
 
 Use this reference only in autonomous steering mode.
 
@@ -51,6 +51,17 @@ Return exactly one:
 
 SWITCH has the highest evidence burden. Prefer continuity when the evidence is close.
 
+These labels are control states for the decision record. Never assume the caller knows them, and do not use one as the response headline without translating it. Use these plain-language interpretations:
+
+- **START:** “No work is active; build this next.”
+- **CONTINUE:** “Keep going on the current objective; the evidence still supports it.”
+- **NARROW:** “Keep the broader objective, but reduce the immediate work to this smaller slice; do not start the named deferred work yet.”
+- **PAUSE:** “Stop after the current safe checkpoint and wait for this named condition.”
+- **SWITCH:** “Finish or preserve the current work as stated, then replace it with this better-supported objective.”
+- **ESCALATE:** “I cannot safely choose until this specific decision or missing evidence is resolved.”
+
+For NARROW in particular, identify four separate things whenever they exist: a merge or review gate to finish, the one new slice to build, the work being held back, and the condition that resumes it. Do not call a merge gate “what to build next.”
+
 ## Control loop
 
 1. Resolve current work, constraints, plan, and prior decision from engineering context.
@@ -58,12 +69,12 @@ SWITCH has the highest evidence burden. Prefer continuity when the evidence is c
 3. Build a bounded Planned, Built, Experienced, and shipping snapshot for the current objective and strongest alternative.
 4. Apply evidence, strategic-bet, data-quality, release-lag, and stability guards.
 5. Select one decision and one internal plan change status.
-6. Write the exact response record to build-alignment-decision.json before altering the plan.
+6. Write the exact response record to `whats-next-decision.json` before altering the plan.
 7. Resolve `<skill-directory>` as the directory containing this SKILL.md and validate with:
 
        node <skill-directory>/scripts/validate-steering-decision.mjs <decision-file>
 
-   Do not assume the caller's repository contains `skills/build-alignment`.
+   Do not assume the caller's repository contains `skills/whats-next`.
 8. Require exit code 0 and preserve the exact validator success line. Fix errors before applying a plan delta; never claim validity from inspection.
 9. Apply only valid, authorized internal plan changes. Execute one bounded slice only when the surrounding task separately authorizes implementation.
 10. Reassess only on a material trigger.
@@ -108,6 +119,8 @@ Do not call a PR impactful before measured. For proposed, merged, or exposed wor
 - **ESCALATE:** activate nothing and ask the smallest plain-language question required.
 
 Every plan item names a candidate objective verbatim in `objective` and describes the resulting internal action in `statement`. When the host has no plan mechanism, return a proposed delta without pretending it was applied.
+
+The response should describe this status naturally: “I changed only the internal plan,” “This is a recommendation; I changed nothing,” or “I need your decision before changing direction.” Avoid phrases such as “host plan mechanism,” “schema invariant,” or “plan delta” unless the caller asks how the skill works.
 
 ## Degraded behavior
 

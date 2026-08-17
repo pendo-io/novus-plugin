@@ -1,0 +1,4 @@
+interface:
+  display_name: "Goal to Experiment"
+  short_description: "Turn a selected goal into a safe experiment"
+  default_prompt: "Use $goal-to-experiment to turn this goal or selected engineering move into a reversible experiment with rollout and measurement guidance."

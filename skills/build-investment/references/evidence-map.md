@@ -1,4 +1,4 @@
-# Build Alignment evidence map
+# Build Investment evidence map
 
 Novus MCP tool names are namespaced differently by each host. Match on the tool-name suffix, such as `listSignals`, rather than the full identifier.
 
@@ -9,24 +9,28 @@ Novus MCP tool names are namespaced differently by each host. Match on the tool-
 | Resolve the application | `listApps` | Do not combine apps. |
 | Check roadmap sources | `listConnectedIntegrations` | Distinguish connected, expired, missing, and tool failure. |
 | Establish product areas | `listProductAreas`, `getProductAreaMembers`, `getMemory` | Use product areas and product-wiki memory as the normalization spine. |
+| Establish strategic goals | `listArtifactsByType` for goals, `getArtifact`, `getRelatedArtifacts` | Map goals to product areas, launches, signals, metrics, issues, and PRs. |
 | Find goals, launches, and tracked surfaces | `listArtifactsByType`, `getArtifact`, `getRelatedArtifacts` | Useful artifact types include goals, launches, pages, features, track events, funnels, journeys, and product wikis. |
-
-## Begin autonomous runs with engineering context
-
-Before product queries, infer the active work from the task, terminal condition, in-progress plan step, linked issue or PR, branch, worktree, diff, and relevant recent conversation or commits. Preserve stable IDs and summarize why each source supports the inferred objective. One explicit assignment is sufficient; otherwise prefer two compatible sources. Do not use commit volume or file recency as proof of importance.
-
-Build candidate objectives from the current work plus the strongest alternatives surfaced by Novus, roadmap, and delivery evidence. Mark current-scope, explicit-choice, and recommend-only authority separately. Discovery is not execution authority.
-
-Read prior build-alignment-decision.json when available. Treat it as steering-stability evidence, not product reality. Extract its decision, thesis, validation date, invalidation condition, deferred work, and material-new-evidence list. Do not reverse it merely because the same evidence was summarized differently.
 
 ## Planned layer
 
-Use Linear or Jira roadmap evidence in this order:
+Start with the active goal portfolio. Record each goal's outcome, target or direction, deadline, related artifacts, current trajectory, and measurement quality. Treat a saved goal as evidence of strategy, not evidence that the investment is paying off.
+
+Resolve Linear or Jira roadmap access before querying:
+
+1. Call Novus `listConnectedIntegrations` to discover native Jira or Linear connections. Treat expired or reauthentication-required connections as unavailable.
+2. Inspect the coding agent's available tools for direct Linear or Jira connectors.
+3. When both paths exist, use Novus-native issue provenance to preserve joins to goals, signals, launches, artifacts, and product areas. Use direct connectors for richer or fresher state, estimate, cycle, project, initiative, and relationship detail when it can change the conclusion.
+4. Deduplicate matching records by stable issue ID or key. They are one planning fact reached through two paths, not two independent sources.
+5. When only one path exists, use it fully.
+6. When neither path exists, mark Planned coverage unavailable. Compare Built with Experienced, but say `cannot confirm this is on the roadmap` and do not infer planned investment from repository activity.
+
+Use the resolved path in this order:
 
 1. `searchIssues` for product-area names, known initiatives, goals, and high-confidence synonyms.
 2. `fetchIssue` for state, priority, estimate, assignee/team, cycle, labels, description, and parent relationships.
 3. `getInitiativeForIssue` when initiative or project intent is material.
-4. Direct Linear/Jira connectors, when available, to fill missing project, cycle, or initiative detail.
+4. Direct Linear/Jira connectors to fill material gaps, or as the primary path when no Novus-native connection exists.
 
 Avoid sweeping keyword searches across the entire tracker. Search the normalized capability map and the strongest customer problems. A title match alone does not prove alignment.
 
@@ -74,12 +78,12 @@ Use the narrowest metric that answers the investment question. Do not narrate ev
 ## Efficient query order
 
 1. Resolve app, window, connected integrations, product areas, and wiki context.
-2. Pull a bounded set of recent, high-value signals across the portfolio.
-3. Inventory active initiatives/projects and recently completed work by normalized product area.
-4. Build a provisional planned/built/experienced comparison.
-5. Deepen only the strongest one to three candidate mismatches with metrics, issue detail, PR evidence, audience, or feedback.
-6. Verify the final recommendation against the strongest alternative and other active goals.
-7. In autonomous mode, classify the strongest alternative's execution authority and compare the proposed decision with the prior decision. A discovered alternative can be recommended without being authorized for execution.
+2. Map active goals to product areas, launches, metrics, issues, and PRs.
+3. Pull a bounded set of recent, high-value signals across the portfolio.
+4. Inventory active initiatives/projects and recently completed work by normalized product area.
+5. Build a provisional goal/planned/built/experienced comparison.
+6. Deepen only the strongest one to three candidate mismatches with metrics, issue detail, PR evidence, audience, or feedback.
+7. Verify the final recommendation against the strongest alternative, goal conflicts, and other strategic or platform bets.
 
 ## Evidence honesty
 
@@ -91,3 +95,4 @@ Use the narrowest metric that answers the investment question. Do not narrate ev
 - **Internal/test traffic can dominate small samples.** Apply known filters or disclose that filtering was unavailable.
 - **Sparse roadmap coverage changes the question.** Without Linear/Jira, answer where pain and apparent investment diverge; do not claim intent.
 - **Stable identifiers matter.** Preserve issue keys, PR numbers, artifact IDs, and links in the evidence ledger.
+- **A goal is intent, not impact.** Verify delivery, exposure, and outcome movement separately.

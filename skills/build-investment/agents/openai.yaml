@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Investment"
+  short_description: "Review where engineering investment should move"
+  default_prompt: "Use $build-investment to assess whether our engineering investment matches customer and business value."

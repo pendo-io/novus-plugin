@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "novus",
   "version": "0.1.0",
-  "description": "Novus skills for coding agents. Ships ux-review: a pre-PR UX review of your local changes, backed by Pendo product analytics.",
+  "description": "Novus skills for coding agents: pre-PR UX review and evidence-backed product investment planning, powered by Pendo product analytics.",
   "author": {
     "name": "pendo-io",
     "url": "https://novus.pendo.io"
@@ -10,5 +10,5 @@
   "homepage": "https://novus.pendo.io",
   "repository": "https://github.com/pendo-io/novus-plugin",
   "license": "Proprietary",
-  "keywords": ["pendo", "novus", "ux", "code-review", "product-analytics"]
+  "keywords": ["pendo", "novus", "ux", "code-review", "product-analytics", "planning", "roadmap"]
 }

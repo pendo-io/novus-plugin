@@ -10,9 +10,9 @@
       "name": "novus",
       "source": "./",
       "displayName": "Pendo Novus",
-      "description": "Pre-PR UX review of your local changes, backed by Pendo product analytics.",
+      "description": "Pre-PR UX review and product investment planning, backed by Pendo product analytics.",
       "category": "code-review",
-      "tags": ["pendo", "ux", "product-analytics"]
+      "tags": ["pendo", "ux", "product-analytics", "planning", "roadmap"]
     }
   ]
 }

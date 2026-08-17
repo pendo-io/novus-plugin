@@ -1124,7 +1124,7 @@ test("requires START to compare its selection with a different candidate", () =>
 });
 
 test("runs CLI validation when the installed script is reached through a symlink", () => {
-  const testDirectory = mkdtempSync(join(tmpdir(), "build-alignment-validator-"));
+  const testDirectory = mkdtempSync(join(tmpdir(), "whats-next-validator-"));
   try {
     const realScript = fileURLToPath(
       new URL("./validate-steering-decision.mjs", import.meta.url),

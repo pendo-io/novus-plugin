@@ -1,7 +1,7 @@
 {
   "name": "novus",
   "version": "0.1.0",
-  "description": "Novus skills for Cursor. Ships ux-review: a pre-PR UX review of your local changes, backed by Novus product analytics.",
+  "description": "Novus skills for Cursor: pre-PR UX review and evidence-backed product investment planning.",
   "author": "pendo-io",
   "license": "Proprietary",
   "skills": "./skills",

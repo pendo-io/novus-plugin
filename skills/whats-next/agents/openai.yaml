@@ -1,0 +1,4 @@
+interface:
+  display_name: "What’s Next"
+  short_description: "Choose the highest-value next build"
+  default_prompt: "Use $whats-next to infer my current work and recommend what to finish, build next, and defer."
