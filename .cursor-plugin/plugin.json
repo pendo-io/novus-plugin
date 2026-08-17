@@ -1,7 +1,7 @@
 {
   "name": "novus",
   "version": "0.1.0",
-  "description": "Novus skills for Cursor: pre-PR UX review and evidence-backed product investment planning.",
+  "description": "Novus skills for Cursor: plan stress testing, data trust, impact verification, UX review, and evidence-backed build decisions.",
   "author": "pendo-io",
   "license": "Proprietary",
   "skills": "./skills",

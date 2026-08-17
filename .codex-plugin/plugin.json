@@ -1,6 +1,6 @@
 {
   "name": "novus",
   "version": "0.1.0",
-  "description": "Novus skills for Codex: pre-PR UX review and evidence-backed product investment planning.",
+  "description": "Novus skills for Codex: plan stress testing, data trust, impact verification, UX review, and evidence-backed build decisions.",
   "skills": "./skills/"
 }

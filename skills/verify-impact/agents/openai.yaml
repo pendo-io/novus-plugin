@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Impact"
+  short_description: "Decide whether a shipped change actually worked"
+  default_prompt: "Use $verify-impact to determine whether this shipped change worked and what to do next."

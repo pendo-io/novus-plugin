@@ -54,8 +54,9 @@ Lead with ordinary builder language:
 6. **Goal connection** — the active goal advanced or protected, or the provisional outcome when no goal fits; state conflicts explicitly.
 7. **What this will and will not fix** — the slice's direct effect and the broader mismatch that remains.
 8. **How to validate** — immediate engineering acceptance separately from the later customer/business checkpoint.
-9. **Confidence and limitation** — only gaps that could change the order.
-10. **Question**, only when one consequential decision is required.
+9. **Evidence trust** — when behavioral evidence materially affected the order, write `Instrumentation: TRUSTED | DEGRADED | UNTRUSTED | UNKNOWN` and include the checked surface/window. When prior impact affected the order, write the `verify-impact` verdict.
+10. **Confidence and limitation** — only gaps that could change the order.
+11. **Question**, only when one consequential decision is required.
 
 Do not use the formal state as an unexplained headline. Translate it first; when useful, show it later as secondary metadata such as `Steering state: NARROW`.
 
@@ -64,6 +65,8 @@ For NARROW, prefer:
 > Finish `<existing gate>`. Then build `<one bounded slice>`. Do not begin `<deferred work>` until `<resume condition>`.
 
 Avoid “host plan mechanism,” “plan delta,” and schema vocabulary unless the caller asks. State external-action status naturally.
+
+Do not invent a reassessment duration. Use a sourced outcome lag, configured window, sufficient-sample condition, or named planning checkpoint.
 
 ## Goal-to-experiment handoff
 
@@ -80,12 +83,23 @@ When the caller asks to continue into experiment design, pass this compact contr
 
 Include this as a visible block only when the caller requests the handoff or experiment brief. Otherwise keep it implicit in the response.
 
+## Lifecycle handoffs
+
+- **Plan exists but implementation has not started:** offer `stress-test-plan` as the next gate.
+- **Outcome is selected and needs rollout/measurement design:** offer `goal-to-experiment`.
+- **Measurement is broken or disputed:** use `verify-instrumentation` before interpreting it.
+- **Work is exposed and the caller asks whether it worked:** use `verify-impact`.
+
+Offer only the handoff that matches the immediate next decision. Do not turn the response into a menu of skills.
+
 ## Final check
 
 - The current objective is supported by engineering context.
 - Linear/Jira coverage states whether Novus-native access, direct connector access, both, or neither was available; duplicate issue records are not treated as independent evidence.
 - The recommendation beats a named alternative.
 - Goal alignment is treated as strategic evidence, not proof of impact.
+- Decision-critical behavioral evidence carries an explicit `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` instrumentation verdict; untrusted zeros do not count against a candidate.
+- Shipped work is not called effective or ineffective without a qualifying impact verdict or equivalent gates.
 - Planned, Built, Experienced, and shipping evidence remain distinct.
 - Recent work is not called impactful before measurement.
 - The formal state is translated before it is named.

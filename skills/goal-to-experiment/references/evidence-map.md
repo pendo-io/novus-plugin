@@ -46,9 +46,11 @@ If one goal directly matches, use it. If two remain plausible and would change t
 | Where do users stop? | `getFunnelAnalysis`, `getFunnelAnalytics`, `getJourney` |
 | Do users return? | `getPageRetention`, `getRetentionCohorts` |
 | Who is affected? | `getArtifactTopUsers`, `getAccountActivityOnArtifact`, `getVisitorActivityForArtifact` |
-| Is the metric trustworthy? | `listArtifactsByType`, `getExternalIds`, `getEventProperties`, `getRawEvents` |
+| Is the metric trustworthy? | `verify-instrumentation`, then `listArtifactsByType`, `getExternalIds`, `getEventProperties`, `getRawEvents` as needed |
 
 The primary outcome answers whether users or the business improved. An early indicator answers whether the code is beginning to work. A must-not-regress measure protects against creating a new failure.
+
+Carry the instrumentation verdict, checked surface, window, and repair into the experiment brief. Prefer existing Novus Page, Feature, Track Event, funnel, journey, and automatic instrumentation coverage. Add net-new manual tracking only when the desired semantic outcome or guardrail cannot be represented by supported coverage.
 
 ## Explain why
 
@@ -92,5 +94,6 @@ Before attribution, check merge versus exposure date, target audience, flag perc
 2. Inspect current work, classify its effect, and map the surface to that outcome.
 3. Read the selected goal, recent signals, metric trend, rollout state, and existing issues.
 4. Identify likely Helping, Hurting, and Uncertain drivers.
-5. Deepen only evidence capable of changing the engineering move.
-6. Verify the winning experiment against the strongest alternative inside the selected outcome.
+5. Verify the primary measure and baseline when they can change the experiment.
+6. Deepen only evidence capable of changing the engineering move.
+7. Verify the winning experiment against the strongest alternative inside the selected outcome.

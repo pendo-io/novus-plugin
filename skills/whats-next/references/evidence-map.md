@@ -78,6 +78,8 @@ Stop at the last verified state. Estimate scope with qualitative complexity and 
 
 Use the narrowest metric that distinguishes the current objective from the strongest alternative.
 
+For decision-critical behavioral evidence, consume a targeted `verify-instrumentation` verdict rather than inferring trust from the presence of an artifact or dashboard. For a claim that shipped work succeeded or failed, consume `verify-impact` or apply its exposure, elapsed-window, trusted-measurement, outcome, and guardrail gates. Preserve the verdict and checked window with the evidence record.
+
 ## Efficient query order
 
 1. Resolve current work and prior decision.
@@ -86,8 +88,9 @@ Use the narrowest metric that distinguishes the current objective from the stron
 4. Pull a bounded set of current high-value signals.
 5. Build the current objective plus strongest credible alternatives.
 6. Deepen only the strongest one to three with issue, PR, reach, feedback, or metric evidence.
-7. Verify the selected move against the strongest alternative, active goals, and goal conflicts.
-8. Classify execution authority and preserve deferred work.
+7. Verify measurement or prior impact only for evidence capable of changing the choice.
+8. Verify the selected move against the strongest alternative, active goals, and goal conflicts.
+9. Classify execution authority and preserve deferred work.
 
 ## Evidence honesty
 
@@ -99,4 +102,5 @@ Use the narrowest metric that distinguishes the current objective from the stron
 - Without roadmap coverage, say intent is unconfirmed.
 - Repository context identifies work; it does not prove value.
 - A saved goal proves strategic intent, not implementation impact or causality.
+- A `TRUSTED` instrumentation verdict proves fitness for its stated decision, not causality; post-ship causality still belongs to `verify-impact`.
 - Preserve issue keys, PR numbers, artifact IDs, metric windows, and links.

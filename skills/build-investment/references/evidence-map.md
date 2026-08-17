@@ -75,6 +75,8 @@ Estimate effort with relative scope/complexity bands and delivery context. Never
 
 Use the narrowest metric that answers the investment question. Do not narrate every available metric.
 
+Attach a targeted `verify-instrumentation` verdict to every behavioral measure capable of changing allocation. Use `verify-impact` for material claims that shipped work paid off or failed. Several metrics derived from one untrusted artifact do not become trustworthy through repetition.
+
 ## Efficient query order
 
 1. Resolve app, window, connected integrations, product areas, and wiki context.
@@ -82,8 +84,9 @@ Use the narrowest metric that answers the investment question. Do not narrate ev
 3. Pull a bounded set of recent, high-value signals across the portfolio.
 4. Inventory active initiatives/projects and recently completed work by normalized product area.
 5. Build a provisional goal/planned/built/experienced comparison.
-6. Deepen only the strongest one to three candidate mismatches with metrics, issue detail, PR evidence, audience, or feedback.
-7. Verify the final recommendation against the strongest alternative, goal conflicts, and other strategic or platform bets.
+6. Verify measurement and prior impact only for evidence capable of changing the portfolio conclusion.
+7. Deepen only the strongest one to three candidate mismatches with metrics, issue detail, PR evidence, audience, or feedback.
+8. Verify the final recommendation and named tradeoff against the strongest alternative, goal conflicts, and other strategic or platform bets.
 
 ## Evidence honesty
 
@@ -96,3 +99,4 @@ Use the narrowest metric that answers the investment question. Do not narrate ev
 - **Sparse roadmap coverage changes the question.** Without Linear/Jira, answer where pain and apparent investment diverge; do not claim intent.
 - **Stable identifiers matter.** Preserve issue keys, PR numbers, artifact IDs, and links in the evidence ledger.
 - **A goal is intent, not impact.** Verify delivery, exposure, and outcome movement separately.
+- **A tradeoff is a planning fact, not a rhetorical balancing item.** Name the actual tranche or disclose that displacement is unresolved.

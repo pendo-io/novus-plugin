@@ -18,6 +18,7 @@ Answer one portfolio question: **Are we investing engineering effort where it ca
 - Account for rollout and adoption lag. Mark recent work `too early to tell`.
 - Treat missing instrumentation as a coverage gap, not zero impact.
 - Apply reliable employee, test, bot, and system-traffic filters; otherwise disclose the limitation.
+- Carry an explicit instrumentation-trust verdict for every behavioral measure capable of changing the investment decision. Use a qualifying impact verdict before classifying shipped work as paying off or failing.
 
 ## Workflow
 
@@ -43,6 +44,10 @@ Read [references/evidence-map.md](references/evidence-map.md). For each product 
 4. **Shipping:** whether material work is proposed, merged, exposed, or measured.
 
 Collect a broad inexpensive view first. Deepen only the strongest one to three candidate mismatches.
+
+For decision-critical behavioral evidence, reuse or run `verify-instrumentation` when available. Carry its `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` verdict into the investment map. An untrusted zero cannot establish low demand, impact failure, or over-investment.
+
+For material shipped work, reuse `verify-impact` when available before classifying it as **paying off** or **impact failure**. Otherwise apply the same gates explicitly: verified exposure, elapsed outcome window, trusted measurement, outcome movement, and guardrails. Do not recreate either full workflow here.
 
 ### 4. Compare investment with burden and outcomes
 
@@ -97,6 +102,8 @@ State:
 
 Use a named planning checkpoint or evidence-based outcome lag. Do not invent exact cycle counts, dates, or durations when cadence and expected lag are unknown.
 
+Support the tradeoff with an actual planned or uncommitted tranche, workstream, or sequencing choice from the authoritative planning context. If no credible displacement candidate is visible, do not invent one. State that the portfolio direction is supported but the exact funding source remains a planning decision, and lower confidence accordingly.
+
 Name the goal advanced by the recommended bet. If no saved goal fits, state the provisional outcome and recommend deciding whether it should become a goal; do not create one automatically.
 
 For this skill, goals define the intended portfolio. Evaluate them in both directions: underfunded goals and effort without a credible goal or deliberate-bet rationale. A goal's existence, status, or target never proves impact; delivery, exposure, and outcome evidence must support that conclusion separately.
@@ -111,13 +118,15 @@ Create a shareable standalone HTML report when the host can write files, unless 
 
 After the portfolio bet is chosen, offer `goal-to-experiment` as the downstream step. Preserve the handoff fields in [references/output-contract.md](references/output-contract.md). Do not collapse experiment design into the portfolio report or invoke the downstream skill automatically.
 
+When a concrete implementation plan already exists for the selected bet, offer `stress-test-plan` before experiment design. After exposure, route the outcome decision to `verify-impact`.
+
 ## Degraded behavior
 
 - **Novus unavailable:** provide only a preliminary planning-and-delivery view, state that customer-value alignment cannot be concluded, and name the minimum evidence needed.
 - **No Linear/Jira path:** compare Built versus Experienced and say `cannot confirm this is on the roadmap`. Do not infer planned investment from repository activity.
 - **GitHub unavailable:** use completed issues and PR provenance already present in Novus; lower confidence in built investment.
 - **Sparse taxonomy:** build a provisional map and disclose weak mappings.
-- **Broken analytics:** recommend minimum instrumentation repair and avoid interpreting zeros.
+- **Broken analytics:** use `verify-instrumentation` to name the smallest exact repair and observed proof; avoid interpreting zeros.
 - **Sparse evidence:** return a smaller, lower-confidence portfolio conclusion instead of generic advice.
 - **Conflicting evidence:** show the conflict and prefer the most direct current source.
 - **Tool failure:** retry a failed read once, then continue with remaining evidence and disclose the limitation.

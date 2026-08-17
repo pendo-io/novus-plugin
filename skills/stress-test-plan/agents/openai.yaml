@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stress Test Plan"
+  short_description: "Find plan-breaking risks before coding"
+  default_prompt: "Use $stress-test-plan to challenge this build plan before implementation starts."

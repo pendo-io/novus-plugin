@@ -22,9 +22,11 @@ Write testable checkboxes under these labels:
 - **User behavior:** The observable experience that changes.
 - **Technical behavior:** Error, state, performance, reliability, or data behavior that must hold.
 - **Tests:** The automated or manual proof required before merge.
-- **Instrumentation:** The exact event, property, log, trace, cohort, or reconciliation check needed to evaluate the change.
+- **Instrumentation:** Existing automatic Novus coverage, the exact `verify-instrumentation` recheck, and only the net-new event, property, log, trace, cohort, or reconciliation check that supported coverage cannot provide.
 
 Do not tell the engineer to “add analytics” or “collect more data” without naming the measurement.
+
+Do not add a duplicate manual Page/Feature event merely to make the experiment easier to query. Reuse the existing artifact or repair its mapping; reserve custom Track Events and properties for behavior or semantics automatic coverage cannot express.
 
 ### Ship safely
 
@@ -50,6 +52,10 @@ Translate product terms:
 | **Review point** | The sample, cycle, or date when the agent chooses expand, continue, modify, or stop. |
 
 Include baseline when trustworthy, direction or threshold, source, expected lag, and invalidation condition. Mark unsupported numeric thresholds `provisional`.
+
+Include `Instrumentation: TRUSTED | DEGRADED | UNTRUSTED | UNKNOWN`. An `UNTRUSTED` primary outcome makes repair plus an observed end-to-end recheck a pre-launch gate.
+
+After exposure and the review point, pass this contract to `verify-impact`. Do not declare the experiment successful or unsuccessful from this pre-release brief.
 
 ### Evidence behind the recommendation
 
@@ -95,6 +101,7 @@ Use the right chart for the metric. Keep the file responsive, printable, depende
 - The first section tells an engineer what to do and where.
 - Product evidence is translated into user and engineering consequences.
 - Definition of done includes behavior, tests, and exact instrumentation.
+- Existing automatic instrumentation is reused before net-new tracking is proposed.
 - Existing work was reused when relevant.
 - Observability value is not confused with fewer user failures.
 - The rollout and rollback are implementable.
@@ -102,3 +109,4 @@ Use the right chart for the metric. Keep the file responsive, printable, depende
 - Assumptions are explicit; missing product fields did not become unnecessary questions.
 - No production-facing change occurs without authority.
 - Numeric splits, thresholds, durations, and guardrails are sourced or explicitly provisional pre-launch decisions.
+- Post-release success or failure is delegated to `verify-impact` with the original experiment contract intact.

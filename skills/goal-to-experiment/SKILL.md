@@ -14,6 +14,7 @@ Assume the upstream goal or outcome is selected but may be incomplete. Complete 
 - Proceed with the most credible context. State medium-confidence assumptions; do not turn missing data into a blocker.
 - Use real evidence. Separate **verified facts**, **correlations**, and **Novus hypotheses**; timing alone does not prove causality.
 - Treat broken instrumentation as an evidence problem, not real zero usage.
+- Prefer Novus's existing automatic instrumentation and artifact definitions. Never add duplicate manual events for supported Pages, Features, or flows; specify only the mapping, semantic property, or truly unsupported behavior still required.
 - Prefer one reversible, high-learning action over a backlog of generic recommendations.
 - Translate product language into engineering decisions. Explain each metric by what changed for users and what the engineer should build, test, instrument, or roll back.
 - Reuse an existing issue, PR, or workstream before proposing net-new work.
@@ -69,6 +70,8 @@ Derive the primary user or business outcome, current state, target or direction,
 
 Calculate current versus required pace when the saved goal supports it. When target, baseline, deadline, or traffic is missing, label only that field `provisional` and continue.
 
+**REQUIRED SUB-SKILL:** Use `verify-instrumentation` when the baseline, goal measure, or decision rule depends on Pendo behavioral data and no current verdict exists. Carry forward its verdict and exact repair. Do not design a product experiment around an `UNTRUSTED` primary outcome; make the repair and observed recheck a pre-launch gate.
+
 ### 4. Diagnose what matters
 
 Gather a broad, inexpensive view, then deepen only decision-relevant evidence. Build three groups:
@@ -85,11 +88,21 @@ Search existing work inside the selected outcome first. Rank experiment candidat
 
 Choose one action and the strongest alternative. An instrumentation repair or focused investigation can win when it unlocks a responsible product decision. Never recommend “collect more data” without naming the exact event, field, cohort, replay, test, or comparison needed.
 
+When a concrete implementation plan already exists, consume a current `stress-test-plan` verdict when available. Preserve its required mechanism changes and explicit non-goals; do not expand the selected outcome while designing the experiment.
+
 ### 6. Produce the engineering brief
 
 Read [references/output-contract.md](references/output-contract.md) immediately before responding. Lead with the engineering action, affected code or work surface, and user impact. Put the analytical evidence underneath it.
 
 Define user-visible behavior, technical acceptance criteria, tests, instrumentation, rollout, rollback, user outcome, early signal, must-not-regress measures, evaluation window, and decision rule.
+
+For instrumentation, state in order:
+
+1. what Novus should instrument automatically;
+2. how `verify-instrumentation` will prove arrival, recognition, definition, continuity, audience, and required flow coverage;
+3. any net-new event or property that is genuinely required because supported automatic coverage cannot express the outcome.
+
+Configuration success is not proof. Require an observed end-to-end path before exposure.
 
 Use exact experiment allocation, lift thresholds, cohort sizes, or durations only when traffic, variance, risk, or a named business decision supports them. Otherwise state the sizing method and make baseline, sample, and guardrail selection explicit pre-launch acceptance criteria.
 
@@ -103,14 +116,14 @@ Use exact experiment allocation, lift thresholds, cohort sizes, or durations onl
 
 ### 8. Review after release
 
-After the measurement window, compare the outcome with baseline, pace, and comparison cohort when available. Recheck competing changes and data quality. Return `expand`, `continue`, `modify`, or `stop`, with the evidence and follow-up engineering action.
+After verified exposure and the measurement window, use `verify-impact` with this experiment contract. Preserve the intended outcome, audience, comparison, early signal, guardrails, expected lag, and invalidation condition. Its verdict determines whether to expand, continue, modify, rollback, or repair measurement; do not make a parallel impact claim inside this skill.
 
 ## Degraded modes
 
 - **Novus unavailable:** Use repository, issue, PR, test, and user-provided evidence; state which product evidence would change the decision.
 - **No repository context:** Start from the saved goal and connected work systems.
 - **No saved goal:** Keep the supplied outcome provisional and design a learning action; do not invent a target or select a different portfolio priority.
-- **No trustworthy metric:** Make the smallest instrumentation repair the engineering move when it blocks evaluation.
+- **No trustworthy metric:** Use `verify-instrumentation`; make its smallest exact repair and observed proof a pre-launch gate when evaluation is blocked.
 - **Sparse or conflicting evidence:** Choose a reversible action and state the switch condition.
 - **Tool failure:** Retry a failed read once, then continue and disclose the gap.
 
@@ -120,9 +133,11 @@ After the measurement window, compare the outcome with baseline, pace, and compa
 - Using this skill to choose between unrelated goals, product areas, or backlog items; route that decision to `build-investment` or `whats-next` first.
 - Leading with a dashboard or goal table instead of the engineering move.
 - Recommending a net-new ticket when relevant work already exists.
+- Adding duplicate manual tracking for a surface Novus already instruments automatically.
 - Calling observability work “user value” without separating faster diagnosis from fewer user failures.
 - Using PM shorthand without explaining the engineering consequence.
 - Blocking an autonomous caller on a question when a safe assumption or measurement repair is available.
+- Re-evaluating post-release impact here instead of handing the experiment contract to `verify-impact`.
 
 ## References
 

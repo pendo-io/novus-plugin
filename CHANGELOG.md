@@ -11,7 +11,15 @@ First release.
 - `build-investment` skill: portfolio-level comparison of planned, built, and experienced investment, with one
   evidence-backed recommendation for where engineering investment should move.
 - `goal-to-experiment` skill: turns a selected goal, portfolio bet, or bounded move into a reversible engineering
-  experiment with acceptance, rollout, rollback, and measurement guidance.
+  experiment with acceptance, rollout, rollback, automatic-instrumentation reuse, and measurement guidance.
+- `verify-impact` skill: decides whether a shipped change worked after checking exposure, measurement trust, outcome
+  movement, guardrails, and alternative explanations.
+- `verify-instrumentation` skill: mirrors Novus Data Validation to check live arrival, artifact matching, definitions,
+  continuity, audience, and flow coverage, with a focused Teach Novus repair when available.
+- `stress-test-plan` skill: challenges an implementation plan against customer, roadmap, repository, rollout, and
+  measurement reality before coding begins.
+- The planning and experiment skills now consume shared instrumentation and impact verdicts instead of interpreting
+  untrusted metrics or duplicating post-release evaluation.
 - Packaging for Claude Code, Gemini CLI, and Codex CLI, plus Agent Plugins 1.0 and Cursor manifests and an
   `.agents/skills` symlink for Devin.
 

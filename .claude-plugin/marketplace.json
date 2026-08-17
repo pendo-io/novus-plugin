@@ -10,9 +10,9 @@
       "name": "novus",
       "source": "./",
       "displayName": "Pendo Novus",
-      "description": "Pre-PR UX review and product investment planning, backed by Pendo product analytics.",
+      "description": "Plan stress testing, data trust, impact verification, UX review, and build decisions backed by Pendo product analytics.",
       "category": "code-review",
-      "tags": ["pendo", "ux", "product-analytics", "planning", "roadmap"]
+      "tags": ["pendo", "ux", "product-analytics", "instrumentation", "impact", "planning", "roadmap"]
     }
   ]
 }

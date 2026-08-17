@@ -19,8 +19,8 @@ Use only numbers that carry the decision. Do not open with PR count, issue count
 
 Show one row per normalized product area:
 
-| Product area | Related goals | Planned | Built | Experienced problem burden | Outcome trend | Classification | Confidence |
-| --- | --- | --- | --- | --- | --- | --- |
+| Product area | Related goals | Planned | Built | Experienced problem burden | Outcome trend | Evidence trust | Classification | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 Use qualitative low/medium/high labels unless exact allocation is directly supported. Sort by the largest meaningful gap after accounting for strategic bets, platform/reliability work, rollout lag, and data quality.
 
@@ -34,6 +34,8 @@ Allowed classifications:
 - too early / insufficient evidence.
 
 `impact failure` and `paying off` require verified audience exposure plus an elapsed outcome window and trustworthy measurement. A merge, completed issue, or intended launch is insufficient. If those gates are missing, use planning drift, investment misalignment, or too early / insufficient evidence.
+
+Use `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` in Evidence trust for the behavioral evidence carrying the row. Direct feedback can establish material burden while a separate adoption metric remains untrusted; describe the distinction.
 
 ## Selected-area investigation
 
@@ -62,6 +64,8 @@ Include:
 - **Confidence:** high, medium, or low, and the missing evidence that could change it.
 
 Express the tradeoff as a bounded tranche, workstream, or sequence unless an authoritative capacity plan supports an exact percentage. Never manufacture allocation precision from issue counts, PR counts, or qualitative scope bands.
+
+Name a displaced tranche only when it exists in planning evidence and is plausibly movable. When the evidence supports more investment but not its source, write `Tradeoff unresolved at the next planning checkpoint` and name the evidence required to choose it. Do not invent an “uncommitted expansion tranche.”
 
 Name an exact validation date or duration only when planning cadence or expected outcome lag supports it. Otherwise use the next named planning checkpoint, one complete measurement window after verified exposure, or the observable condition that starts evaluation.
 
@@ -105,6 +109,15 @@ When the caller asks to continue into experiment design, pass:
 
 Show this block only when the caller requests the handoff or experiment brief. Do not make it a second portfolio recommendation.
 
+## Lifecycle handoffs
+
+- Use `verify-instrumentation` when a decision-critical measure is disputed, zero, or structurally incomplete.
+- Use `stress-test-plan` when a concrete plan already exists for the selected bet and its mechanism has not been challenged.
+- Use `goal-to-experiment` when the selected outcome needs a reversible rollout and evaluation contract.
+- Use `verify-impact` after exposure to determine whether the funded change worked.
+
+Offer only the immediate next gate.
+
 ## HTML report
 
 When the host can write files, create one standalone dependency-free document named `build-investment-YYYY-MM-DD.html` unless the caller provides another name.
@@ -132,9 +145,11 @@ Return the report path plus the generated thesis and recommended bet.
 - Investment avoids surveillance-flavored proxies.
 - Highest friction and highest reachable impact were compared.
 - Missing events and zeros were checked for instrumentation gaps.
+- Decision-critical behavioral evidence carries an explicit instrumentation-trust verdict.
 - Facts, correlations, and hypotheses are distinguishable.
 - The recommendation beats a named alternative.
 - One clear investment bet and validation window are present.
 - The first slice's direct effect is separated from the broader mismatch.
 - Exact capacity percentages appear only when an authoritative capacity plan supports them.
 - Impact classifications pass the exposure, lag, and measurement gates.
+- The named tradeoff is evidenced; otherwise its unresolved planning decision is explicit.

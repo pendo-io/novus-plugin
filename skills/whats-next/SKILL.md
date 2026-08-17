@@ -23,6 +23,7 @@ Advice never grants execution authority. Either mode may recommend work; only th
 - Prefer continuity when evidence is close. Do not abandon in-flight work casually.
 - Distinguish proposed, merged, exposed, and measured work.
 - Account for rollout lag, broken instrumentation, and internal/test traffic.
+- Do not downgrade a candidate or claim customer impact from an untrusted measurement. Consume a current `verify-instrumentation` or `verify-impact` verdict when the decision depends on that evidence.
 
 ## Workflow
 
@@ -63,6 +64,14 @@ Read [references/evidence-map.md](references/evidence-map.md). Build a bounded s
 
 Start with Novus signals when they already join these layers. Deepen only the strongest one to three candidates. Repository context identifies work; it does not establish customer value.
 
+Before interpreting a behavioral zero, conversion, adoption trend, or post-ship movement that could change the choice:
+
+1. **REQUIRED SUB-SKILL:** Use `verify-instrumentation` for that surface when no current verdict exists and the capability is available. Otherwise apply its four verdict labels from the available evidence and disclose partial coverage.
+2. Treat `UNTRUSTED` as an evidence defect, not negative customer behavior. Treat `UNKNOWN` as a confidence limit.
+3. Use `verify-impact` for claims that a shipped candidate worked, failed, or deserves expansion. Without a qualifying verdict, stop at proposed, merged, exposed, or descriptive movement.
+
+Do not recreate either full workflow inside this skill. Carry forward its verdict, scope, window, and material limitation.
+
 Use saved goals as strategic evidence:
 
 1. Read active goal artifacts and their related product areas, launches, signals, metrics, issues, and PRs.
@@ -99,6 +108,10 @@ When applicable, identify:
 
 State what the slice directly fixes and what broader mismatch remains. Do not imply that a bounded fix resolves the whole product-area problem.
 
+Name an exact reassessment duration only when expected lag, traffic, experiment design, or a configured measurement window supports it. Otherwise use the next named planning checkpoint or the observable condition that starts a complete measurement window.
+
+When an implementation plan already exists for the selected slice, consume a current `stress-test-plan` verdict or offer that skill as the pre-code gate. A selected objective is not proof that its proposed mechanism is sound.
+
 ### 6. Respond or record
 
 Read [references/output-contract.md](references/output-contract.md) immediately before writing.
@@ -115,12 +128,14 @@ Lead the human response with the plain-language action, not the formal state or 
 
 When the selected move needs an engineering experiment, rollout, or measurement contract, offer a handoff to `goal-to-experiment`. Preserve the handoff fields defined in [references/output-contract.md](references/output-contract.md). Do not invoke the downstream skill automatically unless the caller requests the experiment brief.
 
+When the caller is ready to implement an existing plan, offer `stress-test-plan`. After verified exposure and the outcome window, route “did it work?” to `verify-impact`. These are lifecycle gates, not additional competing recommendations.
+
 ## Degraded behavior
 
 - **Novus unavailable:** allow current-scope CONTINUE, NARROW, PAUSE, or validation when engineering context is strong; never SWITCH from repository activity alone.
 - **No Linear/Jira path:** say roadmap intent is unavailable. Use explicit instructions and linked issue/PR provenance already present in Novus or GitHub. Allow safe current-scope continuation, narrowing, pausing, or validation; never START or SWITCH from repository activity alone. ESCALATE if missing roadmap intent changes the choice.
 - **GitHub unavailable:** lower shipping and current-work confidence; do not infer merge or exposure from issue state.
-- **Broken analytics:** recommend minimum instrumentation repair when it fits current scope; otherwise keep it proposed.
+- **Broken analytics:** use `verify-instrumentation` to name the smallest exact repair and proof. Apply it only when authorized and inside current scope; otherwise keep it proposed.
 - **Conflicting current work:** ESCALATE with one focused question when the ambiguity changes the choice.
 - **No material mismatch:** CONTINUE.
 - **Tool failure:** retry once, then proceed only if the remaining evidence meets the chosen state's burden.
