@@ -53,6 +53,10 @@ Translate product terms:
 
 Include baseline when trustworthy, direction or threshold, source, expected lag, and invalidation condition. Mark unsupported numeric thresholds `provisional`.
 
+State the exact audience, metric definition, denominator, unit, current window, and comparison window used for any reported movement. If they are incompatible, label the comparison `Not enough data` and use the mismatched value as context only.
+
+Whenever a saved goal has a target or deadline, include **Pacing: On track | At risk | Off track | Not enough data** with one plain-language reason. Use `Not enough data` when the numeric target, deadline, or comparable evidence needed for the calculation is missing. Describe pacing as a planning check, never a forecast.
+
 Include `Instrumentation: TRUSTED | DEGRADED | UNTRUSTED | UNKNOWN`. An `UNTRUSTED` primary outcome makes repair plus an observed end-to-end recheck a pre-launch gate.
 
 After exposure and the review point, pass this contract to `verify-impact`. Do not declare the experiment successful or unsuccessful from this pre-release brief.
@@ -65,6 +69,15 @@ Keep this compact and below the engineering action:
 | --- | --- | --- | --- | --- | --- |
 
 Use `Helping`, `Hurting`, or `Uncertain`; and `fact`, `correlation`, or `Novus hypothesis`. Plainly separate observability benefits from preventing user failures.
+
+### Measurement follow-up
+
+When at least one decision-relevant gap exists, include this exact table immediately after **How Novus will evaluate it**:
+
+| Type | Missing or unreliable | Why it matters | Novus next step |
+| --- | --- | --- | --- |
+
+Use one row per `instrumentation`, `dataAvailability`, `sampleSufficiency`, or `sourceLink` gap. Make every next step specific and Novus-owned. Omit the section only when no decision-relevant gap exists; do not turn a Novus-owned gap into a question for the engineer.
 
 ### Assumptions and handoff
 
@@ -106,6 +119,8 @@ Use the right chart for the metric. Keep the file responsive, printable, depende
 - Observability value is not confused with fewer user failures.
 - The rollout and rollback are implementable.
 - The evaluation plan uses plain language and a clear decision rule.
+- Reported movement preserves audience, definition, denominator, unit, and compatible windows; pacing is labeled as a planning check.
+- Decision-relevant measurement gaps have one type and an exact Novus-owned follow-up.
 - Assumptions are explicit; missing product fields did not become unnecessary questions.
 - No production-facing change occurs without authority.
 - Numeric splits, thresholds, durations, and guardrails are sourced or explicitly provisional pre-launch decisions.

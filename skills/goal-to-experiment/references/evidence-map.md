@@ -2,6 +2,20 @@
 
 Novus MCP tool names are namespaced differently by each host. Match the suffix, such as `listSignals`, instead of the full identifier.
 
+## Contents
+
+- Bootstrap from the selected outcome and current work
+- Select the relevant goal
+- Measure the outcome
+- Compare evidence and assess pace
+- Explain why
+- Apply evidence admission rules
+- Classify measurement gaps
+- Preserve provenance
+- Action surfaces
+- Evidence honesty
+- Efficient order
+
 ## Bootstrap from the selected outcome and current work
 
 Begin with the saved goal, provisional outcome, portfolio bet, or bounded move supplied by the caller or an upstream skill. Preserve its scope. When no outcome is supplied, use only a directly linked goal or issue/PR outcome; do not rank unrelated goals or choose the portfolio priority here.
@@ -52,6 +66,27 @@ The primary outcome answers whether users or the business improved. An early ind
 
 Carry the instrumentation verdict, checked surface, window, and repair into the experiment brief. Prefer existing Novus Page, Feature, Track Event, funnel, journey, and automatic instrumentation coverage. Add net-new manual tracking only when the desired semantic outcome or guardrail cannot be represented by supported coverage.
 
+## Compare evidence and assess pace
+
+Before calculating a delta or pace, confirm that current and reference evidence preserve:
+
+- the same audience and identity filters;
+- the same metric definition, denominator, and unit;
+- compatible attribution and maturity windows;
+- comparable traffic exclusions and instrumentation definitions.
+
+Prefer the immediately preceding equal-length window. Use a goal-defined or seasonally relevant comparison instead when it better represents the decision, but name it explicitly. If a source cannot provide a compatible comparison, retain its value only as labeled context; do not blend it into the delta, trend, or pacing calculation.
+
+When a numeric target, deadline, and comparable observations exist, normalize movement so positive means progress toward the target:
+
+```text
+observedChange = direction * (current - reference)
+periodsRemaining = daysRemaining / comparisonWindowDays
+requiredChangePerPeriod = direction * (target - current) / periodsRemaining
+```
+
+Return `On track` when the target is reached or observed change meets the required change, `At risk` when movement is toward the target but slower, `Off track` when movement is flat, away from the target, or overdue below target, and `Not enough data` when comparable values, a numeric target, or the deadline is missing. If the deadline has passed, do not divide. This is a straight-line planning check, not a forecast.
+
 ## Explain why
 
 | Evidence | Preferred capabilities | Engineering use |
@@ -63,6 +98,33 @@ Carry the instrumentation verdict, checked surface, window, and repair into the 
 | Operational evidence | connected systems or user-provided data | Measure support, incident, investigation, reliability, or delivery outcomes directly. |
 
 Start broad, then deepen the strongest candidate cause. Do not sweep every source.
+
+## Apply evidence admission rules
+
+| Candidate evidence | Admit when | Treatment |
+| --- | --- | --- |
+| Signal | Its supporting evidence connects through the selected audience, behavior, goal-linked artifact, or measure. | Preserve its canonical link and limits. Topic similarity alone is insufficient. |
+| Replay, conversation, or message | It shows behavior relevant to the selected outcome and audience. | Use as an illustration. Do not infer prevalence from one example. |
+| Aggregate behavior | The population, definition, and window are compatible with the decision. | Use for reach, prevalence, or comparison; name material limits. |
+| PR, release, flag, or guide | Its delivery and exposure timing are known or explicitly unknown. | Use as timing context. Do not treat delivery as proof of impact. |
+| Provider item without a URL | The provider returned the evidence but no canonical link. | Retain it with `sourceUrl: null` and create a `sourceLink` gap. Never synthesize a URL from an ID. |
+
+## Classify measurement gaps
+
+Every decision-relevant gap has one type and an exact Novus-owned follow-up:
+
+| Type | Use when | Follow-up shape |
+| --- | --- | --- |
+| `instrumentation` | A required event, property, identity, definition, mapping, or join is missing or broken. | Name the smallest repair and the observed end-to-end recheck. |
+| `dataAvailability` | A source exists but cannot return a usable window, series, segment, replay, or cohort. | Name the exact retrieval or source capability Novus should restore. |
+| `sampleSufficiency` | Evidence exists but volume or representativeness cannot support comparison or prevalence. | Name the audience, traffic, or sample condition required before deciding. |
+| `sourceLink` | Retained evidence has no provider-returned canonical URL. | Ask Novus to preserve or retrieve the canonical source link. |
+
+Record why the gap matters, `owner: Novus`, and the smallest next step. Deduplicate these gaps with the `verify-instrumentation` verdict. Missing evidence becomes a user question only when no safe reversible action remains.
+
+## Preserve provenance
+
+For each queried source, retain internally: retrieval time, requested audience and window, scanned count when available, retained evidence, rejected evidence and reason, and unavailable evidence. Provenance supports auditability; do not dump it into the engineering brief. Surface only the source, window, limitation, or follow-up that can change the recommendation.
 
 ## Action surfaces
 

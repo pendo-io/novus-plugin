@@ -13,6 +13,7 @@ Assume the upstream goal or outcome is selected but may be incomplete. Complete 
 - Exhaust read-only discovery before asking a question. Inspect the repository, current work, Novus context, goals, signals, metrics, and connected planning systems first.
 - Proceed with the most credible context. State medium-confidence assumptions; do not turn missing data into a blocker.
 - Use real evidence. Separate **verified facts**, **correlations**, and **Novus hypotheses**; timing alone does not prove causality.
+- Preserve comparison integrity. Compare the same audience, metric definition, denominator, unit, and compatible windows. Keep mismatched evidence as labeled context only; never use it to calculate movement or pace.
 - Treat broken instrumentation as an evidence problem, not real zero usage.
 - Prefer Novus's existing automatic instrumentation and artifact definitions. Never add duplicate manual events for supported Pages, Features, or flows; specify only the mapping, semantic property, or truly unsupported behavior still required.
 - Prefer one reversible, high-learning action over a backlog of generic recommendations.
@@ -68,7 +69,7 @@ If no saved goal fits, keep the selected outcome provisional and ground its meas
 
 Derive the primary user or business outcome, current state, target or direction, deadline, affected audience, early indicators, must-not-regress measures, expected lag, and data-quality limits.
 
-Calculate current versus required pace when the saved goal supports it. When target, baseline, deadline, or traffic is missing, label only that field `provisional` and continue.
+Calculate current versus required pace when the saved goal supports it, following the comparison and pacing rules in [references/evidence-map.md](references/evidence-map.md). Call pacing a planning check, never a forecast. When target, baseline, deadline, comparable evidence, or traffic is missing, label only that field `provisional` and continue.
 
 **REQUIRED SUB-SKILL:** Use `verify-instrumentation` when the baseline, goal measure, or decision rule depends on Pendo behavioral data and no current verdict exists. Carry forward its verdict and exact repair. Do not design a product experiment around an `UNTRUSTED` primary outcome; make the repair and observed recheck a pre-launch gate.
 
@@ -80,7 +81,11 @@ Gather a broad, inexpensive view, then deepen only decision-relevant evidence. B
 - **Hurting:** A material obstacle or adverse movement.
 - **Uncertain:** Coverage, timing, conflict, or data quality prevents a responsible conclusion.
 
-Preserve source, window, audience, relationship type, and confidence. Separate merge date from rollout and exposure. Check flags, overlapping changes, adoption lag, and instrumentation changes before attributing movement.
+Preserve source, window, audience, relationship type, and confidence. Retain a Signal only when its evidence connects to the selected outcome through a goal-linked audience, behavior, artifact, or measure; topic similarity alone is insufficient. Treat one replay, conversation, or message as an illustration rather than prevalence evidence.
+
+Separate merge date from rollout and exposure. Check flags, overlapping changes, adoption lag, and instrumentation changes before attributing movement. Preserve provider-returned canonical links; never construct a source URL from an ID.
+
+Classify each material evidence gap as `instrumentation`, `dataAvailability`, `sampleSufficiency`, or `sourceLink`. For each, record why it matters, owner `Novus`, and the smallest exact next step. Keep retrieval provenance internally and surface only gaps that can change the experiment or its evaluation.
 
 ### 5. Select one engineering experiment
 
@@ -95,6 +100,8 @@ When a concrete implementation plan already exists, consume a current `stress-te
 Read [references/output-contract.md](references/output-contract.md) immediately before responding. Lead with the engineering action, affected code or work surface, and user impact. Put the analytical evidence underneath it.
 
 Define user-visible behavior, technical acceptance criteria, tests, instrumentation, rollout, rollback, user outcome, early signal, must-not-regress measures, evaluation window, and decision rule.
+
+When the selected goal has a target or deadline, include an explicit `Pacing` status using the output contract. When any material evidence gap exists, include the required `Measurement follow-up` table with one Novus-owned action per gap.
 
 For instrumentation, state in order:
 
