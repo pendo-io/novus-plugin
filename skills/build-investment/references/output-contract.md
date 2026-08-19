@@ -1,98 +1,83 @@
 # Build Investment output contract
 
-Produce one portfolio investment decision, not a generic delivery dashboard. Never hide a coverage gap that could change the conclusion.
+Produce one portfolio investment decision, not a delivery dashboard. The reader should immediately understand where customers are struggling, where movable engineering investment is going instead, and the focus change that closes that gap.
 
-## Scope and coverage
+## Default focus brief
 
-State the application, planning period, customer-experience window, product areas reviewed, sources used, missing or expired integrations, internal/test filtering, and overall confidence.
+Return a response-only engineering brief of **180–260 words**, capped at **300 words**. Do not create an HTML report or standalone file.
 
-## Generated thesis
+Lead with a claim-first headline or opening sentence that names the focus change and the work that moves later or remains sustained. Within the first 100 words, state both sides of the allocation gap:
 
-Lead with one claim-first headline and a short paragraph answering:
+- the product path where customers are struggling and the concrete failure mode;
+- the material workstream currently receiving movable investment and what it builds.
 
-1. Where is the largest meaningful investment mismatch?
-2. Why does it matter to customers or the business?
+Use two or three plain headings when useful:
 
-Use only numbers that carry the decision. Do not open with PR count, issue count, cycle time, or generic health statistics.
+1. **Where investment is misaligned** — contrast customer burden with current investment. Do not merely label it a mismatch.
+2. **What should change** — name one focus shift, the direct work involved, what moves later, and what remains protected.
+3. **Why this focus** — explain why it beats the strongest alternative and give one short success check.
 
-## Investment map
+Do not require the phrase `Bottom line`. The recommendation itself should do that work.
 
-Show one row per normalized product area:
+## Engineer-to-engineer writing rules
 
-| Product area | Related goals | Planned | Built | Experienced problem burden | Outcome trend | Evidence trust | Classification | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+- Use active, concrete language. Sound like an engineer explaining a sequencing call to another engineer.
+- Describe work before citing it. Write `preserve fields that the builder does not model (INT-376)`, not `finish INT-376`.
+- Put issue keys, PR numbers, artifact IDs, and links in parentheses as supporting evidence. The brief must make sense without Linear, Jira, or GitHub open.
+- Explain what the current investment builds and why it does not address the customer failure.
+- Use only one to three metrics that materially change the decision.
+- Keep implementation detail to the smallest concrete description needed to understand the workstream.
+- Keep validation to one sentence unless measurement confidence changes the recommendation.
+- Avoid methodology, taxonomy, classifications, exhaustive coverage notes, long checklists, and generic portfolio language.
+- Avoid consultancy phrasing such as `value unlock`, `decision surface`, `the seam`, `bounded tranche`, or `close the delta`.
 
-Use qualitative low/medium/high labels unless exact allocation is directly supported. Sort by the largest meaningful gap after accounting for strategic bets, platform/reliability work, rollout lag, and data quality.
+## Required decision content
 
-Allowed classifications:
+The brief must cover:
 
-- planning drift;
-- investment misalignment;
-- impact failure;
-- paying off;
-- deliberate bet;
-- too early / insufficient evidence.
+- **Focus:** what should receive more, less, or sustained investment.
+- **Customer gap:** the observed product path, failure mode, and reachable audience.
+- **Current investment:** the workstream absorbing movable capacity and what it delivers.
+- **Change:** the smallest coherent workstream that should move next.
+- **Tradeoff:** the described work that moves later and the work that remains protected.
+- **Alternative:** the strongest competing focus and why it loses now.
+- **Check:** the outcome to inspect after verified exposure and one supported measurement window.
+- **Confidence:** one sentence naming the limitation most likely to change the decision.
 
-`impact failure` and `paying off` require verified audience exposure plus an elapsed outcome window and trustworthy measurement. A merge, completed issue, or intended launch is insufficient. If those gates are missing, use planning drift, investment misalignment, or too early / insufficient evidence.
+Do not render these as a field-by-field template. Write a short, connected brief.
 
-Use `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` in Evidence trust for the behavioral evidence carrying the row. Direct feedback can establish material burden while a separate adoption metric remains untrusted; describe the distinction.
+## Reference style
 
-## Selected-area investigation
+Treat identifiers as citations, not nouns:
 
-Write five connected blocks:
+> Stop chat edits from clearing step fields the model does not resend (INT-378).
 
-1. **What customers experience**
-2. **Who is affected**
-3. **What the team planned and built**
-4. **Why the mismatch persists**
-5. **Recommended bet**
+Avoid:
 
-For each material claim, include a stable identifier or link and distinguish fact, correlation, and Novus hypothesis when it matters.
+> Complete INT-378.
 
-## Recommended bet
+When several records support one workstream, describe the work once and group the references in parentheses.
 
-Include:
+## Detailed analysis
 
-- **Decision:** what to increase, decrease, or sustain.
-- **Tradeoff:** what should move later or remain protected.
-- **Why now:** decisive customer, business, planning, and delivery evidence.
-- **Expected movement:** primary outcome and leading indicator, with direction.
-- **Goal connection:** saved goal advanced, protected, or conflicted; use a provisional outcome when none fits.
-- **First action:** smallest planning, instrumentation, investigation, or delivery step.
-- **Validation window:** when to evaluate after exposure.
-- **Invalidation:** what should reverse or revise the bet.
-- **Confidence:** high, medium, or low, and the missing evidence that could change it.
+Only when the caller explicitly requests detail, put the focus brief first and add a Markdown appendix. The appendix may contain:
 
-Express the tradeoff as a bounded tranche, workstream, or sequence unless an authoritative capacity plan supports an exact percentage. Never manufacture allocation precision from issue counts, PR counts, or qualitative scope bands.
+- the full product-area investment map;
+- planned, built, experienced, and shipping-state evidence;
+- the selected-area investigation;
+- the goal audit;
+- the evidence ledger and coverage limitations.
 
-Name a displaced tranche only when it exists in planning evidence and is plausibly movable. When the evidence supports more investment but not its source, write `Tradeoff unresolved at the next planning checkpoint` and name the evidence required to choose it. Do not invent an “uncommitted expansion tranche.”
+Do not create a separate report file. Do not let appendix detail change the singularity of the recommendation.
 
-Name an exact validation date or duration only when planning cadence or expected outcome lag supports it. Otherwise use the next named planning checkpoint, one complete measurement window after verified exposure, or the observable condition that starts evaluation.
+## Evidence and trust
 
-Do not imply that the first slice fixes the entire portfolio mismatch. State its direct expected effect and what remains.
-
-## Evidence ledger
-
-Keep a compact traceability table:
-
-| Claim | Evidence | Source | Window/status | Confidence |
-| --- | --- | --- | --- | --- |
-
-Include only decision-relevant evidence. Preserve issue keys, initiatives, PRs, artifact IDs, and metric windows.
-
-## Gaps and cautions
-
-List only limitations that could materially change the investment decision: missing roadmap coverage, weak mappings, broken instrumentation, stale or narrow windows, internal traffic, open outcome lag, or conflicting goals.
-
-## Next actions
-
-End with:
-
-1. the planning decision to make now;
-2. the first work item or investigation to draft;
-3. the outcome to review and when.
-
-Do not mutate external systems without explicit authorization.
+- Use a credible estimate or capacity denominator before stating allocation percentages.
+- Never use raw PR, commit, line, issue, or hour counts as effort proxies.
+- Use qualitative workstream concentration when estimate coverage is weak.
+- Carry `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` internally for decision-critical behavior; expose the verdict only when it changes the recommendation.
+- Do not call shipped work successful or failed without verified exposure, elapsed lag, and trustworthy outcome measurement.
+- Treat missing instrumentation as missing evidence, not zero demand or impact.
 
 ## Goal-to-experiment handoff
 
@@ -101,55 +86,22 @@ When the caller asks to continue into experiment design, pass:
 - `selectedOutcome`: the exact portfolio bet or provisional outcome;
 - `goalId`: the directly related saved goal, or null;
 - `decisionSource`: `build-investment`;
-- `whySelected`: why this mismatch beat the strongest alternative;
-- `evidence`: stable IDs and windows for the decisive portfolio evidence;
-- `constraints`: protected investments, deferred scope, authority, and must-not-regress conditions;
-- `validationWindow`: when the bet should be evaluated after exposure;
+- `whySelected`: why this focus beat the strongest alternative;
+- `evidence`: stable IDs and windows for decisive evidence;
+- `constraints`: protected investments, deferred scope, and must-not-regress conditions;
+- `validationWindow`: when to evaluate after exposure;
 - `invalidationCondition`: what would reverse or revise the bet.
 
-Show this block only when the caller requests the handoff or experiment brief. Do not make it a second portfolio recommendation.
-
-## Lifecycle handoffs
-
-- Use `verify-instrumentation` when a decision-critical measure is disputed, zero, or structurally incomplete.
-- Use `stress-test-plan` when a concrete plan already exists for the selected bet and its mechanism has not been challenged.
-- Use `goal-to-experiment` when the selected outcome needs a reversible rollout and evaluation contract.
-- Use `verify-impact` after exposure to determine whether the funded change worked.
-
-Offer only the immediate next gate.
-
-## HTML report
-
-When the host can write files, create one standalone dependency-free document named `build-investment-YYYY-MM-DD.html` unless the caller provides another name.
-
-Use this hierarchy:
-
-1. `BUILD INVESTMENT` eyebrow, timeframe, application, sources, and coverage;
-2. generated thesis;
-3. investment map with Planned, Built, and Experienced bands;
-4. selected-area investigation;
-5. prominent recommended-bet strip;
-6. evidence ledger, method, confidence, and missing coverage.
-
-Use a light, calm, analytical, responsive, and printable design. Avoid card-heavy widget grids and false-precision bars. Make labels accessible without relying on color. Use no external scripts, fonts, or network dependencies. Keep the full conclusion visible for static and printed use.
-
-Return the report path plus the generated thesis and recommended bet.
+Show this only when requested. Do not make it a second portfolio recommendation.
 
 ## Final check
 
-- Planned, Built, Experienced, and shipping state are distinct.
-- Saved goals are treated as strategic intent, not proof of impact.
-- The finding is a decision, not a recap.
-- Strategic, platform, reliability, and compliance bets were not mislabeled as waste.
-- Release and adoption lag were considered.
-- Investment avoids surveillance-flavored proxies.
-- Highest friction and highest reachable impact were compared.
-- Missing events and zeros were checked for instrumentation gaps.
-- Decision-critical behavioral evidence carries an explicit instrumentation-trust verdict.
-- Facts, correlations, and hypotheses are distinguishable.
-- The recommendation beats a named alternative.
-- One clear investment bet and validation window are present.
-- The first slice's direct effect is separated from the broader mismatch.
-- Exact capacity percentages appear only when an authoritative capacity plan supports them.
-- Impact classifications pass the exposure, lag, and measurement gates.
-- The named tradeoff is evidenced; otherwise its unresolved planning decision is explicit.
+- The opening names the focus change.
+- Customer struggle and current movable investment are both clear within the first 100 words.
+- The recommendation answers “are we investing in the right place?” rather than summarizing product health.
+- Work descriptions come before ticket or PR references.
+- The displaced and protected work are explicit.
+- The strongest alternative is named.
+- No more than three decision-carrying metrics appear.
+- The default response is 180–260 words and at most 300.
+- No HTML or standalone report is produced.

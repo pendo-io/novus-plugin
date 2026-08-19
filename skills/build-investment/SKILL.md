@@ -7,6 +7,25 @@ description: Use when a leader asks whether engineering investment is going to t
 
 Answer one portfolio question: **Are we investing engineering effort where it can create the most customer and business value?** Lead with the largest meaningful mismatch and recommend one investment bet.
 
+## Voice and narrative
+
+Write like an engineer briefing another engineer who needs to make a scope and sequencing decision. Make the investment takeaway obvious immediately:
+
+1. **Where customers are struggling:** name the product path and concrete failure mode.
+2. **Where the team is investing instead:** name the material current work and what it builds.
+3. **What should change:** name one focus shift, what moves later, and what remains protected.
+4. **Why this focus wins:** compare it briefly with the strongest alternative.
+
+The default response is a **180–260 word focus brief**, capped at **300 words**. The first paragraph or claim-first headline must say what to focus on and what to delay or sustain. Within the first 100 words, state both sides of the allocation gap: customers are struggling in one place while movable engineering investment is going somewhere else.
+
+Use two or three plain focus-area headings when they improve scanning, such as `Where investment is misaligned`, `What should change`, and `Why this focus`. Do not use `Bottom line` as a required label. Do not turn the brief into a specification, implementation plan, methodology recap, or evidence dump.
+
+Describe work before citing its record. Write `stop builder rebuilds from deleting unmodeled fields (INT-376)`, not `finish INT-376`. Treat issue keys, PR numbers, artifact IDs, and links as supporting references in parentheses; the brief must remain understandable when no planning tool is open.
+
+Prefer concrete engineering language: `workstream`, `product path`, `dependency`, `failure mode`, `merged`, `exposed`, `measured`, `rework`, and `acceptance criteria`. Avoid consultancy language, abstract framework labels, throat-clearing, and phrases such as `generated thesis`, `decision surface`, `value unlock`, `the seam`, or `bounded tranche`.
+
+Use only the one to three metrics that carry the decision. Give enough context to understand what current work builds, why it does not close the customer gap, and what capacity should move. Keep success criteria to one sentence unless they change the sequencing decision.
+
 ## Operating rules
 
 - Use real evidence. Never invent allocation, pain, metrics, roadmap intent, shipping state, or causality.
@@ -110,13 +129,24 @@ For this skill, goals define the intended portfolio. Evaluate them in both direc
 
 Respect active work and deliberate bets. Frame tradeoffs as planning-cycle choices, not automatic reprioritization.
 
-### 7. Render the decision surface
+### 7. Write the recommendation
 
 Read [references/output-contract.md](references/output-contract.md) immediately before writing.
 
-Create a shareable standalone HTML report when the host can write files, unless the caller requests response-only Markdown. Keep the thesis and recommended bet in the response. Do not generate a steering JSON record or alter an internal execution plan.
+Return a response-only focus brief. Do not create an HTML report, standalone file, steering JSON record, or internal execution plan. If the caller explicitly requests detailed analysis, put the focus brief first and add a Markdown appendix after it.
 
-After the portfolio bet is chosen, offer `goal-to-experiment` as the downstream step. Preserve the handoff fields in [references/output-contract.md](references/output-contract.md). Do not collapse experiment design into the portfolio report or invoke the downstream skill automatically.
+Before sending the response, check its length and structure:
+
+- The focus change appears in the first paragraph or headline.
+- The response is 180–260 words and never exceeds 300 words unless the caller explicitly requests detail.
+- The first 100 words name both sides: customer struggle and current movable investment.
+- It answers four questions: where investment is misaligned, what should change, what stays protected, and why this focus beats the alternative.
+- Every issue or PR reference follows a short plain-language description.
+- It uses no more than three decision-carrying metrics.
+- It does not include the full investment map, evidence ledger, methodology, planning-hygiene review, or a long implementation checklist.
+- Coverage limitations are compressed into one confidence sentence unless one changes the decision.
+
+After the portfolio bet is chosen, offer `goal-to-experiment` only when it is the immediate useful next step. Preserve the handoff fields in [references/output-contract.md](references/output-contract.md). Do not spend response space on lifecycle routing by default, collapse experiment design into the portfolio report, or invoke the downstream skill automatically.
 
 When a concrete implementation plan already exists for the selected bet, offer `stress-test-plan` before experiment design. After exposure, route the outcome decision to `verify-impact`.
 
