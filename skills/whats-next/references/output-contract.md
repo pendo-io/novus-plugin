@@ -44,25 +44,93 @@ Applied means the internal plan was actually changed. Proposed means it was not.
 
 ## Human response
 
-Lead with ordinary builder language:
+Make the decision understandable in one screen. Use this exact narrative order.
 
-1. **What to do next** — one actionable imperative.
-2. **Finish first**, when applicable — a PR, review, or validation gate.
-3. **Build next** — exactly one bounded new slice.
-4. **Do not start yet** — deferred work and its resume condition.
-5. **Why this order** — decisive Planned, Built, Experienced, and shipping evidence, plus why it beats the strongest alternative.
-6. **Goal connection** — the active goal advanced or protected, or the provisional outcome when no goal fits; state conflicts explicitly.
-7. **What this will and will not fix** — the slice's direct effect and the broader mismatch that remains.
-8. **How to validate** — immediate engineering acceptance separately from the later customer/business checkpoint.
-9. **Evidence trust** — when behavioral evidence materially affected the order, write `Instrumentation: TRUSTED | DEGRADED | UNTRUSTED | UNKNOWN` and include the checked surface/window. When prior impact affected the order, write the `verify-impact` verdict.
-10. **Confidence and limitation** — only gaps that could change the order.
-11. **Question**, only when one consequential decision is required.
+### 1. Named headline
+
+Open with a level-one heading:
+
+- `# <First name>'s next steps` when the caller names a builder, for example `# Joe's next steps`;
+- `# Your next steps` when speaking directly to the builder;
+- `# Next steps` only when no person can be identified.
+
+Never use the formal steering state, `What's next`, or `Do this next` as the page headline.
+
+### 2. Opening recommendation
+
+Immediately below the headline, write one short paragraph in ordinary engineering language. State the recommended order, the current finish gate, the next bounded slice, and the concrete reason for that order. A builder should know what to do without reading farther.
+
+Prefer:
+
+> Get `<current PR>` merged, then `<next bounded slice>` before returning to `<deferred work>`. `<Current gate>` is nearly done; `<next slice>` addresses `<specific customer or product problem>`.
+
+### 3. Do this next
+
+Use a `## Do this next` heading and a short numbered list:
+
+1. **Finish `<current gate>`.** State what remains before it is done.
+2. **Build `<one bounded slice>`.** Name the contextual signal or customer/product evidence and the goal or provisional outcome it advances. When an implementation already exists, say **repair**, **rebase**, **validate**, or **finish** it instead of proposing a second build.
+3. **Hold `<strongest deferred candidate>`.** State the exact resume condition and why it loses now.
+
+Use only applicable steps, but never hide the strongest deferred candidate. The action line is the answer; do not make the reader reconstruct it from evidence.
+
+After the list, translate the classified basis into one natural sentence: `This is a product-led call.`, `This is a customer-led call.`, `This is a continuity-led call.`, or `This is a validation-led call.`
+
+- `product-led`: trusted candidate-specific behavioral evidence materially changed the order.
+- `customer-led`: mapped feedback, support, or customer need materially changed the order.
+- `continuity-led`: product evidence was close, missing, or non-distinguishing, so delivery continuity decided the order.
+- `validation-led`: missing or untrusted evidence made repair or investigation the next move.
+
+Never call a decision product-led because app-wide activity exists or because active goals were listed. The evidence must map to the selected candidate and distinguish it from the strongest alternative.
+
+### 4. Why this order
+
+Use a `## Why this order` heading and at most four short bullets, in this priority order:
+
+- **Signal:** the issue or opportunity, its stable ID, and the concrete customer problem it represents.
+- **Goal:** the directly related saved goal and relationship. If none fits, say `No linked goal` and state the signal-backed provisional outcome.
+- **Product:** the narrow product metric, feedback theme, replay finding, or affected reach that distinguishes the choice. Say what customers are doing or failing to do.
+- **Delivery:** the decisive issue, PR, conflict, review, or exposure fact.
+
+Within those bullets, compare the strongest alternative at equivalent depth. Name its goal fit, candidate-specific product/customer evidence, and delivery state; do not merely say it is lower priority. If the alternative lacks evidence, say exactly what is missing.
+
+Before writing **Build**, reconcile the proposed slice with open and merged issues/PRs. Existing matching work belongs under **Finish**. Do not recommend rebuilding a customer request that a review-ready PR already implements.
+
+Within those bullets, state what the selected slice fixes and the broader problem it does not fix. Keep signals, goals, and other decision-changing evidence beside the recommendation they caused; do not add an evidence appendix.
+
+### 5. Validate now
+
+Use a `## Validate now` heading. Name the immediate engineering checks required before the work is considered ready: review, mergeability, CI, acceptance paths, instrumentation repair, or exposure proof. If a behavioral zero or trend is untrusted, say it was excluded from the ranking and name the verification required before it can be used.
+
+### 6. Reassess later
+
+Use a `## Reassess later` heading. State:
+
+- the later customer or business checkpoint and invalidation condition;
+- the sourced window, sample condition, named planning checkpoint, or observable event that starts reassessment;
+- confidence and only the material evidence or connector limitation that could change the order.
+
+Include `Instrumentation: TRUSTED | DEGRADED | UNTRUSTED | UNKNOWN` with the checked surface/window only when behavioral evidence affected the order. Otherwise explain naturally why an untrusted behavioral claim was excluded.
+
+Ask a question only when one consequential decision is required.
+
+Use an engineer-to-engineer voice throughout: short sentences, concrete nouns, explicit IDs, and direct verbs. Prefer “Users cannot tell what Seen it means” over “There is a comprehension mismatch in the analytics surface.” Avoid throat-clearing, strategy-deck language, repeated caveats, schema vocabulary, and a closing recap.
 
 Do not use the formal state as an unexplained headline. Translate it first; when useful, show it later as secondary metadata such as `Steering state: NARROW`.
 
 For NARROW, prefer:
 
-> Finish `<existing gate>`. Then build `<one bounded slice>`. Do not begin `<deferred work>` until `<resume condition>`.
+> # Joe's next steps
+>
+> Get `<existing gate>` finished, then `<one bounded slice>` before returning to `<deferred work>`. The next slice addresses `<specific customer or product problem>`.
+>
+> ## Do this next
+>
+> 1. **Finish `<existing gate>`.** `<remaining gate>`.
+> 2. **Build `<one bounded slice>`.** `<signal/customer evidence>`; this advances `<goal or provisional outcome>`.
+> 3. **Hold `<deferred work>`.** Resume when `<condition>`.
+>
+> This is a customer-led call.
 
 Avoid “host plan mechanism,” “plan delta,” and schema vocabulary unless the caller asks. State external-action status naturally.
 
@@ -97,12 +165,20 @@ Offer only the handoff that matches the immediate next decision. Do not turn the
 - The current objective is supported by engineering context.
 - Linear/Jira coverage states whether Novus-native access, direct connector access, both, or neither was available; duplicate issue records are not treated as independent evidence.
 - The recommendation beats a named alternative.
+- The response opens with the named builder's next-steps headline and a short recommendation paragraph.
+- The decision basis sentence sounds natural and matches what actually changed the order.
+- The current objective and strongest alternative received comparable product-evidence depth.
+- Every decisive product or customer source maps directly to the candidate's objective, artifact, flow, or owned surface.
+- App-wide usage is not presented as candidate-specific demand unless the objective itself is app-wide.
+- Full goal relationships were checked; duplicate, elapsed, unmeasured, and unrelated goals do not count as alignment.
+- A new build is not recommended when the same outcome already has an implementation or review-ready PR.
 - Goal alignment is treated as strategic evidence, not proof of impact.
 - Decision-critical behavioral evidence carries an explicit `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` instrumentation verdict; untrusted zeros do not count against a candidate.
 - Shipped work is not called effective or ineffective without a qualifying impact verdict or equivalent gates.
 - Planned, Built, Experienced, and shipping evidence remain distinct.
 - Recent work is not called impactful before measurement.
 - The formal state is translated before it is named.
+- The headings read as a developer handoff: **Do this next**, **Why this order**, **Validate now**, and **Reassess later**.
 - Finish work, the next build, deferred work, and validation are not conflated.
 - The slice's direct effect is separated from the broader product mismatch.
 - One validation window and invalidation condition are present.
