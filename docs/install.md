@@ -85,17 +85,6 @@ For Gemini CLI, add the same server under `mcpServers` in `~/.gemini/settings.js
 
 ## Verifying it works
 
-For `verify-impact`, ask: `Did this shipped change work, and should we expand it?` You should receive one impact verdict,
-the last verified shipping state, an instrumentation-trust assessment, and one next action.
-
-For `verify-instrumentation`, ask: `Can I trust the data for this feature or funnel?` You should receive a targeted
-`TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` verdict. When the Data Validation capability is available, the skill
-uses live arrival, Page/Feature/Track Event matching, explicit gaps, and the permissioned Teach Novus repair flow.
-
-For `stress-test-plan`, supply an implementation plan and ask what could make it a bad build. You should receive one
-pre-build verdict, no more than three plan-breaking risks, and a stronger first slice without a long requirements
-questionnaire.
-
 For `ux-review`, ask for a UX review in a repo with UI changes in the working tree. You should see either a short report
 anchored to `path:line`, or the single line `No UX concerns in these changes.`
 
@@ -104,15 +93,10 @@ what to build, what to defer, and how to validate it. The skill uses Novus-nativ
 available to the coding agent, or a clearly disclosed fallback when neither exists.
 
 For `build-investment`, ask: `Compare what we planned, built, and customers experienced this quarter. Are we investing
-in the right places?` You should receive a generated thesis, investment map, selected-area investigation, and one
-recommended portfolio bet. It resolves Novus-native or direct Linear/Jira planning sources without double-counting
-matching issues; when neither exists, it discloses that roadmap intent is unconfirmed. When file output is available,
-the skill also writes a standalone HTML report.
-
-For `goal-to-experiment`, supply the selected goal, provisional outcome, portfolio bet, or bounded move and ask: `Turn
-this into a reversible experiment with acceptance criteria, rollout, rollback, and a measurement plan.` You should
-receive one engineering-ready experiment brief; it should reuse automatic Novus instrumentation where supported and
-pass the post-release decision to `verify-impact` rather than reprioritizing the portfolio or choosing unrelated work.
+in the right places?` You should receive a short focus brief that contrasts customer struggle with current engineering
+investment, recommends one sequencing change, preserves the strongest alternative, and describes tickets before citing
+their IDs. It resolves Novus-native or direct Linear/Jira planning sources without double-counting matching issues; when
+neither exists, it discloses that roadmap intent is unconfirmed.
 
 If the report opens with `Running without Novus data — code-observable findings only.`, the skill loaded but the MCP
 server did not connect. The review is still valid; it just has no analytics behind it. It will close with a one-line

@@ -136,9 +136,9 @@ Avoid “host plan mechanism,” “plan delta,” and schema vocabulary unless 
 
 Do not invent a reassessment duration. Use a sourced outcome lag, configured window, sufficient-sample condition, or named planning checkpoint.
 
-## Goal-to-experiment handoff
+## Optional implementation handoff
 
-When the caller asks to continue into experiment design, pass this compact contract without re-running portfolio selection:
+When the caller asks to continue into experiment or rollout design, pass this compact contract without re-running work selection:
 
 - `selectedOutcome`: the exact chosen objective or provisional outcome;
 - `goalId`: the directly related saved goal, or null;
@@ -151,14 +151,14 @@ When the caller asks to continue into experiment design, pass this compact contr
 
 Include this as a visible block only when the caller requests the handoff or experiment brief. Otherwise keep it implicit in the response.
 
-## Lifecycle handoffs
+## Immediate next gate
 
-- **Plan exists but implementation has not started:** offer `stress-test-plan` as the next gate.
-- **Outcome is selected and needs rollout/measurement design:** offer `goal-to-experiment`.
-- **Measurement is broken or disputed:** use `verify-instrumentation` before interpreting it.
-- **Work is exposed and the caller asks whether it worked:** use `verify-impact`.
+- **Plan exists but implementation has not started:** name the highest-risk mechanism assumption and smallest pre-code check.
+- **Outcome is selected and needs rollout/measurement design:** offer the compact implementation handoff above.
+- **Measurement is broken or disputed:** name the exact instrumentation repair and observed proof required before interpretation.
+- **Work is exposed and the caller asks whether it worked:** require exposure, elapsed-window, trusted-measurement, outcome, guardrail, and competing-change evidence.
 
-Offer only the handoff that matches the immediate next decision. Do not turn the response into a menu of skills.
+Offer only the gate that matches the immediate next decision. Do not turn the response into a workflow menu.
 
 ## Final check
 

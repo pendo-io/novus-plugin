@@ -64,9 +64,9 @@ Read [references/evidence-map.md](references/evidence-map.md). For each product 
 
 Collect a broad inexpensive view first. Deepen only the strongest one to three candidate mismatches.
 
-For decision-critical behavioral evidence, reuse or run `verify-instrumentation` when available. Carry its `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` verdict into the investment map. An untrusted zero cannot establish low demand, impact failure, or over-investment.
+For every decision-critical behavioral measure, assign an explicit `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` verdict. Check live arrival, artifact matching, definitions, continuity, audience, and required flow coverage with available Novus evidence. An untrusted zero cannot establish low demand, impact failure, or over-investment.
 
-For material shipped work, reuse `verify-impact` when available before classifying it as **paying off** or **impact failure**. Otherwise apply the same gates explicitly: verified exposure, elapsed outcome window, trusted measurement, outcome movement, and guardrails. Do not recreate either full workflow here.
+Before classifying material shipped work as **paying off** or **impact failure**, verify exposure, elapsed outcome window, measurement trust, outcome movement, guardrails, and plausible competing changes. Stop at the last verified shipping state when any gate is missing.
 
 ### 4. Compare investment with burden and outcomes
 
@@ -146,9 +146,7 @@ Before sending the response, check its length and structure:
 - It does not include the full investment map, evidence ledger, methodology, planning-hygiene review, or a long implementation checklist.
 - Coverage limitations are compressed into one confidence sentence unless one changes the decision.
 
-After the portfolio bet is chosen, offer `goal-to-experiment` only when it is the immediate useful next step. Preserve the handoff fields in [references/output-contract.md](references/output-contract.md). Do not spend response space on lifecycle routing by default, collapse experiment design into the portfolio report, or invoke the downstream skill automatically.
-
-When a concrete implementation plan already exists for the selected bet, offer `stress-test-plan` before experiment design. After exposure, route the outcome decision to `verify-impact`.
+Keep experiment design, detailed plan review, and post-release impact evaluation outside this skill. Name only the immediate next decision when a handoff is useful; do not turn the brief into a lifecycle menu.
 
 ## Degraded behavior
 
@@ -156,11 +154,11 @@ When a concrete implementation plan already exists for the selected bet, offer `
 - **No Linear/Jira path:** compare Built versus Experienced and say `cannot confirm this is on the roadmap`. Do not infer planned investment from repository activity.
 - **GitHub unavailable:** use completed issues and PR provenance already present in Novus; lower confidence in built investment.
 - **Sparse taxonomy:** build a provisional map and disclose weak mappings.
-- **Broken analytics:** use `verify-instrumentation` to name the smallest exact repair and observed proof; avoid interpreting zeros.
+- **Broken analytics:** name the smallest exact instrumentation repair and the observed proof required before interpreting the measure; avoid interpreting zeros.
 - **Sparse evidence:** return a smaller, lower-confidence portfolio conclusion instead of generic advice.
 - **Conflicting evidence:** show the conflict and prefer the most direct current source.
 - **Tool failure:** retry a failed read once, then continue with remaining evidence and disclose the limitation.
 
 ## Scope boundary
 
-Do not use this skill for an individual engineer's next task, autonomous plan steering, sprint velocity reporting, individual performance evaluation, code implementation, automatic backlog management, deployment decisions, or detailed experiment design. Use `whats-next` for current-work steering and `goal-to-experiment` after the investment bet is selected.
+Do not use this skill for an individual engineer's next task, autonomous plan steering, sprint velocity reporting, individual performance evaluation, code implementation, automatic backlog management, deployment decisions, or detailed experiment design. Use `whats-next` for current-work steering.

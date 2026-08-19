@@ -75,7 +75,7 @@ Estimate effort with relative scope/complexity bands and delivery context. Never
 
 Use the narrowest metric that answers the investment question. Do not narrate every available metric.
 
-Attach a targeted `verify-instrumentation` verdict to every behavioral measure capable of changing allocation. Use `verify-impact` for material claims that shipped work paid off or failed. Several metrics derived from one untrusted artifact do not become trustworthy through repetition.
+Attach an explicit `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` instrumentation verdict to every behavioral measure capable of changing allocation. For material claims that shipped work paid off or failed, verify exposure, elapsed outcome window, trusted measurement, outcome movement, guardrails, and competing changes. Several metrics derived from one untrusted artifact do not become trustworthy through repetition.
 
 ## Efficient query order
 

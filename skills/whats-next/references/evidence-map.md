@@ -126,7 +126,7 @@ Before querying, write the distinguishing question in plain language, for exampl
 
 Generic active visitors, accounts, or event volume establish that the app is used. They do not establish demand for a specific MCP tool, CLI flow, metadata field, or UI change. Likewise, a signal or metric from another product area cannot fill a candidate's Experienced slot.
 
-For decision-critical behavioral evidence, consume a targeted `verify-instrumentation` verdict rather than inferring trust from the presence of an artifact or dashboard. For a claim that shipped work succeeded or failed, consume `verify-impact` or apply its exposure, elapsed-window, trusted-measurement, outcome, and guardrail gates. Preserve the verdict and checked window with the evidence record.
+For decision-critical behavioral evidence, assign an explicit instrumentation verdict after checking arrival, recognition, definition, continuity, audience, and required flow coverage rather than inferring trust from the presence of an artifact or dashboard. For a claim that shipped work succeeded or failed, apply exposure, elapsed-window, trusted-measurement, outcome, guardrail, and competing-change gates. Preserve the verdict and checked window with the evidence record.
 
 ## Efficient query order
 
@@ -156,5 +156,5 @@ For decision-critical behavioral evidence, consume a targeted `verify-instrument
 - A goal list is not goal alignment; open relationships and reject duplicates, elapsed targets, and unrelated goals.
 - Customer evidence must map to the candidate's surface and scope before it can change rank.
 - A saved goal proves strategic intent, not implementation impact or causality.
-- A `TRUSTED` instrumentation verdict proves fitness for its stated decision, not causality; post-ship causality still belongs to `verify-impact`.
+- A `TRUSTED` instrumentation verdict proves fitness for its stated decision, not causality; post-ship claims still require exposure, timing, outcome, guardrail, and competing-change checks.
 - Preserve issue keys, PR numbers, artifact IDs, metric windows, and links.

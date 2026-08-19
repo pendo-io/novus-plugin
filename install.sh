@@ -24,7 +24,7 @@ Or from this clone:
   claude plugin marketplace add $ROOT
   claude plugin install novus@pendo
 
-Restart Claude Code, then ask for a UX review, what to build next, a build investment review, or an experiment brief. On the first Novus tool call
+Restart Claude Code, then ask for a UX review, what to build next, or a build investment review. On the first Novus tool call
 Claude opens a browser to sign in to Pendo and pick a subscription + app.
 EOF
 }
@@ -36,7 +36,7 @@ Gemini CLI — run one of these:
   gemini extensions install $REPO_URL
   gemini extensions link $ROOT      # development: symlink this clone
 
-Restart Gemini CLI, then ask for a UX review, what to build next, a build investment review, or an experiment brief.
+Restart Gemini CLI, then ask for a UX review, what to build next, or a build investment review.
 EOF
 }
 
@@ -69,7 +69,7 @@ On that path, add the Novus MCP server yourself:
 
   codex mcp add novus --transport streamable-http --url https://novus-api.pendo.io/mcp
 
-Restart Codex, then ask for a UX review, what to build next, a build investment review, or an experiment brief.
+Restart Codex, then ask for a UX review, what to build next, or a build investment review.
 EOF
 }
 

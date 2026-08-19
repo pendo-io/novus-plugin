@@ -23,7 +23,7 @@ Advice never grants execution authority. Either mode may recommend work; only th
 - Prefer continuity when evidence is close. Do not abandon in-flight work casually.
 - Distinguish proposed, merged, exposed, and measured work.
 - Account for rollout lag, broken instrumentation, and internal/test traffic.
-- Do not downgrade a candidate or claim customer impact from an untrusted measurement. Consume a current `verify-instrumentation` or `verify-impact` verdict when the decision depends on that evidence.
+- Do not downgrade a candidate or claim customer impact from an untrusted measurement. Assign an explicit instrumentation-trust verdict and apply exposure and impact gates when the decision depends on behavioral or post-ship evidence.
 
 ## Workflow
 
@@ -100,11 +100,11 @@ The recommendation must make Novus's contribution visible:
 
 Before interpreting a behavioral zero, conversion, adoption trend, or post-ship movement that could change the choice:
 
-1. **REQUIRED SUB-SKILL:** Use `verify-instrumentation` for that surface when no current verdict exists and the capability is available. Otherwise apply its four verdict labels from the available evidence and disclose partial coverage.
+1. Assign `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` after checking live arrival, artifact matching, definitions, continuity, audience, and required flow coverage with available Novus evidence.
 2. Treat `UNTRUSTED` as an evidence defect, not negative customer behavior. Treat `UNKNOWN` as a confidence limit.
-3. Use `verify-impact` for claims that a shipped candidate worked, failed, or deserves expansion. Without a qualifying verdict, stop at proposed, merged, exposed, or descriptive movement.
+3. For claims that a shipped candidate worked, failed, or deserves expansion, verify exposure, elapsed outcome window, measurement trust, outcome movement, guardrails, and plausible competing changes. Otherwise stop at proposed, merged, exposed, or descriptive movement.
 
-Do not recreate either full workflow inside this skill. Carry forward its verdict, scope, window, and material limitation.
+Carry forward the verdict, scope, window, and material limitation without expanding this skill into a full instrumentation or post-release audit.
 
 Use saved goals as strategic evidence:
 
@@ -149,7 +149,7 @@ Keep the decision basis internally exact, but translate it for the builder as a 
 
 Name an exact reassessment duration only when expected lag, traffic, experiment design, or a configured measurement window supports it. Otherwise use the next named planning checkpoint or the observable condition that starts a complete measurement window.
 
-When an implementation plan already exists for the selected slice, consume a current `stress-test-plan` verdict or offer that skill as the pre-code gate. A selected objective is not proof that its proposed mechanism is sound.
+When an implementation plan already exists for the selected slice, state the highest-risk assumption and the smallest pre-code check needed to validate the mechanism. A selected objective is not proof that its proposed mechanism is sound.
 
 ### 6. Respond or record
 
@@ -165,20 +165,18 @@ Require exit code 0 and preserve the exact success line `Decision record is vali
 
 Lead the human response with the plain-language action, not the formal state or validation machinery. Report external-action status naturally, for example: “This is a recommendation; I changed no code, issues, or PRs.”
 
-When the selected move needs an engineering experiment, rollout, or measurement contract, offer a handoff to `goal-to-experiment`. Preserve the handoff fields defined in [references/output-contract.md](references/output-contract.md). Do not invoke the downstream skill automatically unless the caller requests the experiment brief.
-
-When the caller is ready to implement an existing plan, offer `stress-test-plan`. After verified exposure and the outcome window, route “did it work?” to `verify-impact`. These are lifecycle gates, not additional competing recommendations.
+When the selected move needs an engineering experiment, rollout, or measurement contract, offer a compact implementation handoff using the fields in [references/output-contract.md](references/output-contract.md). Do not generate the full experiment brief unless the caller requests it.
 
 ## Degraded behavior
 
 - **Novus unavailable:** allow current-scope CONTINUE, NARROW, PAUSE, or validation when engineering context is strong; never SWITCH from repository activity alone.
 - **No Linear/Jira path:** say roadmap intent is unavailable. Use explicit instructions and linked issue/PR provenance already present in Novus or GitHub. Allow safe current-scope continuation, narrowing, pausing, or validation; never START or SWITCH from repository activity alone. ESCALATE if missing roadmap intent changes the choice.
 - **GitHub unavailable:** lower shipping and current-work confidence; do not infer merge or exposure from issue state.
-- **Broken analytics:** use `verify-instrumentation` to name the smallest exact repair and proof. Apply it only when authorized and inside current scope; otherwise keep it proposed.
+- **Broken analytics:** name the smallest exact instrumentation repair and observed proof. Apply it only when authorized and inside current scope; otherwise keep it proposed.
 - **Conflicting current work:** ESCALATE with one focused question when the ambiguity changes the choice.
 - **No material mismatch:** CONTINUE.
 - **Tool failure:** retry once, then proceed only if the remaining evidence meets the chosen state's burden.
 
 ## Scope boundary
 
-Do not use this skill for a broad “are we investing in the right product areas?” portfolio review, generic roadmap summaries, individual performance evaluation, automatic backlog management, code implementation, deployment decisions, or detailed experiment design. Use `build-investment` for portfolio allocation and `goal-to-experiment` after the next move is selected.
+Do not use this skill for a broad “are we investing in the right product areas?” portfolio review, generic roadmap summaries, individual performance evaluation, automatic backlog management, code implementation, deployment decisions, or detailed experiment design. Use `build-investment` for portfolio allocation.

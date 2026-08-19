@@ -1,4 +1,0 @@
-interface:
-  display_name: "Verify Instrumentation"
-  short_description: "Check whether product data can be trusted"
-  default_prompt: "Use $verify-instrumentation to check whether I can trust the data for this feature or flow."
