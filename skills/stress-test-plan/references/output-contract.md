@@ -1,31 +1,39 @@
 # Stress Test Plan output contract
 
-Produce a concise pre-build decision, not a generic risk register.
+Produce a concise engineering decision, not a strategy memo or generic risk register.
 
 ## Required response
 
-### Plan verdict
+### Call
 
 Lead with:
 
 > **<PROCEED | REVISE | NARROW | STOP | NEEDS ONE ANSWER> — <plain-language instruction>.**
 
-Follow with the strongest reason not to build the original plan as written.
+Follow with the strongest concrete reason you would not implement the original plan as written.
 
-### Thesis under test
+### What the plan is betting on
 
-State the intended user/operational outcome, audience, proposed mechanism, and confidence. Mark assumptions plainly.
+State the intended outcome, affected users or operators, proposed mechanism, and confidence. Mark assumptions plainly. Use engineering language: inputs, behavior, dependencies, failure mode, and observable result.
 
-### Plan-breaking risks
+### What can break
 
-Show no more than three:
+Show no more than three. A compact table is allowed, but prefer numbered findings when a table makes the response sound like a template.
 
 | Risk | Evidence | Failure if ignored | Cheapest proof before coding | Required plan change |
 | --- | --- | --- | --- | --- |
 
 Rank known blockers above speculative risks. Include source IDs or links for material evidence.
 
-### Stronger first slice
+For each finding, say:
+
+- what is known versus inferred;
+- the product or repository evidence;
+- what fails if the plan is wrong;
+- the cheapest proof available before coding;
+- the exact change required.
+
+### The smaller plan I would ship
 
 State one bounded replacement plan:
 
@@ -41,11 +49,20 @@ State one bounded replacement plan:
 
 State whether Novus, repository, GitHub, and Linear/Jira evidence were available. Ask one question only with `NEEDS ONE ANSWER`; otherwise end with the revised plan, not an invitation to supply more requirements.
 
+## Voice check
+
+- Sound like an engineer protecting another engineer from expensive rework.
+- Prefer “the runtime cannot access this dependency” over “delivery confidence is low.”
+- Prefer “12 of 80 eligible users reached this step” over “engagement is weak.”
+- Prefer “prove this mapping with one fixture before adding the scheduler” over “conduct additional validation.”
+- Do not use phrases such as “strategic alignment,” “customer reality,” “value proposition,” or “stakeholder buy-in” when concrete system or behavior language is available.
+- Do not explain basic engineering concepts unless the evidence makes the explanation necessary.
+
 ## Verdict gates
 
 | Verdict | Gate |
 | --- | --- |
-| PROCEED | Thesis, sequence, scope, safety, and learning path are credible. |
+| PROCEED | Problem, mechanism, sequence, scope, safety, and learning path are credible. |
 | REVISE | Outcome remains sound, but a material mechanism or safety contract must change. |
 | NARROW | Outcome remains sound, but the first slice is too large, premature, or weakly testable. |
 | STOP | Direct evidence defeats the problem or mechanism and no responsible narrow slice remains. |
@@ -55,6 +72,8 @@ State whether Novus, repository, GitHub, and Linear/Jira evidence were available
 
 - The verdict appears before analysis.
 - The response names why this could be a bad build.
+- Relevant Novus product evidence changed a recommendation, or the response explicitly states why it was unavailable or untrustworthy.
+- Every product metric names its surface, audience, and window closely enough to audit.
 - Risks are plan-specific and evidence-backed.
 - No more than three risks appear.
 - The revised first slice is smaller and implementable.

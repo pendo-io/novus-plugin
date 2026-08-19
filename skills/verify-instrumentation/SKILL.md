@@ -1,98 +1,135 @@
 ---
 name: verify-instrumentation
-description: Use when someone asks whether product analytics, events, Pages, Features, Track Events, funnels, journeys, goals, or post-release measurements are accurate, complete, firing, mapped correctly, or trustworthy enough for a decision.
+description: Audit product tagging coverage by comparing Novus product memory and, when available, observed traffic with configured Pages, Features (click events), and Track Events. Use when someone asks what is tagged, what is untagged, whether instrumentation coverage is complete, where memory- or traffic-backed gaps exist, or requests a coverage breakdown for a feature, flow, product area, or an entire app. Return a concise coverage analysis and optionally create a shareable visual HTML report.
 ---
 
-# Verify Instrumentation
+# Verify Instrumentation Coverage
 
-Answer one question: **Can this product measurement be trusted for the decision at hand?** Check the smallest relevant feature or flow by default; do not turn a targeted request into an application-wide audit.
+Answer: **What does Novus know the product contains, how much of it is tagged, what traffic is recognized, and where are the highest-impact gaps?**
 
-## Core model
+This is a coverage audit, not an impact evaluation. Keep reads non-mutating. Do not start capture, create or sync artifacts, change definitions, or modify product code unless separately authorized.
 
-Configured is not firing. Firing is not recognized. Recognized is not necessarily semantically correct or complete.
+## 1. Resolve scope
 
-Return one verdict:
+Select exactly one application. Never combine apps.
 
-- **TRUSTED** — the measurement is fit for the stated decision.
-- **DEGRADED** — a bounded conclusion remains safe, with named limits.
-- **UNTRUSTED** — a known instrumentation defect can reverse or materially distort the conclusion.
-- **UNKNOWN** — evidence or access is insufficient to test trust.
+- If the user names a feature, flow, or product area, audit that scope.
+- If the user supplies a PR, issue, or diff, use it only to identify the relevant product area unless the user explicitly requests a diff-only audit.
+- If the user gives no scope, audit the full selected app. Do not infer a narrow target from the current diff.
+- Use current app context when unambiguous. If several apps are plausible and no current app exists, ask one app-selection question.
 
-Keep tools read-only by default. Do not tag artifacts, change Pendo definitions, start recording, modify code, or sync anything unless the surrounding task authorizes that action.
+Use the requested observation window. Otherwise default to the most recent representative window available, normally 7 days for area/app audits and a focused live session for a single flow. State exact boundaries and whether the sample is exhaustive or bounded by tool limits.
 
-## Workflow
+## 2. Build the expected-surface inventory from memory
 
-### 1. Resolve the decision and target
+Read [references/coverage-model.md](references/coverage-model.md) before gathering data.
 
-Infer the target from the named feature, flow, goal, issue, PR, current diff, or metric under discussion. State:
+Use `getMemory` as the primary expected-product map. Memory describes what the product contains; it does not prove traffic.
 
-- one application and audience;
-- the decision this data will support;
-- the Pages, Features, Track Events, funnel/journey steps, or goal measures that must be trustworthy;
-- the observation window or live test session.
+- For a whole-app audit, read `overview`, `product_areas`, `flows`, `sitemap`, and `integrations`.
+- For a named feature, flow, or product area, query memory for that scope and read the relevant full sections needed to avoid a narrow keyword-only result.
+- Extract concrete routes/Pages, meaningful interactions, flow milestones, and custom/server events. Preserve the memory section and wording that support each expected surface.
+- Include only specific, taggable behaviors. Do not turn vague capabilities, personas, or outcomes into invented tags.
+- When memory is unavailable, use repository routes and product-flow evidence as a fallback and label memory coverage unavailable.
 
-Ask at most one question only when competing targets would change the check. Never merge applications.
+## 3. Inventory configured instrumentation
 
-### 2. Use Novus Data Validation first
+For the selected app and scope, inventory:
 
-Read [references/data-validation.md](references/data-validation.md). Prefer a first-class Novus instrumentation-check or Data Validation capability when the host exposes one. Otherwise compose the check from Novus raw events, artifacts, external references, event properties, metrics, repository code, and the current issue or PR.
+- Page artifacts and URL rules;
+- Feature/click-event artifacts, selectors, and Page context;
+- Track Event artifacts, exact event names, required properties, and known code locations;
+- relevant funnel or journey steps when the scope names a flow;
+- sync/external-reference status when exposed.
 
-Follow the in-product Data Validation model:
+For product-area scope, connect artifacts using names, descriptions, routes, Page containment, source paths, and repository ownership. Label uncertain membership rather than silently excluding it.
 
-1. Confirm raw events are arriving for the selected app.
-2. Observe a focused live path when possible.
-3. Match meaningful events to Novus artifacts.
-4. Treat unmatched meaningful events as gaps, not customer zeros.
-5. Identify the smallest repair, then re-run the same path.
+Compare the configured inventory with memory before using traffic. Classify every concrete memory surface as tagged, untagged, conflicting, or unresolved.
 
-Do not claim the full in-product audit ran when only component tools were available. State the actual coverage.
+## 4. Observe traffic when available
 
-### 3. Check the trust chain
+Prefer a first-class Novus Data Validation or instrumentation-check capability. Otherwise compose the audit from `getRawEvents`, configured artifacts, external references, event properties, metrics, and repository evidence.
 
-Read [references/evidence-map.md](references/evidence-map.md). Evaluate only layers relevant to the decision:
+1. Confirm events are arriving for the selected app.
+2. Gather the broadest representative raw-event sample available for the window.
+3. Preserve event counts, URLs, element fingerprints/selectors, Track Event names, timestamps, and Page context.
+4. Exclude non-meaningful UI noise such as focus, blur, and change from the coverage denominator unless explicitly requested.
+5. Disclose pagination, recording, retention, sampling, or audience-filter limits.
 
-1. **Arrival** — expected events reach Pendo in the selected app.
-2. **Recognition** — Page loads, Feature clicks, and Track Events match the intended artifacts.
-3. **Definition** — URL rules, selectors, event names, properties, and external references represent the intended behavior.
-4. **Continuity** — renamed events, selector changes, routes, releases, and sync failures do not split the measurement window.
-5. **Audience** — app, segment, account/visitor identity, and employee/test filtering fit the decision.
-6. **Coverage** — every decision-critical step is observed in the right order; duplicate or alternate client paths are accounted for.
+Do not interpret an empty result as no usage. It may mean no traffic, capture unavailable, filtering, retention limits, or broken emission.
 
-Test semantic correctness against repository code or an observed path when available. A technically matching event with the wrong business meaning is not trustworthy.
+Traffic is an additional evidence layer, not a prerequisite for a coverage audit. If capture is unavailable or unrepresentative, continue with memory alignment and state the traffic limitation.
 
-### 4. Classify the effect of every gap
+## 5. Match traffic to tags
 
-For each gap, state whether it:
+Apply the matching rules in [references/coverage-model.md](references/coverage-model.md):
 
-- blocks the decision;
-- narrows the safe conclusion;
-- is irrelevant to this decision.
+- Page coverage uses observed `load` events and the most-specific compatible URL rule.
+- Feature coverage uses observed clicks and compiled selector matching. A Page match does not make its clicks tagged.
+- Track Event coverage uses exact event-name matching; verify required properties when the decision depends on them.
 
-Use `UNTRUSTED` when a primary measure or critical flow step is known broken. Use `UNKNOWN` when it could be broken but cannot be tested. Never reinterpret missing events as no use, no conversion, or no impact.
+Classify every meaningful observed surface as:
 
-### 5. Return the verdict and repair
+1. **Recognized** — observed traffic matches the intended artifact.
+2. **Unmatched** — meaningful traffic arrived but no artifact recognized it.
+3. **Misrecognized** — traffic matched an artifact with the wrong business meaning or scope.
+4. **Ambiguous** — multiple definitions or insufficient evidence prevent a reliable match.
 
-Read [references/output-contract.md](references/output-contract.md) immediately before responding. Lead with the verdict and the decision it permits or blocks.
+Separately classify configured artifacts with no observed traffic as **configured, not observed**. Do not count them as tagging gaps without further evidence.
 
-Recommend one smallest repair or validation action. When a Page or Feature gap is visible and the in-product capability is available, offer the focused **Teach Novus** flow. For Track Event naming gaps, identify the exact code or definition change instead; do not pretend the Page/Feature tagging workflow repairs custom event semantics.
+## 6. Calculate coverage
 
-After any repair, require the same observed path to re-match before upgrading trust. Configuration success alone is not proof.
+Report memory alignment first, then traffic coverage when available. Do not collapse them into one score:
 
-## Degraded behavior
+- **Memory alignment coverage** = concretely taggable memory surfaces with a matching intended tag / all concretely taggable memory surfaces evaluated.
+- **Traffic surface coverage** = recognized distinct observed surfaces / all distinct observable surfaces.
+- **Traffic-weighted coverage** = recognized meaningful event occurrences / all meaningful observed event occurrences.
 
-- **No first-class Data Validation MCP tool:** compose from `getRawEvents`, artifact definitions, external IDs, metrics, and repository evidence; disclose partial coverage.
-- **Raw-event recording off:** use existing historical/definition evidence. If a live capture is required, request the one exact recording action or admin permission needed.
-- **Novus unavailable:** perform a static code and definition review; return `UNKNOWN` or `DEGRADED`, never full trust.
-- **No repository:** validate arrival and matching, but label semantic code coverage unavailable.
-- **No representative traffic:** use a controlled test session and keep audience-level trust `UNKNOWN` until representative evidence exists.
-- **Tool failure:** retry a read once, then preserve the gap in the verdict.
+Calculate overall and Page/Feature/Track Event breakdowns. If a reliable traffic denominator cannot be formed, report memory alignment plus observed/configured counts and label traffic coverage unavailable. Do not mix types, apps, audiences, or windows.
 
-## Handoffs
+Rank gaps by observed traffic share, flow criticality, and confidence. Distinguish:
 
-- `verify-impact` must consume this verdict before interpreting a Pendo outcome.
-- `whats-next` and `build-investment` must lower confidence or avoid conclusions that rely on untrusted measurements.
-- `goal-to-experiment` should turn the exact repair and recheck into pre-launch acceptance criteria when measurement blocks the experiment.
+- traffic-bearing gaps that need tagging;
+- broken or overly broad definitions;
+- duplicate/overlapping tags;
+- stale-tag candidates supported by repository removal, history, or conflicting memory;
+- evidence limitations that need another capture.
 
-## Scope boundary
+Also report configured tags that have no corresponding concrete memory surface as **not reflected in memory**. Treat these as memory-maintenance or stale-tag review candidates, not automatic tagging defects.
 
-Do not use this skill to add broad new tracking, automatically instrument the entire application, decide whether a product change worked, or assess portfolio allocation. Novus automatically instruments supported surfaces; this skill verifies whether the resulting evidence can be trusted.
+## 7. Return the coverage report
+
+Read [references/output-contract.md](references/output-contract.md). Return the text coverage breakdown first unless the user already asked for HTML.
+
+End an interactive text report with: **Would you like me to create a shareable HTML report?** Do not create the file until the user opts in.
+
+If the user requests HTML initially or accepts the offer, read [references/data-contract.md](references/data-contract.md), build the renderer input, and create the standalone file:
+
+```bash
+python3 scripts/render_coverage_report.py <coverage.json> <coverage.html>
+```
+
+Resolve the script relative to this skill directory. Save the HTML in the user's requested location. If unspecified, use the current workspace's artifact, output, or visualization directory.
+
+- In Codex or another filesystem-capable host, return a clickable absolute path and display/open the report when supported.
+- In an artifact-capable Claude host, return the same self-contained HTML as an artifact.
+- If neither is possible, return the concise text summary required by the output contract.
+
+Do not include secrets, tokens, raw private conversations, or unnecessary visitor identifiers in the report.
+
+## 8. Verify and hand off
+
+Before responding:
+
+- when HTML was requested, open the generated file and verify desktop and mobile layout;
+- confirm overall totals reconcile with the type breakdown;
+- confirm memory-backed and traffic-backed evidence remain visibly distinct;
+- confirm every surfaced gap has observed evidence or is clearly labeled uncertain;
+- confirm configured-but-unobserved artifacts are not counted as missing tags;
+- confirm the report names the app, scope, window, sample limits, and data sources.
+
+Lead the response with coverage, not process. Include the highest-impact gaps and exact limits of the audit. Include the HTML link only after the user opts in.
+
+## Repair boundary
+
+Recommend focused repairs, but do not perform them without authorization. For a Page or Feature gap, offer Teach Novus when available. For Track Events, name the exact event-name/property/code correction. Require the same path or traffic source to match after repair before calling the gap closed.

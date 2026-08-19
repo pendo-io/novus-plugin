@@ -1,4 +1,4 @@
 interface:
-  display_name: "Verify Instrumentation"
-  short_description: "Check whether product data can be trusted"
-  default_prompt: "Use $verify-instrumentation to check whether I can trust the data for this feature or flow."
+  display_name: "Verify Instrumentation Coverage"
+  short_description: "Audit tagging coverage from memory and traffic"
+  default_prompt: "Use $verify-instrumentation to compare product memory and available traffic with current tags, then offer an optional shareable HTML report."

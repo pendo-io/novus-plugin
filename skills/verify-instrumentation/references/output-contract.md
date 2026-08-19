@@ -1,65 +1,40 @@
-# Verify Instrumentation output contract
+# Coverage audit output contract
 
-Produce one targeted trust decision.
+## Lead summary
 
-## Required response
+Lead with memory alignment and add traffic coverage when available:
 
-### Trust verdict
+> **Tagging coverage: X% of concrete memory surfaces are tagged. Traffic coverage: Y% of observed surfaces and Z% of meaningful events recognized.**
 
-Lead with:
+When traffic is unavailable, say so without weakening or suppressing memory alignment. Always include numerators and denominators, app, scope, memory sections checked, exact traffic window when applicable, and whether each result is exhaustive or sampled.
 
-> **<TRUSTED | DEGRADED | UNTRUSTED | UNKNOWN> — <what decision the data can or cannot support>.**
+## Required text report
 
-Name the selected app, target surface, observation window/session, and actual validation coverage.
+1. Memory alignment coverage, overall and by Page/Feature/Track Event.
+2. Traffic surface and traffic-weighted coverage when available.
+3. Ranked gaps labeled `Memory`, `Traffic`, or `Memory + Traffic`, with evidence, repair, and proof.
+4. Configured tags not reflected in memory and configured tags not observed, separated from actual gaps.
+5. Evidence limitations and one next action.
 
-### Trust chain
+End an interactive report with: **Would you like me to create a shareable HTML report?** Do not create HTML unless the user requested it or opts in.
 
-| Layer | What was checked | Result | Decision effect | Evidence |
-| --- | --- | --- | --- | --- |
-| Arrival |  | pass/gap/unknown |  |  |
-| Recognition |  | pass/gap/unknown |  |  |
-| Definition |  | pass/gap/unknown |  |  |
-| Continuity |  | pass/gap/unknown |  |  |
-| Audience |  | pass/gap/unknown |  |  |
-| Coverage |  | pass/gap/unknown |  |  |
+## Required HTML sections after opt-in
 
-Include only relevant layers, but never omit a known decision-blocking gap.
+1. Memory alignment plus optional traffic coverage.
+2. Page, Feature, and Track Event memory/traffic cards.
+3. Ranked gaps with visible evidence-source labels.
+4. Tags not reflected in memory and tags not observed, separated from actual gaps.
+5. Evidence limitations and one next action.
 
-### What can be concluded
+Use color plus text labels; never rely on color alone. Make the file responsive, accessible, printable, self-contained, and free of external runtime dependencies.
 
-State the narrowest safe product conclusion. Then state the conclusion that remains blocked. Do not report an untrusted zero as user behavior.
+## Interpretation rules
 
-### Smallest repair and proof
-
-Name exactly one next action:
-
-- focused Teach Novus repair for an observed Page or Feature gap;
-- exact Track Event name/property/code correction;
-- selector or URL-rule correction;
-- app/audience/filter correction;
-- focused live capture or alternate-path test.
-
-Then name the recheck that proves the repair. A configuration or workflow success message is not sufficient; the same real path must produce the intended match.
-
-### Authority
-
-State whether the response was read-only. Name any permission required to start recording, tag/sync artifacts, modify code, or change a production definition.
-
-## Verdict gates
-
-| Verdict | Gate |
-| --- | --- |
-| TRUSTED | Every decision-critical layer passes with fresh, representative-enough evidence. |
-| DEGRADED | Known gaps exist, but they cannot reverse the explicitly bounded conclusion. |
-| UNTRUSTED | A known defect affects a primary measure or critical step. |
-| UNKNOWN | A decision-critical layer could not be tested. |
-
-## Final check
-
-- The target and decision are explicit.
-- Data Validation coverage is described accurately.
-- Arrival, recognition, and semantic correctness are not conflated.
-- Unmatched events are gaps, not zeros.
-- Track Event name splits and alternate paths are checked.
-- One repair and its observed proof are present.
-- The verdict can be reused by `verify-impact` without reinterpretation.
+- Say `observed but unmatched`, not `unused`, for traffic-bearing gaps.
+- Say `known in memory but untagged` for a concrete memory-backed gap.
+- Say `tag not reflected in memory`, not `stale`, when memory has no counterpart.
+- Say `configured, not observed in this window`, not `broken`, for quiet tags.
+- Say `coverage unavailable` when the denominator cannot be tested.
+- Never treat missing events as zero customer behavior.
+- Never present memory as proof of production traffic.
+- Do not claim an app-wide audit if the raw-event sample or artifact inventory was partial.

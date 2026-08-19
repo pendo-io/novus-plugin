@@ -17,6 +17,27 @@ Use the smallest available artifact: explicit request, plan file, spec, issue, b
 | The mechanism fits the system | repository code, tests, architecture docs, current flags and workflows | What existing state and failure paths must it preserve? |
 | We can learn after shipping | `verify-instrumentation`, raw events, artifact definitions, rollout/flag capabilities | Can the outcome and guardrails be observed for the exposed audience? |
 
+## Product-data contract
+
+For a user-facing or operational plan, Novus product evidence is the default, not an optional enrichment.
+
+1. Resolve the exact product surface before querying metrics. Similar names, rollups, and overview pages are not interchangeable.
+2. Prefer the narrowest evidence that tests the plan's claim: a funnel step over app activity, a feature over a product-area rollup, or a relevant conversation cluster over total agent usage.
+3. Carry the artifact or signal ID, audience, window, denominator, comparison, and external/internal scope into the conclusion.
+4. State the decision the evidence changes. If it changes nothing, omit it.
+5. Distinguish reach from value, correlation from causation, and missing instrumentation from zero use.
+
+Product evidence should be able to force at least one of these changes:
+
+- solve a different bottleneck;
+- reduce or expand the affected audience;
+- add a prerequisite before implementation;
+- change the first slice or rollout order;
+- change acceptance or stop conditions;
+- stop the build.
+
+If Novus is available but the skill uses none of its product evidence for a plan that affects users, the review is incomplete unless it explains why no relevant surface can be measured.
+
 ## Linear and Jira resolution
 
 1. Check Novus `listConnectedIntegrations` for native Linear/Jira coverage.
@@ -43,7 +64,7 @@ Do not convert the stress test into a full architecture or code review.
 
 Rank a risk highly when:
 
-- direct evidence contradicts the plan's thesis;
+- direct evidence contradicts the problem or mechanism the plan claims;
 - learning after implementation would be expensive;
 - failure can lose data, broaden audience, violate trust, or block the core user path;
 - it is a prerequisite that makes the proposed feature unusable;
@@ -60,3 +81,5 @@ Do not elevate speculative edge cases above a current customer or system failure
 - Missing events are not evidence of no use.
 - Repository activity is not investment or value evidence.
 - Preserve source IDs, metric windows, affected audience, and confidence for every plan-changing claim.
+- Never substitute an app-wide trend for evidence about the feature or workflow named in the plan.
+- Do not decorate a repository conclusion with unrelated product metrics. The product evidence must test a disputed claim.
