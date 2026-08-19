@@ -2,9 +2,15 @@
 
 Novus skills for coding agents, backed by Pendo product analytics.
 
-Novus automatically instruments supported product surfaces. These skills help builders decide what to finish next and whether portfolio investment matches customer need, backed by product, planning, and delivery evidence.
+Novus automatically instruments supported product surfaces. These skills help builders decide what to finish next, whether shipped work created customer value, and whether portfolio investment matches customer need, backed by product, planning, and delivery evidence.
 
 ## Skills
+
+### `build-impact`
+
+Answers: **What did this shipped work add up to, did it create customer value, and what should we do now?**
+
+It works for one change or a builder's recent PRs. It reconstructs the intended outcome, verifies the trail from proposed to merged to exposed to measured, checks instrumentation trust, separates observed movement from attributable impact, and returns one verdict: `WORKED`, `PARTIAL`, `DID NOT WORK`, `TOO EARLY`, or `CANNOT VERIFY`. Weekly builder reports use a compact Slack-first "Your code in the wild" format with exact PRs, one release date, customer movement, and one signal-backed next check. It recommends one next action without changing rollout or production state.
 
 ### `whats-next`
 
@@ -34,6 +40,7 @@ When Novus MCP is connected, it backs findings with real traffic, adoption, funn
 
 ## Choose the right decision
 
+- Use `build-impact` when the question is what shipped work added up to and whether it created customer value.
 - Use `build-investment` when the question is whether the portfolio is funding the right product areas.
 - Use `whats-next` when the question is what one builder should finish, build, or defer next.
 - Use `ux-review` when the question is whether local changes introduce a customer-facing UX problem.
@@ -55,18 +62,23 @@ Full instructions, including how to point at a non-production Novus, are in [doc
 
 Ask naturally:
 
+> did this shipped change work, and should we roll it out further?
+
+> show me what my recent PRs added up to, whether customers are using the experience, and what to watch next
+
 > what should I build next?
 
 > compare what we planned, built, and customers experienced this quarter
 
 > review the UX of my changes
 
-The skills activate from their descriptions. In clients with slash commands, invoke `/whats-next`, `/build-investment`, or `/ux-review` directly.
+The skills activate from their descriptions. In clients with slash commands, invoke `/build-impact`, `/whats-next`, `/build-investment`, or `/ux-review` directly.
 
 ## Layout
 
 ```
 skills/
+  build-impact/           post-release customer-outcome decision
   whats-next/             current-work steering and validated decision record
   build-investment/       portfolio investment focus brief
   ux-review/              pre-PR UX review workflow and references
