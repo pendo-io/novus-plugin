@@ -1,7 +1,7 @@
 {
   "name": "novus",
   "version": "0.1.0",
-  "description": "Novus skills for Gemini CLI. Ships ux-review: a pre-PR UX review of your local changes, backed by Pendo product analytics.",
+  "description": "Novus skills for Gemini CLI: UX review and evidence-backed next-work and portfolio investment decisions.",
   "contextFileName": "GEMINI.md",
   "mcpServers": {
     "novus": {

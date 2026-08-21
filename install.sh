@@ -5,7 +5,7 @@
 #   ./install.sh claude       Claude Code
 #   ./install.sh gemini       Gemini CLI
 #   ./install.sh codex        Codex CLI
-#   ./install.sh devin [dir]  copy the skill into a repo for Devin to pick up
+#   ./install.sh devin [dir]  copy the skills into a repo for Devin to pick up
 
 set -euo pipefail
 
@@ -24,7 +24,7 @@ Or from this clone:
   claude plugin marketplace add $ROOT
   claude plugin install novus@pendo
 
-Restart Claude Code, then ask for a UX review. On the first Novus tool call
+Restart Claude Code, then ask for a UX review, what to build next, or a build investment review. On the first Novus tool call
 Claude opens a browser to sign in to Pendo and pick a subscription + app.
 EOF
 }
@@ -36,14 +36,19 @@ Gemini CLI — run one of these:
   gemini extensions install $REPO_URL
   gemini extensions link $ROOT      # development: symlink this clone
 
-Restart Gemini CLI, then ask for a UX review.
+Restart Gemini CLI, then ask for a UX review, what to build next, or a build investment review.
 EOF
 }
 
 codex_install() {
-  local target="$HOME/.agents/skills/ux-review"
+  local skill_dir skill_name target
   mkdir -p "$HOME/.agents/skills"
-  ln -sfn "$ROOT/skills/ux-review" "$target"
+  for skill_dir in "$ROOT"/skills/*; do
+    [[ -d "$skill_dir" ]] || continue
+    skill_name="${skill_dir##*/}"
+    target="$HOME/.agents/skills/$skill_name"
+    ln -sfn "$skill_dir" "$target"
+  done
   cat <<EOF
 Codex CLI — preferred, installs the skill and the Novus MCP server together:
 
@@ -55,16 +60,16 @@ Or from this clone:
   codex plugin marketplace add $ROOT
   codex plugin add novus@pendo
 
-Fallback for Codex builds without \`codex plugin\` — linked the skill at user
-scope, skill only:
+Fallback for Codex builds without \`codex plugin\` — linked every skill at user
+scope, skills only:
 
-  $target -> $ROOT/skills/ux-review
+  $HOME/.agents/skills/<skill-name> -> $ROOT/skills/<skill-name>
 
 On that path, add the Novus MCP server yourself:
 
   codex mcp add novus --transport streamable-http --url https://novus-api.pendo.io/mcp
 
-Restart Codex, then ask for a UX review.
+Restart Codex, then ask for a UX review, what to build next, or a build investment review.
 EOF
 }
 
@@ -79,9 +84,9 @@ devin_install() {
     exit 1
   fi
   mkdir -p "$dest/.agents/skills"
-  cp -R "$ROOT/skills/ux-review" "$dest/.agents/skills/"
+  cp -R "$ROOT/skills/." "$dest/.agents/skills/"
   cat <<EOF
-Copied the skill to $dest/.agents/skills/ux-review
+Copied the Novus skills to $dest/.agents/skills/
 
 Commit it. Devin discovers skills under .agents/skills/ in every connected
 repository — there is nothing else to install.

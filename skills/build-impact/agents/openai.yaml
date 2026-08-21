@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Impact"
+  short_description: "Connect shipped work to customer outcomes"
+  default_prompt: "Use $build-impact to show what my recent shipped work added up to, whether customers are using it, and what to watch next."

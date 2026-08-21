@@ -2,7 +2,7 @@
   "name": "novus",
   "displayName": "Pendo Novus",
   "version": "0.1.0",
-  "description": "Pendo Novus skills for Claude Code. Ships ux-review: a pre-PR UX review of your local changes, backed by Novus product analytics.",
+  "description": "Pendo Novus skills for Claude Code: UX review and evidence-backed next-work and portfolio investment decisions.",
   "author": {
     "name": "Pendo",
     "url": "https://novus.pendo.io"
@@ -10,5 +10,5 @@
   "homepage": "https://novus.pendo.io",
   "repository": "https://github.com/pendo-io/novus-plugin",
   "license": "Proprietary",
-  "keywords": ["pendo", "novus", "ux", "code-review", "product-analytics"]
+  "keywords": ["pendo", "novus", "ux", "code-review", "product-analytics", "planning", "roadmap"]
 }

@@ -6,6 +6,10 @@ First release.
 
 - `ux-review` skill: pre-PR UX review of local changes, with Novus product analytics through the Novus MCP server and
   graceful degradation to code-observable findings when the server is not connected.
+- `whats-next` skill: current-work steering backed by engineering context, Novus customer evidence, and either
+  Novus-native or directly connected Linear/Jira planning data, with a graceful no-roadmap fallback.
+- `build-investment` skill: portfolio-level comparison of planned, built, and experienced investment, with one
+  evidence-backed recommendation for where engineering investment should move.
 - Packaging for Claude Code, Gemini CLI, and Codex CLI, plus Agent Plugins 1.0 and Cursor manifests and an
   `.agents/skills` symlink for Devin.
 

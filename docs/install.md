@@ -1,7 +1,7 @@
 # Installing
 
-Every agent below reads the same skill directory, `skills/ux-review/`. What differs is the manifest each one looks for
-and how it installs.
+Every agent below reads the same `skills/` directory. What differs is the manifest each one looks for and how it
+installs.
 
 ## Claude Code
 
@@ -10,7 +10,8 @@ claude plugin marketplace add pendo-io/novus-plugin
 claude plugin install novus@pendo
 ```
 
-Restart Claude Code. `/ux-review` appears in the skill list, and the `novus` MCP server connects on first use.
+Restart Claude Code. The seven skills listed in the repository README appear in the skill list, and the `novus` MCP
+server connects on first use.
 
 From a local clone instead:
 
@@ -49,8 +50,8 @@ Codex resolves the marketplace from `.claude-plugin/marketplace.json` — it pre
 and falls back to the Claude manifest, which is why there is no Codex-specific marketplace file here. The plugin itself
 comes from `.codex-plugin/plugin.json`.
 
-**Fallback for Codex builds without `codex plugin`** — links `skills/ux-review` into `~/.agents/skills/`, where Codex
-looks at user scope:
+**Fallback for Codex builds without `codex plugin`** — links every directory under `skills/` into
+`~/.agents/skills/`, where Codex looks at user scope:
 
 ```bash
 ./install.sh codex
@@ -70,7 +71,7 @@ Devin scans `.agents/skills/` in every connected repository, so the skill is com
 ./install.sh devin ~/Code/pendo/your-repo
 ```
 
-Then commit `.agents/skills/ux-review/`.
+Then commit the Novus skill directories under `.agents/skills/`.
 
 ## Authentication
 
@@ -84,8 +85,18 @@ For Gemini CLI, add the same server under `mcpServers` in `~/.gemini/settings.js
 
 ## Verifying it works
 
-Ask for a UX review in a repo with UI changes in the working tree. You should see either a short report anchored to
-`path:line`, or the single line `No UX concerns in these changes.`
+For `ux-review`, ask for a UX review in a repo with UI changes in the working tree. You should see either a short report
+anchored to `path:line`, or the single line `No UX concerns in these changes.`
+
+For `whats-next`, ask: `What should I build next?` You should receive one sequence that distinguishes what to finish,
+what to build, what to defer, and how to validate it. The skill uses Novus-native Linear/Jira, direct Linear/Jira tools
+available to the coding agent, or a clearly disclosed fallback when neither exists.
+
+For `build-investment`, ask: `Compare what we planned, built, and customers experienced this quarter. Are we investing
+in the right places?` You should receive a short focus brief that contrasts customer struggle with current engineering
+investment, recommends one sequencing change, preserves the strongest alternative, and describes tickets before citing
+their IDs. It resolves Novus-native or direct Linear/Jira planning sources without double-counting matching issues; when
+neither exists, it discloses that roadmap intent is unconfirmed.
 
 If the report opens with `Running without Novus data — code-observable findings only.`, the skill loaded but the MCP
 server did not connect. The review is still valid; it just has no analytics behind it. It will close with a one-line
