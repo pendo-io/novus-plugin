@@ -1,60 +1,51 @@
 # Usage Brief output contract
 
-Produce one verification-emphasis decision for the change, backed by the smallest evidence that supports it — not a metrics dashboard. The reader is a builder deciding how carefully to test, before they ship.
+Return a short, plain-language brief a builder reads in one pass and acts on. Reason in the tiers below internally, but **render them as plain sentences — never as labels**. The reader is a builder without deep product-analytics fluency: lead with what the change means for customers and how carefully to test it, and keep engineering names and metric jargon out of the way.
 
 ## Shape
 
-```markdown
-**Usage brief: <HEAVY | STANDARD | LIGHT> verification** · <area> · <window>
+Write **4–6 short paragraphs or tight lines, ~120–160 words**, in this order. No section headers, no rating labels, no tables.
 
-*<One sentence: how used this area is and what makes the change risky or safe.>*
+1. **The call, in one line** — how carefully to test, as a plain instruction: *"Test this carefully — but only the &lt;part&gt;."* / *"Normal testing is fine."* / *"Light touch — &lt;why&gt;."*
+2. **What the change does, for customers** — one plain sentence.
+3. **Who it affects** — reach in human terms (*"~118 people / 79 accounts a month, and slipping"*), with internal/test/researcher traffic separated out. A number earns its place only if it changes the call.
+4. **Why it needs (or doesn't need) care** — the decisive reason in plain terms: an outbound or irreversible effect, a concentrated high-value audience, a fragile track record. Name what breaks and whose side it breaks on.
+5. **The lever, in a sentence** — *"This deepens the product for existing &lt;users&gt;; it won't win new ones."* (adoption vs. stickiness as plain English, never the label), and separate it from the surface's own trajectory.
+6. **What to test** — the specific risky path in plain language (*"the flow that opens and tracks the PR on the customer's repo, and that each lookup stays scoped to the right customer"*) and what to skip. Describe the path by **what it does**, not by function, service, or file names.
 
-**Usage of the associated parts**
+Then, **only when the change's own impact will not be cleanly measurable**, add one plain line:
 
-- <Surface> reaches **X visitors / Y accounts** (~**Z% of active users**), <trend> vs <comparison window>.
-- Top usage: <top accounts/visitors, with the internal/test/researcher split named>.
-- <Journey sentence, when a path is legible.>
+> *"Will you know if it worked?"* — say why not, and where the number lives instead (*"Not from analytics — we don't track X; pull it from the database if you need it."*).
 
-**Adoption vs. stickiness:** **<ADOPTION-LEANING | STICKINESS-LEANING | BOTH | NEITHER | UNKNOWN>.** <One sentence with the number behind it, and which lever *this change* pulls.>
+Omit that line entirely when impact is measurable — its presence is a signal, not boilerplate.
 
-**Why <HEAVY|STANDARD|LIGHT>:** <reach × criticality × action, plus the decisive modifier — reachability, concentration, or trend>.
+## Reason in these tiers — internal, do not print the labels
 
-**Measurability:** <verify-instrumentation verdict> — <can this change's own impact be measured after it ships; if not, the missing event>.
+**Verification level** (drives paragraph 1):
 
-**Test the <specific path> hardest.** <The one path that carries the risk, not "test everything".>
-```
+| Tier | Renders as | When |
+| --- | --- | --- |
+| HEAVY | "Test this carefully" | high reach, or a critical/irreversible path, or a small but high-value/at-risk audience |
+| STANDARD | "Normal testing is fine" | moderate reach, reversible action, no concentrated stakes |
+| LIGHT | "Light touch" | low reach, read-only or trivially reversible, no concentrated stakes |
 
-- Aim for 120–180 words, never over 220, excluding link targets and a compact source line.
-- Lead with the verdict; a builder should get the emphasis level in the first line.
-- Write movement as complete sentences ("reaches ~18% of active users, up 166% over 30 days"), not a row of bare percentages or a table.
-- Name exact accounts/visitors only as far as the rating needs; always separate internal/test/researcher traffic from customer reach.
+Reachability (a partial rollout or feature gate) can lower the call; account concentration or a fast-rising trend can raise it past what raw reach implies — say which, plainly (*"capped to Bitbucket customers"*, *"and rising fast"*).
 
-## Verdicts
+**Growth lever** (drives paragraph 5): the change deepens use for existing users (stickiness), brings new users (adoption), both, or neither — rendered as a plain sentence.
 
-| Verdict | Meaning |
-| --- | --- |
-| **HEAVY** | High reach or a critical/irreversible path, or a small but high-value/at-risk audience. Verify the risky path thoroughly before shipping. |
-| **STANDARD** | Moderate reach, reversible action, no concentrated high-value dependency. Normal verification. |
-| **LIGHT** | Low reach, read-only or trivially reversible, no concentrated stakes. Light verification; say so plainly. |
+## Rules
 
-Render exactly one. Reachability (a partial rollout) can lower the verdict; account concentration or a fast-rising trend can raise it past what raw reach implies — name the modifier that moved it.
-
-| Classification | Meaning |
-| --- | --- |
-| **ADOPTION-LEANING** | New accounts/visitors arriving faster than repeat use grows. |
-| **STICKINESS-LEANING** | The same users returning; repeat depth rising while reach is flat. |
-| **BOTH** | Both signals present and material. |
-| **NEITHER** | Flat or declining on both — consider whether the work is worth its cost. |
-| **UNKNOWN** | Not enough trustworthy data to classify. |
+- ~120–160 words, never over ~200. No headers, no rating labels, no metric tables.
+- Product language first. **Never a bare function, service, file, or endpoint name** — describe what the code does. A path may follow in plain words only if it genuinely sharpens the target.
+- Every number is in human terms and separates internal/test/researcher traffic from customers.
+- One clear test instruction: the risky path named plainly, and what to skip.
+- The measurability line appears **only** when impact isn't cleanly measurable, and says where the number lives instead.
+- No usage claim beyond what the measurement supports; no zero rendered as zero use; nothing external changed.
 
 ## Final check
 
-- Exactly one verification verdict and one adoption/stickiness classification.
-- Reach is stated as a share of active users, with the window — never a bare count.
-- Internal, test, and researcher traffic is separated from customer reach, not hidden.
-- The change's lever (adoption vs. stickiness) is distinguished from the surface's own trajectory.
-- The rating names the decisive modifier when reach alone would mislead (low reach + high-value account, or a partial rollout).
-- A measurability note carries the `verify-instrumentation` verdict; a missing denominator/completion event is called out before it ships, not after.
-- The emphasis points at a specific path, not "test everything".
-- No usage claim exceeds what the measurement supports; no zero was rendered as zero use.
-- Nothing external or live was changed.
+- A builder reads it in one pass and knows how hard to test and why.
+- No rating labels (`HEAVY`, `ADOPTION-LEANING`), no bare code/service names, no metric table.
+- Reach is human and separates internal/test traffic; the lever (deepen vs. acquire) is a plain sentence.
+- The decisive reason for the call is named in plain terms — what breaks, and whose side.
+- The measurability line is present only when there's a real gap, and points to where the number actually lives.

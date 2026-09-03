@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.1 — unreleased
+
+- `usage-brief`: render a plain-language, product-voice brief instead of a
+  labelled/enum report. The skill still reasons in the `HEAVY`/`STANDARD`/`LIGHT`
+  and adoption/stickiness tiers internally, but renders them as plain sentences,
+  describes the risky path by what it does (not by function/service names), and
+  shows the measurability line only when a change's impact is not cleanly
+  measurable. Realigns the skill to the repo's house voice ("lead with user
+  impact; keep engineering specifics out of the way") after a live run read like
+  an engineering audit.
+
 ## 0.3.0 — unreleased
 
 - `verify-instrumentation` skill: read-only measurement-trust check over a six-link chain (arrival, recognition,

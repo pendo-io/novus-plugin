@@ -5,7 +5,9 @@ description: Use when a builder is about to start or scope work on a product are
 
 # Usage Brief
 
-Characterize the product area a change will touch, before it ships, so the builder knows the stakes: who uses it, whether it is an adoption or a stickiness story, and how much manual verification the change warrants. Return one test-emphasis verdict backed by evidence. Do not judge shipped impact, choose the next task, or review UX.
+Characterize the product area a change will touch, before it ships, so the builder knows the stakes: who uses it, whether it is an adoption or a stickiness story, and how much manual verification the change warrants. Return a short, plain-language brief that tells the builder how carefully to test and why. Do not judge shipped impact, choose the next task, or review UX.
+
+Your reader is a builder without deep product-analytics fluency. Lead with what the change means for customers and how carefully to test it; keep engineering specifics, metric jargon, and internal rating labels out of the way.
 
 ## Core rule
 
@@ -42,7 +44,7 @@ Classify how the area grows, with numbers, not adjectives:
 - **Adoption signal** — new accounts/visitors arriving (new-vs-returning split, account-count growth, weekly ramp).
 - **Stickiness signal** — the same users returning (retention, days-active cadence, repeat depth).
 
-Return one classification — `ADOPTION-LEANING`, `STICKINESS-LEANING`, `BOTH`, `NEITHER`, or `UNKNOWN` — and say which lever *this specific change* pulls, since an in-flow enhancement rarely drives new-user acquisition even when its surface is being adopted.
+Classify it internally — `ADOPTION-LEANING`, `STICKINESS-LEANING`, `BOTH`, `NEITHER`, or `UNKNOWN` — but render it as a plain sentence, never the label. Say which lever *this specific change* pulls, since an in-flow enhancement rarely drives new-user acquisition even when its surface is being adopted (e.g. "this deepens the product for existing users; it won't win new ones").
 
 ### 4. Rate severity and test emphasis
 
@@ -55,11 +57,11 @@ Then call `verify-instrumentation` for the surface, so the brief can state wheth
 
 ### 5. Return the brief
 
-Read [references/output-contract.md](references/output-contract.md) immediately before responding. Return one test-emphasis verdict — `HEAVY`, `STANDARD`, or `LIGHT` — with the adoption/stickiness classification, the evidence behind the rating, and the one measurability note. Point the emphasis at the specific path that carries the risk (e.g. delivery-correctness), not "test everything."
+Read [references/output-contract.md](references/output-contract.md) immediately before responding. Reason to one verification level (`HEAVY`, `STANDARD`, or `LIGHT`) and one growth-lever classification internally, then render them as a short, plain-language brief — the builder should get the call in the first line ("Test this carefully" / "Normal testing is fine" / "Light touch — …"). Point the reader at the specific path that carries the risk and what to skip, not "test everything," and describe that path by what it does, not by function, service, or file names. Add the measurability line only when the change's own impact will not be cleanly measurable.
 
 ## Degraded behavior
 
-- **Novus unavailable:** return the code-only scope — surfaces, action type, exposure — and a `LIGHT`/`STANDARD`/`HEAVY` rating from criticality and action alone, marked as un-evidenced. Do not claim usage numbers.
+- **Novus unavailable:** return the code-only scope — surfaces, action type, exposure — and a plain test call (careful / normal / light) from criticality and action alone, said plainly to be un-evidenced. Do not claim usage numbers.
 - **No matching artifact:** the surface is not modeled in Novus. Say so; rate from criticality and action, not from an invented reach.
 - **Zero or sparse activity:** report it honestly; a genuinely unused surface lowers reach but may still be high-stakes if the action is irreversible. Never render zero events as zero use.
 - **Internal/test/researcher-heavy traffic:** separate it; a ramp that is mostly internal or researcher traffic is not proven customer adoption.
