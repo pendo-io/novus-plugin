@@ -1,7 +1,7 @@
 {
   "name": "novus",
   "displayName": "Pendo Novus",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Pendo Novus skills for Claude Code: UX review and evidence-backed next-work and portfolio investment decisions.",
   "author": {
     "name": "Pendo",
