@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 — unreleased
+
+- `verify-instrumentation` skill: read-only measurement-trust check over a six-link chain (arrival, recognition,
+  definition, continuity, audience, decision-critical coverage), returning `TRUSTED` / `DEGRADED` / `UNTRUSTED` /
+  `UNKNOWN` and the single smallest repair. This is the sub-check `build-impact` already referenced; it never renders
+  zero events as zero use, treats a missing artifact as broken, or adds instrumentation itself.
+- `usage-brief` skill: pre-build read of a change's associated surfaces — usage (reach as a share of active users, top
+  accounts and visitors, journey), an adoption-vs-stickiness classification, and one verification-emphasis verdict
+  (`HEAVY` / `STANDARD` / `LIGHT`) modified by reachability, account concentration, and trend so low traffic is not
+  mistaken for low risk. Carries a `verify-instrumentation` verdict so it can flag when a change's own impact will not
+  be measurable. Read-only.
+- `scripts/set-version.sh` and `scripts/check-version.sh`: set and verify the plugin version in lockstep across the
+  five manifests that carry it (previously edited by hand, with no guard against drift).
+
 ## 0.1.0 — unreleased
 
 First release.

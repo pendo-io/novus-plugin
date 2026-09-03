@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Instrumentation"
+  short_description: "Check whether a surface is measured well enough to trust"
+  default_prompt: "Use $verify-instrumentation to check whether the surface my work touches is instrumented well enough to measure its impact later, and name the smallest repair."
