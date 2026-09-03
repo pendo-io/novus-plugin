@@ -59,4 +59,4 @@ Name the **single smallest exact repair** that would raise the verdict — the s
 
 ## Scope boundary
 
-This skill decides whether a measurement can be trusted. It does not add or repair instrumentation (that is `add-instrumentation`), decide whether shipped work created value (`build-impact`), characterize an area's usage or risk (`usage-brief`), or choose the next task (`whats-next`). Hand the verdict, checked surface, window, and repair to those skills; do not expand this one into their decision.
+This skill decides whether a measurement can be trusted. It does not add or repair instrumentation (a dedicated `add-instrumentation` skill is planned but not yet available — until then, report the smallest repair and stop), decide whether shipped work created value (`build-impact`), characterize an area's usage or risk (`usage-brief`), or choose the next task (`whats-next`). Hand the verdict, checked surface, window, and repair to those skills; do not expand this one into their decision.

@@ -16,6 +16,8 @@ FILES=(
 seen=""
 rc=0
 for f in "${FILES[@]}"; do
+  # Assumes one "version" key per manifest — same assumption as set-version.sh.
+  # A second version-like key would concatenate into $v; anchor both if that changes.
   v="$(perl -ne 'print $1 if /"version"\s*:\s*"([0-9]+\.[0-9]+\.[0-9]+)"/' "$ROOT/$f" 2>/dev/null || true)"
   if [[ -z "$v" ]]; then
     echo "no version found in $f" >&2

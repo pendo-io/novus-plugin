@@ -67,4 +67,4 @@ Read [references/output-contract.md](references/output-contract.md) immediately 
 
 ## Scope boundary
 
-This skill characterizes the ground before a change and rates verification effort. It does not decide whether shipped work created value (`build-impact`), choose which work to do next (`whats-next`), allocate a portfolio (`build-investment`), review a change for UX problems (`ux-review`), or add tracking (`add-instrumentation`). Use `verify-instrumentation` as its measurement sub-check; hand off the other decisions rather than expanding this skill into them.
+This skill characterizes the ground before a change and rates verification effort. It does not decide whether shipped work created value (`build-impact`), choose which work to do next (`whats-next`), allocate a portfolio (`build-investment`), review a change for UX problems (`ux-review`), or add tracking (a dedicated `add-instrumentation` skill is planned but not yet available). Use `verify-instrumentation` as its measurement sub-check; hand off the other decisions rather than expanding this skill into them.

@@ -86,7 +86,11 @@ Ask naturally:
 
 > review the UX of my changes
 
-The skills activate from their descriptions. In clients with slash commands, invoke `/build-impact`, `/whats-next`, `/build-investment`, or `/ux-review` directly.
+> how used is the area I'm about to change, and how hard should I verify it?
+
+> is this surface instrumented well enough to trust its numbers?
+
+The skills activate from their descriptions. In clients with slash commands, invoke `/build-impact`, `/whats-next`, `/build-investment`, `/ux-review`, `/usage-brief`, or `/verify-instrumentation` directly.
 
 ## Layout
 
@@ -96,6 +100,8 @@ skills/
   whats-next/             current-work steering and validated decision record
   build-investment/       portfolio investment focus brief
   ux-review/              pre-PR UX review workflow and references
+  usage-brief/            pre-build usage read and verification-emphasis verdict
+  verify-instrumentation/ measurement-trust check for a surface
 plugin.json  mcp.json     Agent Plugins 1.0 (Cursor, Copilot, VS Code, Kiro, ChatGPT)
 .claude-plugin/  .mcp.json
                          Claude Code

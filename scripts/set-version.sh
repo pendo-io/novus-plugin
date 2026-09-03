@@ -17,6 +17,8 @@ if [[ $# -ne 1 ]]; then
   exit 2
 fi
 VERSION="$1"
+# The semver check both rejects bad input and keeps $VERSION safe to interpolate
+# into the perl program below.
 if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "error: '$VERSION' is not a semver x.y.z" >&2
   exit 2
@@ -36,6 +38,9 @@ for f in "${FILES[@]}"; do
     echo "error: missing $f" >&2
     exit 1
   fi
+  # Assumes exactly one "version" key per manifest (true for all five today). If a
+  # manifest ever gains a nested "version" (e.g. inside an mcpServers/deps block),
+  # anchor this match — as written it rewrites every "version": "x.y.z" in the file.
   perl -i -pe 's/("version"\s*:\s*")[0-9]+\.[0-9]+\.[0-9]+(")/${1}'"$VERSION"'${2}/' "$path"
   echo "set $f -> $VERSION"
 done
