@@ -10,7 +10,7 @@ claude plugin marketplace add pendo-io/novus-plugin
 claude plugin install novus@pendo
 ```
 
-Restart Claude Code. The seven skills listed in the repository README appear in the skill list, and the `novus` MCP
+Restart Claude Code. The six skills listed in the repository README appear in the skill list, and the `novus` MCP
 server connects on first use.
 
 From a local clone instead:

@@ -29,7 +29,7 @@ Novus MCP tool prefixes vary by host (Claude Code exposes `getArtifactMetrics` a
 Classify with numbers, not adjectives.
 
 - **Adoption-leaning** — new accounts/visitors arriving faster than repeat use grows: account count climbing, new-vs-returning skewing new, a weekly ramp. Capabilities: `getArtifactMetrics` (`weekly`), new-vs-returning app reads, account-count trend.
-- **Stickiness-leaning** — the same users returning: retention holding, `daysActive` high across the top users, repeat depth rising while unique reach is flat. Capabilities: `getPageRetention`, `getRetentionCohorts`, `getArtifactTopUsers` (`daysActive`).
+- **Stickiness-leaning** — the same users returning: retention holding, `daysActive` high across the top users, repeat depth rising while unique reach is flat. Capabilities: `getRetentionCohorts` (weekly cohort retention, per page/feature via `artifactId`) and `getArtifactTopUsers` (`daysActive`); `getPageRetention` (7-day return rate) when the host exposes it — some deployments do not, so fall back to `daysActive` + the weekly ramp rather than treating its absence as no retention.
 - **Both / Neither / Unknown** — say which, and separate the *surface's* trajectory from the *change's* lever: an in-flow enhancement usually deepens use for existing users (stickiness) even when its surface is being adopted; it rarely acquires new users on its own.
 
 ## Severity and test emphasis
