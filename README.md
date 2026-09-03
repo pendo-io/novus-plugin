@@ -38,12 +38,26 @@ Reviews uncommitted or branch-local changes for UX problems before a PR exists: 
 
 When Novus MCP is connected, it backs findings with real traffic, adoption, funnel, and frustration evidence. Without Novus data it still reports code-observable findings. It never posts to GitHub or Bitbucket.
 
+### `usage-brief`
+
+Answers: **Before I build this, how used is the area I'm about to change, and how carefully should I verify it?**
+
+The pre-build counterpart to `build-impact`. From a description, a Linear/Jira ticket, or a PR/branch, it resolves the surfaces the change touches and returns a structured read: usage of the associated parts (reach as a share of active users, top accounts and visitors, journey), whether the area grows by adoption or by stickiness, and one verification-emphasis verdict — `HEAVY`, `STANDARD`, or `LIGHT` — modified by reachability, account concentration, and trend so low traffic is not mistaken for low risk. It carries a `verify-instrumentation` verdict so it can say whether the change's own impact will be measurable later. Read-only.
+
+### `verify-instrumentation`
+
+Answers: **Is the surface this work touches instrumented well enough to trust its Pendo data?**
+
+The measurement-trust sub-check the other skills lean on. It runs a six-link trust chain — arrival, recognition, definition, continuity, audience, and decision-critical coverage — and returns one verdict, `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN`, plus the single smallest repair that would raise it. It never renders zero events as zero use, never treats a missing artifact as a broken one, and never adds instrumentation itself. Read-only.
+
 ## Choose the right decision
 
+- Use `usage-brief` when the question is how used and how risky an area is *before* you change it.
 - Use `build-impact` when the question is what shipped work added up to and whether it created customer value.
 - Use `build-investment` when the question is whether the portfolio is funding the right product areas.
 - Use `whats-next` when the question is what one builder should finish, build, or defer next.
 - Use `ux-review` when the question is whether local changes introduce a customer-facing UX problem.
+- Use `verify-instrumentation` when the question is whether a surface's Pendo data can be trusted for a decision.
 
 ## Install
 
@@ -72,7 +86,11 @@ Ask naturally:
 
 > review the UX of my changes
 
-The skills activate from their descriptions. In clients with slash commands, invoke `/build-impact`, `/whats-next`, `/build-investment`, or `/ux-review` directly.
+> how used is the area I'm about to change, and how hard should I verify it?
+
+> is this surface instrumented well enough to trust its numbers?
+
+The skills activate from their descriptions. In clients with slash commands, invoke `/build-impact`, `/whats-next`, `/build-investment`, `/ux-review`, `/usage-brief`, or `/verify-instrumentation` directly.
 
 ## Layout
 
@@ -82,6 +100,8 @@ skills/
   whats-next/             current-work steering and validated decision record
   build-investment/       portfolio investment focus brief
   ux-review/              pre-PR UX review workflow and references
+  usage-brief/            pre-build usage read and verification-emphasis verdict
+  verify-instrumentation/ measurement-trust check for a surface
 plugin.json  mcp.json     Agent Plugins 1.0 (Cursor, Copilot, VS Code, Kiro, ChatGPT)
 .claude-plugin/  .mcp.json
                          Claude Code
