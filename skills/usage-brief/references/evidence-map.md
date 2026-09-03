@@ -55,3 +55,4 @@ Then run `verify-instrumentation` on the surface and carry its verdict as the me
 - **No data is not a finding.** If the artifact does not exist in Novus, fall back to a code-only scope; do not report the absence of data as usage.
 - **Internal, test, and researcher traffic inflate reach.** Separate it by segment or account name; a ramp that is mostly internal or bug-bounty traffic is not proven customer adoption.
 - **A share needs a denominator.** Never state reach as a share without the active-user base it is a share of, and the window.
+- **Say it in product language.** Report every number the way a product person would — "about 118 people / 79 accounts a month, and slipping" — not "numVisitors 118, −15% period-over-period". The metric name, window, and trend math belong in your reasoning, not in the brief.
