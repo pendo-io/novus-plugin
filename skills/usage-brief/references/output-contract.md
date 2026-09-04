@@ -1,51 +1,49 @@
 # Usage Brief output contract
 
-Return a short, plain-language brief a builder reads in one pass and acts on. Reason in the tiers below internally, but **render them as plain sentences — never as labels**. The reader is a builder without deep product-analytics fluency: lead with what the change means for customers and how carefully to test it, and keep engineering names and metric jargon out of the way.
+Return a short, plain-language brief that **leads with the current usage numbers** for the area a change touches, then reads whether the change can grow that usage. This is also the exact text posted as a comment, so it must stand on its own. The reader is a builder without deep product-analytics fluency: plain product language, no metric jargon, no internal labels.
 
 ## Shape
 
-Write **4–6 short paragraphs or tight lines, ~120–160 words**, in this order. No section headers, no rating labels, no tables.
+Two short blocks, **~110–160 words total**. Keep the two headers; no other headers, no tables.
 
-1. **The call, in one line** — how carefully to test, as a plain instruction: *"Test this carefully — but only the &lt;part&gt;."* / *"Normal testing is fine."* / *"Light touch — &lt;why&gt;."*
-2. **What the change does, for customers** — one plain sentence.
-3. **Who it affects** — reach in human terms (*"~118 people / 79 accounts a month, and slipping"*), with internal/test/researcher traffic separated out. A number earns its place only if it changes the call.
-4. **Why it needs (or doesn't need) care** — the decisive reason in plain terms: an outbound or irreversible effect, a concentrated high-value audience, a fragile track record. Name what breaks and whose side it breaks on.
-5. **The lever, in a sentence** — *"This deepens the product for existing &lt;users&gt;; it won't win new ones."* (adoption vs. stickiness as plain English, never the label), and separate it from the surface's own trajectory.
-6. **What to test** — the specific risky path in plain language (*"the flow that opens and tracks the PR on the customer's repo, and that each lookup stays scoped to the right customer"*) and what to skip. Describe the path by **what it does**, not by function, service, or file names.
+```markdown
+**📊 Current usage — <area>**
 
-Then, **only when the change's own impact will not be cleanly measurable**, add one plain line:
+- <Surface> was used by **X people / Y accounts** in the last 30 days (**~Z% of active users**), <trend vs the prior 30 days>.
+- <Who: top accounts/visitors, with internal / test / researcher traffic separated out — not folded into customer reach.>
+- <The specific control or flow this change touches, and its own usage when measurable on its own.>
 
-> *"Will you know if it worked?"* — say why not, and where the number lives instead (*"Not from analytics — we don't track X; pull it from the database if you need it."*).
+**📈 Can this change grow usage?**
 
-Omit that line entirely when impact is measurable — its presence is a signal, not boilerplate.
-
-## Reason in these tiers — internal, do not print the labels
-
-**Verification level** (drives paragraph 1):
-
-| Tier | Renders as | When |
-| --- | --- | --- |
-| HEAVY | "Test this carefully" | high reach, or a critical/irreversible path, or a small but high-value/at-risk audience |
-| STANDARD | "Normal testing is fine" | moderate reach, reversible action, no concentrated stakes |
-| LIGHT | "Light touch" | low reach, read-only or trivially reversible, no concentrated stakes |
-
-Reachability (a partial rollout or feature gate) can lower the call; account concentration or a fast-rising trend can raise it past what raw reach implies — say which, plainly (*"capped to Bitbucket customers"*, *"and rising fast"*).
-
-**Growth lever** (drives paragraph 5): the change deepens use for existing users (stickiness), brings new users (adoption), both, or neither — rendered as a plain sentence.
+- <Headroom, plainly: low or declining usage = room to grow; high and saturated = little room.>
+- <Lever: brings new users / deepens use for people already here / neither — one sentence, separated from the surface's own trajectory.>
+- <The number that would show it worked: the metric this change could move, its value now, and a realistic ceiling — with an honest caveat and where the number would come from if it isn't cleanly measurable yet.>
+- <Optional: a known Novus signal this change addresses, when one exists.>
+```
 
 ## Rules
 
-- ~120–160 words, never over ~200. No headers, no rating labels, no metric tables.
-- Product language first. **Never a bare function, service, file, or endpoint name** — describe what the code does. A path may follow in plain words only if it genuinely sharpens the target.
-- Every number is in human terms and separates internal/test/researcher traffic from customers.
-- One clear test instruction: the risky path named plainly, and what to skip.
-- The measurability line appears **only** when impact isn't cleanly measurable, and says where the number lives instead.
-- No usage claim beyond what the measurement supports; no zero rendered as zero use; nothing external changed.
+- Lead with the usage numbers. The first block a reader sees is real current usage, not a caveat or a rating.
+- Every number in human terms, as a **share of active users** with its window, and with internal/test/researcher traffic separated from customers. A number earns its place only if it informs current usage or the growth read.
+- Growth is an **estimate, never a prediction** — grounded in headroom, lever, reachable population, and known signals. Say "room to grow" / "little room", not "will increase usage by N%".
+- Plain product language. No function, service, file, or endpoint names; no rating labels; no metric field names (`numVisitors`, "period-over-period") in the body.
+- No testability, severity, or "how hard to test" content — that is out of scope for this skill.
+- No usage claim beyond what the measurement supports; never render zero events as zero use, or an unmeasurable metric as "no potential".
+
+## Posting
+
+The blocks above are the comment body. Prefix it with one line naming what it is and the source, e.g.:
+
+```markdown
+_Usage brief for this change — current product usage and its potential to grow it, from Pendo via Novus._
+```
+
+Post only after the user confirms the exact text and the target (the PR, or the linked Linear/Jira ticket). If neither resolves or there is no write access, return the comment for manual paste and say it was not posted.
 
 ## Final check
 
-- A builder reads it in one pass and knows how hard to test and why.
-- No rating labels (`HEAVY`, `ADOPTION-LEANING`), no bare code/service names, no metric table.
-- Reach is human and separates internal/test traffic; the lever (deepen vs. acquire) is a plain sentence.
-- The decisive reason for the call is named in plain terms — what breaks, and whose side.
-- The measurability line is present only when there's a real gap, and points to where the number actually lives.
+- The brief opens with current usage numbers for the area, as a share of active users, with internal/test traffic separated.
+- The growth read is an honest estimate (headroom + lever + reachable population), not a predicted number.
+- One metric named as "what would show it worked", with a caveat when it isn't cleanly measurable.
+- No testability/severity content; no rating labels; no code, service, or metric-field names in the body.
+- Nothing was posted without explicit confirmation of the text and the target.

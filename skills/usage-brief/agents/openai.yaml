@@ -1,4 +1,4 @@
 interface:
   display_name: "Usage Brief"
-  short_description: "Read the usage and stakes of an area before you build"
-  default_prompt: "Use $usage-brief to tell me how used the area I'm about to change is, whether it grows by adoption or stickiness, and how hard I should verify this change."
+  short_description: "How much an area is used, and whether this change can grow it"
+  default_prompt: "Use $usage-brief to show how much the product area my PR touches is used today, whether this change has potential to grow that usage, and post the brief to the PR or ticket."
