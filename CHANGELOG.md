@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0 — unreleased
+
+- `usage-brief` refocused on product usage. It now leads with the current usage
+  of the area a change touches (reach as a share of active users, top accounts,
+  internal/test/researcher traffic separated out), then reads whether the change
+  has potential to grow that usage — headroom, the lever it pulls (new users vs.
+  deeper use), the number that would show it worked, and any known friction it
+  closes. The testability / verification-emphasis output was removed.
+- `usage-brief` can now **post the brief** as a comment on the PR (or the linked
+  Linear/Jira ticket) — the only skill in the plugin that writes, and only after
+  the user confirms the exact text and target. Degrades to "here's the comment to
+  paste" when no PR/ticket resolves or there is no write access. The other skills
+  remain strictly read-only.
+
 ## 0.3.1 — unreleased
 
 - `usage-brief`: render a plain-language, product-voice brief instead of a

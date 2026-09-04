@@ -40,9 +40,9 @@ When Novus MCP is connected, it backs findings with real traffic, adoption, funn
 
 ### `usage-brief`
 
-Answers: **Before I build this, how used is the area I'm about to change, and how carefully should I verify it?**
+Answers: **How much is the area my PR touches used today, and can this change grow that usage?**
 
-The pre-build counterpart to `build-impact`. From a description, a Linear/Jira ticket, or a PR/branch, it resolves the surfaces the change touches and returns a structured read: usage of the associated parts (reach as a share of active users, top accounts and visitors, journey), whether the area grows by adoption or by stickiness, and one verification-emphasis verdict — `HEAVY`, `STANDARD`, or `LIGHT` — modified by reachability, account concentration, and trend so low traffic is not mistaken for low risk. It carries a `verify-instrumentation` verdict so it can say whether the change's own impact will be measurable later. Read-only.
+From a description, a Linear/Jira ticket, or a PR/branch, it resolves the surfaces the change touches and returns a short, plain-language brief that **leads with current usage** (reach as a share of active users, top accounts and visitors, with internal/test/researcher traffic separated out), then reads whether the change has **potential to grow** that usage — headroom, the lever it pulls (new users vs. deeper use), the number that would show it worked, and any known friction it closes. It then offers to **post the brief as a comment** on the PR (or the linked Linear/Jira ticket) — the only skill here that writes, and only after you confirm the exact text. Everything else is read-only.
 
 ### `verify-instrumentation`
 
@@ -52,7 +52,7 @@ The measurement-trust sub-check the other skills lean on. It runs a six-link tru
 
 ## Choose the right decision
 
-- Use `usage-brief` when the question is how used and how risky an area is *before* you change it.
+- Use `usage-brief` when the question is how used the area your change touches is, and whether the change can grow that usage.
 - Use `build-impact` when the question is what shipped work added up to and whether it created customer value.
 - Use `build-investment` when the question is whether the portfolio is funding the right product areas.
 - Use `whats-next` when the question is what one builder should finish, build, or defer next.
@@ -86,7 +86,7 @@ Ask naturally:
 
 > review the UX of my changes
 
-> how used is the area I'm about to change, and how hard should I verify it?
+> how used is the area my PR touches, and can this change grow that usage?
 
 > is this surface instrumented well enough to trust its numbers?
 
@@ -100,7 +100,7 @@ skills/
   whats-next/             current-work steering and validated decision record
   build-investment/       portfolio investment focus brief
   ux-review/              pre-PR UX review workflow and references
-  usage-brief/            pre-build usage read and verification-emphasis verdict
+  usage-brief/            current usage + growth potential, posted to the PR/ticket
   verify-instrumentation/ measurement-trust check for a surface
 plugin.json  mcp.json     Agent Plugins 1.0 (Cursor, Copilot, VS Code, Kiro, ChatGPT)
 .claude-plugin/  .mcp.json
