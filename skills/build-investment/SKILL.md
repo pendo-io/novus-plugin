@@ -22,6 +22,12 @@ Describe work before citing its record. Keep PRs and issue keys as supporting re
 - Respect platform, reliability, compliance, strategy, and ahead-of-demand work when evidence supports their intent. A leader's rationale is strategic context to test; it does not prove customer impact.
 - Account for rollout, adoption lag, measurement trust, and employee/test/bot traffic. Missing instrumentation is missing evidence, not zero demand.
 
+## Evidence boundary
+
+Treat sources named in the current request as the complete evidence boundary. If the caller asks for Novus, GitHub, and Linear, use only those sources. Do not carry meeting notes, prior transcripts, personal memory, ambient UI, or evidence from an earlier request into the brief unless the caller explicitly includes or authorizes them for this run. A Linear issue or GitHub PR that names a customer can support only what that record says; it does not authorize retrieving the customer's meeting or attributing additional statements to a person.
+
+Before drafting, keep a short internal source ledger: each customer statement, strategic rationale, planning fact, delivery fact, and measure must map to an allowed source. A link to a source outside the boundary proves only that the link exists. If the named sources do not contain the strategy or customer rationale needed for a confident recommendation, say so and defer only the affected judgment. Cite the allowed source that supports each attribution.
+
 ## 1. Set scope and evidence coverage
 
 Resolve one application, portfolio scope, planning period, and customer-experience window. Accept a product area, goal, initiative, team, quarter, or cycle. Otherwise use the most recent complete 30 days for customer experience and the current cycle or quarter for planned and built work. Do not combine applications.

@@ -15,6 +15,12 @@ The default report is **Build Value**: what the team built, what it enables for 
 
 Read [references/output-contract.md](references/output-contract.md) for the selected report shape and apply its Tiffany-style pass. Every output includes its own title, plain-language purpose, and short headings, so it makes sense outside the chat. All views share the evidence checks below. Keep connected systems read-only unless the surrounding task separately authorizes a change.
 
+## Evidence boundary
+
+Treat sources named in the current request as the complete evidence boundary. If the caller asks for Novus, GitHub, and Linear, use only those sources. Do not carry meeting notes, prior transcripts, personal memory, ambient UI, or evidence from an earlier request into the report unless the caller explicitly includes or authorizes them for this run. A Linear issue or GitHub PR that names a customer can support only what that record says; it does not authorize retrieving the customer's meeting or attributing additional statements to a person.
+
+Before drafting, keep a short internal source ledger: each customer statement, rationale, delivery fact, and measure must map to an allowed source. A link to a source outside the boundary proves only that the link exists. If an unsupported source would materially improve the answer, state the missing context instead of using it. Cite the allowed source that supports each attribution.
+
 ## 1. Resolve the work and the customer job
 
 Identify one application, product area or customer workflow, delivery period, and outcome window. Use the caller's scope; otherwise use the most recent complete 30 days of delivery and an exposure-appropriate outcome window. Resolve ambiguity from available context before asking. Do not mix applications.

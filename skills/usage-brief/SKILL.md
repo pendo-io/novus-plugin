@@ -13,6 +13,12 @@ Show a builder how the relevant product area is used today, who could benefit fr
 - Use the benefit the change intends to create: reach, successful completion, less effort, fewer errors, reliability, or repeat value. More activity is not always better.
 - Keep reads read-only. Posting a comment to a PR or ticket requires confirmation of the exact text and target. Do not change code, planning records, rollout, or production.
 
+## Evidence boundary
+
+Treat sources named in the current request as the complete evidence boundary. If the caller asks for Novus, GitHub, and Linear, use only those sources. Do not carry meeting notes, prior transcripts, personal memory, ambient UI, or evidence from an earlier request into the brief unless the caller explicitly includes or authorizes them for this run. A Linear issue or GitHub PR that names a customer can support only what that record says; it does not authorize retrieving the customer's meeting or attributing additional statements to a person.
+
+Before drafting, keep a short internal source ledger: each customer statement, rationale, work-state fact, and measure must map to an allowed source. A link to a source outside the boundary proves only that the link exists. If the allowed sources do not establish customer demand, describe the intended benefit as a hypothesis from the proposed change and name the missing evidence. Cite the allowed source that supports each attribution.
+
 ## 1. Resolve the surfaces and intent
 
 Resolve the work from a description, issue, PR, branch, or diff. Read [references/evidence-map.md](references/evidence-map.md). Map the user-visible or operational behavior to Novus pages, features, events, or funnels. If no artifact resolves, describe the code-supported scope and missing Novus coverage. Use trustworthy caller-supplied or other available evidence when it maps to the same surface, audience, and window; otherwise disclose that usage is unavailable.

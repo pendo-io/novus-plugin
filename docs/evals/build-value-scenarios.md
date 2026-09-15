@@ -77,3 +77,15 @@ Acceptance checks for each reusable output:
 The post-edit dashboard/guide sample used the required report identity and comparison headings, omitted the unusable count, and kept the investment decision distinct from unproven impact. The strategic-shift rerun was not blind because the evaluator saw expected checks; it is not counted as independent validation.
 
 A separate evaluator generated Build Value and Usage Brief from the supplied synthetic facts without reading this file. Both included their own title, purpose, and short headings. Build Value kept 196/400 distinct from 96/150 and did not claim faster analysis. Usage Brief retained the missing-date limitation, 45-second baseline, and 98% success guardrail without inventing a target or posting. Review found repeated conclusions in Build Value; its contract now places the opening conclusion under the first heading rather than requiring a separate summary paragraph.
+
+## Source-boundary regression
+
+Observed failure on September 15: a run requested evidence from Novus, GitHub, and Linear, but the output attributed guide preferences to Brian from a Granola transcript retrieved for an earlier request. The allowed records supported only that a Linear issue and GitHub PR named a 531 Social Dashboard incident. They did not support the personal guide statements.
+
+Acceptance checks:
+
+- Treat sources named in the current request as a closed evidence set.
+- Do not use meeting notes, prior transcripts, personal memory, or ambient UI unless the caller authorizes them for the current run.
+- A customer name in an allowed record supports only the statement in that record; it does not authorize fetching or summarizing a separate meeting.
+- Every attributed customer statement, strategy claim, delivery fact, and measure maps to an allowed source.
+- When the allowed sources lack customer rationale, label the benefit as a hypothesis or identify the missing context instead of filling the gap from prior conversation.
