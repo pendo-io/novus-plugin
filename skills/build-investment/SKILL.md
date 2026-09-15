@@ -11,7 +11,7 @@ Answer one portfolio question: **Are we investing engineering effort where it ca
 
 Write for an engineering or product leader making a scope and sequencing decision. Lead with the recommendation and explain who benefits, what the work enables, why the evidence supports it, and what could change the decision. Use plain sentences and short paragraphs. Avoid em dashes, decorative emoji, canned praise, dramatic fragments, abstract framework language, and manufactured contrasts such as "this isn't X, it's Y."
 
-Describe work before citing its record. Keep PRs and issue keys as supporting references; the brief should make sense without opening a planning tool. Use one to three measures that carry the decision. Aim for 180–260 words, at most 300 unless the caller asks for detail. Read [references/output-contract.md](references/output-contract.md) before writing.
+Describe work before citing its record. Keep PRs and issue keys as supporting references; the brief should make sense without opening a planning tool. Use one to three measures that carry the decision. Aim for 180–260 words, at most 300 unless the caller asks for detail. Read [references/output-contract.md](references/output-contract.md) before writing and apply its Tiffany-style pass. Identify the report as Build Investment, state the question it answers, and use its required headings to compare engineering effort with customer needs before the next decision. Keep this investment comparison central; Build Value is the separate explanation of what completed work adds up to.
 
 ## Operating rules
 

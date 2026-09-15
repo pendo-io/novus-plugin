@@ -44,7 +44,7 @@ Missing usage for a future audience does not disprove a strategic rationale. Sta
 
 ## 4. Write and share
 
-Read [references/output-contract.md](references/output-contract.md) immediately before composing. Return a brief the reader can use without translating analytics jargon. Offer the current branch's PR as the comment target, or the linked Linear/Jira issue if there is no PR. Show the exact text and target, then post only after confirmation. Never guess a target or auto-post.
+Read [references/output-contract.md](references/output-contract.md) immediately before composing and apply its Tiffany-style pass. Include the Usage Brief title, purpose line, and three short headings inside the output. Return a brief the reader can use without translating analytics jargon. Offer the current branch's PR as the comment target, or the linked Linear/Jira issue if there is no PR. Show the exact text and target, then post only after confirmation. Never guess a target or auto-post.
 
 If no target or write access exists, return the brief for manual use and state that it was not posted. If usage or a trustworthy success measure is unavailable, give the supported scope, proposed benefit, and exact evidence needed without inventing numbers.
 

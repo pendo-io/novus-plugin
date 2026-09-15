@@ -59,3 +59,21 @@ Check: use matching account denominators, disclose the missing window, recognize
 On September 15, 2026, two independent agents produced reports for these six cases using only the synthetic inputs and the edited skills. The reports preserved the main evidence and scope boundaries above. Review identified four wording ambiguities, corrected in this change: common release dates for independently useful changes, team-scope titles for unrelated work, use of trustworthy supplied metrics without a Novus artifact, and caller-requested Usage Brief formats.
 
 This is a record of synthetic instruction checks, not a production analytics test or proof of live connector behavior.
+
+## Output framing regression
+
+Observed failure on September 15: the live reports used long analytical paragraphs, and the Build Investment artifact did not identify its purpose or expose the investment/customer-need comparison through headings. The user requested Tiffany-style writing and preservation of Build Investment's original direction, with strategy and locked-release context rather than a redesign of the skill.
+
+Before editing, an independent agent given the old investment contract and synthetic dashboard/guide facts returned three unheaded paragraphs starting “Defer judgment on changing the current investment mix.” It included a broad, internally contaminated visitor count only to explain why it could not support the decision. This reproduces the framing and evidence-clutter failure.
+
+Acceptance checks for each reusable output:
+
+- The report identifies its own name, scope, and purpose without surrounding chat.
+- The first substantive sentence states the conclusion; short headings make the customer question and next step easy to find.
+- Plain sentences explain the work and customer consequence. Unusable metrics are omitted from the main report, while the material limitation remains next to the claim.
+- Build Investment compares current engineering work with customer needs and gives a sequencing decision. It does not become a product-health report or a justification of a single fix.
+- Strategic shifts, locked releases, and caller-requested pre-read formats remain supported. Do not force displacement or an impact verdict when those are unsupported.
+
+The post-edit dashboard/guide sample used the required report identity and comparison headings, omitted the unusable count, and kept the investment decision distinct from unproven impact. The strategic-shift rerun was not blind because the evaluator saw expected checks; it is not counted as independent validation.
+
+A separate evaluator generated Build Value and Usage Brief from the supplied synthetic facts without reading this file. Both included their own title, purpose, and short headings. Build Value kept 196/400 distinct from 96/150 and did not claim faster analysis. Usage Brief retained the missing-date limitation, 45-second baseline, and 98% success guardrail without inventing a target or posting. Review found repeated conclusions in Build Value; its contract now places the opening conclusion under the first heading rather than requiring a separate summary paragraph.

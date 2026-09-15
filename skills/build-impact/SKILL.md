@@ -13,7 +13,7 @@ The default report is **Build Value**: what the team built, what it enables for 
 - **Specific change or rollout decision:** evaluate the named PR, launch, experiment, or feature and recommend one next action.
 - **Individual contribution (explicit request only):** relate the person's exact PRs to the customer experience. Distinguish their contribution from team ownership; never assign them an area-wide result without supporting evidence or compare individual productivity.
 
-Read [references/output-contract.md](references/output-contract.md) for the selected report shape. All views share the evidence checks below. Keep connected systems read-only unless the surrounding task separately authorizes a change.
+Read [references/output-contract.md](references/output-contract.md) for the selected report shape and apply its Tiffany-style pass. Every output includes its own title, plain-language purpose, and short headings, so it makes sense outside the chat. All views share the evidence checks below. Keep connected systems read-only unless the surrounding task separately authorizes a change.
 
 ## 1. Resolve the work and the customer job
 

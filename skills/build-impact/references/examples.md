@@ -8,11 +8,21 @@ Fixture: team-supplied release R1 confirms filters and product-area support reac
 
 ### Build Value · Analytics · June 1–28
 
+What the team built and why it matters to customers.
+
+#### What changed
+
 The recent filter and product-area changes could make it easier to carry the same question across Analytics views. Customers asked for consistent controls; the team has now made those controls available across more of the workflow.
 
 The benefit would be less time reconstructing an analysis when moving between views. That is the product rationale, based on the requests in A1 and A2. The June 1 release record confirms availability, but we do not yet know whether the changes reduced customer effort.
 
-Measurement is unknown for this outcome, so impact cannot be verified. The next check is whether customers who encounter these controls can finish the relevant analysis with less effort. Feedback from the original requesting customers would help determine whether the underlying problem was resolved.
+#### What we know so far
+
+We do not yet measure whether customers finish this analysis with less effort, so we cannot confirm that benefit.
+
+#### What to check next
+
+Ask the original requesting customers to complete the analysis and check whether they still have to rebuild their selected context.
 
 Sources: fixture issues A1/A2 and release R1. No measured improvement is claimed.
 
@@ -22,11 +32,21 @@ Fixture: release R2 confirms exposure on June 1. For June 1–28, validation V2 
 
 ### Build Value · Analytics · June 1–28
 
+What the team built and why it matters to customers.
+
+#### What changed
+
 Customers are returning to the filtering workflow, which supports the idea that it addresses a recurring need. Whether it makes analysis easier is still unproven.
+
+The June 1 release added filters and product-area controls to help customers carry the same analysis between views.
+
+#### What we know so far
 
 Measurement is trusted for eligible accounts and filter use after the June 1 rollout. During June 1–28, 196 of 400 customer accounts that could encounter the filter used it, or 49%. Of the 150 adopting accounts with two full weeks of follow-up, 96 returned to it in a later week.
 
-The eligible population makes the adoption count interpretable, and repeat use adds evidence beyond initial trial. We did not set a success target, so these numbers alone cannot establish whether adoption met expectations. They also do not show faster completion or improved retention.
+These counts show trial and return use. Without a target or completion measure, they do not show whether adoption met expectations or analysis became faster.
+
+#### What to check next
 
 The next check is whether customers complete the analysis with less effort, the intended benefit recorded in A3. The current evidence supports recurring use; it does not establish that the release caused a broader business result.
 
@@ -38,12 +58,22 @@ Fixture: A4 describes preserving an analysis through sharing. R3 confirms relate
 
 ### Build Value · Analytics · June 1–28
 
+What the team built and why it matters to customers.
+
+#### What changed
+
 The new controls support more specific analysis, but the sharing step still loses the context customers selected. The intended end-to-end benefit is incomplete.
 
-The June 1 release added the controls for eligible Analytics customers. In three interviews during June 1–28, customers reported rebuilding their context when sharing a result. A behavior check reproduced the same limitation. This supports a specific handoff problem; it does not tell us how many customers encounter it.
+The June 1 release added controls for more specific analysis. The intended benefit includes carrying that analysis through sharing with colleagues.
+
+#### What we know so far
+
+In three interviews during June 1–28, customers reported rebuilding their context when sharing a result. A behavior check reproduced the same limitation. This supports a specific handoff problem; it does not tell us how many customers encounter it.
 
 The product benefit described in A4 depends on carrying an analysis through to colleagues. More filter activity would not resolve that gap. Quantitative impact remains unverified because workflow completion is not measured reliably.
 
-The next check is to trace an analysis through sharing with affected customers and confirm what context must survive. That gives the team a concrete problem to investigate and gives leaders evidence for a later sequencing decision.
+#### What to check next
+
+Trace an analysis through sharing with affected customers and confirm which filters and selections need to survive.
 
 Sources: fixture intent A4, release R3, interviews F3, and behavior check B3.

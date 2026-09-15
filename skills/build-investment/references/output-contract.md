@@ -4,15 +4,27 @@ Return one leadership recommendation: **sustain, increase, redirect, reduce, or 
 
 ## Focus brief
 
-Aim for 180–260 words, at most 300 unless the caller asks for detail. Use two or three short paragraphs, with headings only when they help. Explain:
+Title the output **Build Investment · <scope> · <planning period>** and put this purpose line directly below it: **Are we putting engineering effort in the right places?** The report must identify itself when copied into a meeting pre-read without the surrounding chat.
 
-- the recommended direction and the product area or customer job it concerns;
-- what the team is investing in, who benefits, and what customer or strategic evidence supports the conclusion;
-- the next action, review condition, and uncertainty that could change the decision.
+Aim for 180–260 words, at most 300 unless the caller asks for detail. Lead with a concrete recommendation, such as “Keep the organization onboarding work in the October release.” Use these three short headings:
+
+1. **Where effort is going:** describe the material planned or in-flight workstreams and what they build. Distinguish merged work from customer availability. When no planning source exists, say what delivery evidence shows and that planned investment is unconfirmed.
+2. **How that compares with customer needs:** explain the customer problem or strategic opportunity, whether the investment addresses it, and the strongest relevant alternative. Separate current usage from a deliberate bet on future customers. Name a mismatch when supported; explain alignment when supported.
+3. **What should change:** give one sequencing decision, what moves later and what stays protected when those are known, and one next check. For sustain, use **What should stay the same**. For an unresolved decision, use **What we need to decide**. A locked release makes this a recommendation for the next open planning decision, not an instruction to disrupt the release.
+
+This is the original investment-versus-customer-need comparison, with room for strategy and fixed commitments. Do not replace it with a general product-health summary, a retrospective justification of one fix, or a measurement audit. Missing analytics may limit an impact claim without preventing a strategy-backed sequencing recommendation. Preserve uncertainty that could actually reverse the decision.
+
+If the caller specifies another format, retain the title, purpose, recommendation, and the three questions in that format. Use bold labels for a short Slack version.
 
 Make the recommendation clear in the opening paragraph. Within the first 100 words, connect the actual investment to the customer need or intended strategic benefit. For a redirect, explain both sides of the gap. For sustain, explain why the current focus remains justified. For defer judgment, state the evidence or strategic choice that prevents a decision.
 
-Use plain, conversational language. Describe the work before citing tickets or PRs. Keep technical details only when they explain the sequencing decision. Avoid em dashes, unnecessary emoji, canned praise, abstract framework labels, and "this isn't X, it's Y" constructions. Put the limitation beside the claim it qualifies.
+## Tiffany writing style
+
+When `tiffany-style` is available, read and apply it before drafting. The rules here remain usable when that personal skill is not installed.
+
+Write as a capable colleague preparing a product meeting: direct recommendation, concrete work, customer consequence, next decision. Use short complete sentences, meaningful bullets, and the headings above. Describe work before citing records. Prefer “we have not confirmed customers received the fix” to “production exposure remains unverified,” and “keep the current focus” to “sustain the investment allocation.” Keep necessary uncertainty beside the claim in one direct sentence; put supporting measurement detail in sources or a requested appendix. Leave unusable numbers out of the main brief instead of listing and retracting them.
+
+Before returning it, read the draft aloud mentally. Remove repeated conclusions, generic praise, em dashes, dramatic fragments, consultancy language, and manufactured “not X, but Y” contrasts. Every paragraph should help the reader understand the investment, the customer need, or the decision. Headings do not excuse abstract or padded prose.
 
 ## Adapt to the recommendation
 
