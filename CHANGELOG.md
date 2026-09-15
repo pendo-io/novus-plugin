@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 — unreleased
+## 0.5.0 — unreleased
 
 - `build-impact` now defaults to **Build Value**, a product-area report connecting related team contributions to
   customer benefit. Specific-change decisions and explicitly requested individual reports remain available under
