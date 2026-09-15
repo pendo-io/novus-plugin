@@ -8,9 +8,11 @@ Novus automatically instruments supported product surfaces. These skills help bu
 
 ### `build-impact`
 
-Answers: **What did this shipped work add up to, did it create customer value, and what should we do now?**
+Answers: **What do this team's improvements add up to for customers, why do they matter, and what evidence supports their value?**
 
-It works for one change or a builder's recent PRs. It reconstructs the intended outcome, verifies the trail from proposed to merged to exposed to measured, checks instrumentation trust, separates observed movement from attributable impact, and returns one verdict: `WORKED`, `PARTIAL`, `DID NOT WORK`, `TOO EARLY`, or `CANNOT VERIFY`. Weekly builder reports use a compact Slack-first "Your code in the wild" format with exact PRs, one release date, customer movement, and one signal-backed next check. It recommends one next action without changing rollout or production state.
+The default report is **Build Value**, focused on a product area or customer workflow over a defined period. It connects related contributions across the team, explains the customer benefit or remaining gap, and interprets adoption against the people who could encounter the changes. Completion, reduced effort, and reliability can matter even when usage does not grow. Product rationale, observed outcomes, and causal attribution stay separate.
+
+The `/build-impact` command is unchanged. Specific-change decisions and explicitly requested individual reports remain available as **Build Impact**. All views verify release state and measurement, including identity migrations and unreleased branch work. An individual report stays private unless sharing is separately requested. See the [Build Value examples](skills/build-impact/references/examples.md).
 
 ### `whats-next`
 
@@ -30,7 +32,9 @@ It compares three layers across product areas:
 - **Built** — completed work and merged changes, estimated with team-level scope and complexity rather than surveillance metrics such as lines of code or raw PR counts.
 - **Experienced** — Novus signals, adoption, funnels, frustration, feedback, account reach, and post-release outcomes.
 
-The result is a short engineer-to-engineer focus brief: where customers are struggling, where the team is investing instead, what should change, what stays protected, and why that choice beats the strongest alternative. It stays read-only until the user approves a planning or delivery action and never invents a capacity tradeoff when planning evidence does not identify one.
+The result is a short leadership brief recommending whether to sustain, increase, redirect, reduce, or defer judgment. It considers current customer needs, deliberate strategic shifts, intended future audiences, and fixed commitments. A supported decision to stay the course is a valid result. Any proposed displacement comes from actual planning evidence.
+
+It can use relevant strategy documents or product/leadership meeting context supplied by the caller or available through connected sources, and revises its conclusion when that context is corrected. By default it returns a response suitable for an existing meeting pre-read; it can produce a different audience format or artifact when requested. The analysis stays read-only and does not automatically publish, schedule, or change the roadmap.
 
 ### `ux-review`
 
@@ -40,9 +44,9 @@ When Novus MCP is connected, it backs findings with real traffic, adoption, funn
 
 ### `usage-brief`
 
-Answers: **How much is the area my PR touches used today, and can this change grow that usage?**
+Answers: **How is the area my PR touches used today, who could benefit from this change, and what would show it helped?**
 
-From a description, a Linear/Jira ticket, or a PR/branch, it resolves the surfaces the change touches and returns a short, plain-language brief that **leads with current usage** (reach as a share of active users, top accounts and visitors, with internal/test/researcher traffic separated out), then reads whether the change has **potential to grow** that usage — headroom, the lever it pulls (new users vs. deeper use), the number that would show it worked, and any known friction it closes. It then offers to **post the brief as a comment** on the PR (or the linked Linear/Jira ticket) — the only skill here that writes, and only after you confirm the exact text. Everything else is read-only.
+From a description, issue, or PR/branch, it resolves the relevant surfaces and leads with trustworthy current usage, including customer eligibility and traffic exclusions. It explains the proposed benefit and an appropriate success measure: reach, completion, efficiency, reliability, or reduced errors. Low usage alone does not establish high potential. If measurement is invalid, it leads with that gap. It can post the brief as a PR or ticket comment only after confirmation of the exact text and target.
 
 ### `verify-instrumentation`
 
@@ -52,8 +56,8 @@ The measurement-trust sub-check the other skills lean on. It runs a six-link tru
 
 ## Choose the right decision
 
-- Use `usage-brief` when the question is how used the area your change touches is, and whether the change can grow that usage.
-- Use `build-impact` when the question is what shipped work added up to and whether it created customer value.
+- Use `usage-brief` for current usage and the possible benefit of a proposed change.
+- Use `build-impact` for a Build Value review of a product area's shipped work, a specific impact decision, or an explicitly requested individual report.
 - Use `build-investment` when the question is whether the portfolio is funding the right product areas.
 - Use `whats-next` when the question is what one builder should finish, build, or defer next.
 - Use `ux-review` when the question is whether local changes introduce a customer-facing UX problem.
@@ -80,13 +84,17 @@ Ask naturally:
 
 > show me what my recent PRs added up to, whether customers are using the experience, and what to watch next
 
+> give me a Build Value report for the Analytics improvements our team shipped last month
+
+> use Build Investment for our product-meeting pre-read, including the strategy decisions from our last three product meetings
+
 > what should I build next?
 
 > compare what we planned, built, and customers experienced this quarter
 
 > review the UX of my changes
 
-> how used is the area my PR touches, and can this change grow that usage?
+> how used is the area my PR touches, and would this change make the task easier or more reliable?
 
 > is this surface instrumented well enough to trust its numbers?
 
@@ -96,11 +104,11 @@ The skills activate from their descriptions. In clients with slash commands, inv
 
 ```
 skills/
-  build-impact/           post-release customer-outcome decision
+  build-impact/           Build Value area review + specific/individual impact
   whats-next/             current-work steering and validated decision record
   build-investment/       portfolio investment focus brief
   ux-review/              pre-PR UX review workflow and references
-  usage-brief/            current usage + growth potential, posted to the PR/ticket
+  usage-brief/            current usage + proposed benefit, optional PR/ticket comment
   verify-instrumentation/ measurement-trust check for a surface
 plugin.json  mcp.json     Agent Plugins 1.0 (Cursor, Copilot, VS Code, Kiro, ChatGPT)
 .claude-plugin/  .mcp.json

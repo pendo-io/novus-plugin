@@ -1,90 +1,108 @@
 ---
 name: build-impact
-description: Use when someone asks whether a shipped change, set of pull requests, launch, experiment, or feature worked, created customer value, should roll out further, should continue, or should be rolled back, including weekly engineering-impact or "code in the wild" reports.
+description: Explain what a team's shipped improvements add up to for customers in a product area, why they matter, and what evidence supports their value. Also use to verify a specific change, launch, or experiment, or when a builder explicitly requests an individual impact report. Portfolio allocation belongs to build-investment.
 ---
 
 # Build Impact
 
-Decide whether shipped work produced the intended customer or business outcome. Separate what shipped, who could experience it, what moved, and what can responsibly be attributed to the work. For a builder's recent PRs, tell one product-impact story instead of producing a changelog.
+The default report is **Build Value**: what the team built, what it enables for customers, and whether the evidence supports the intended benefit. Keep the `build-impact` command for both this product-area review and specific impact decisions.
 
-## Core rule
+## Choose the scope
 
-**No impact verdict from an unverified measurement.** A merge is not exposure, movement is not causality, and zero events is not zero use.
+- **Product area or team work (default):** explain the value of related improvements over a defined period. Include contributions across the team. Weekly reports and Slack requests use this scope unless the caller names a person or specific change.
+- **Specific change or rollout decision:** evaluate the named PR, launch, experiment, or feature and recommend one next action.
+- **Individual contribution (explicit request only):** relate the person's exact PRs to the customer experience. Distinguish their contribution from team ownership; never assign them an area-wide result without supporting evidence or compare individual productivity.
 
-Keep Novus, GitHub, Linear/Jira, flags, launches, and production read-only unless the surrounding task separately authorizes a mutation.
+Read [references/output-contract.md](references/output-contract.md) for the selected report shape and apply its Tiffany-style pass. Every output includes its own title, plain-language purpose, and short headings, so it makes sense outside the chat. All views share the evidence checks below. Keep connected systems read-only unless the surrounding task separately authorizes a change.
 
-## Workflow
+## Evidence boundary
 
-### 1. Reconstruct the impact contract
+Treat sources named in the current request as the complete evidence boundary. If the caller asks for Novus, GitHub, and Linear, use only those sources. Do not carry meeting notes, prior transcripts, personal memory, ambient UI, or evidence from an earlier request into the report unless the caller explicitly includes or authorizes them for this run. A Linear issue or GitHub PR that names a customer can support only what that record says; it does not authorize retrieving the customer's meeting or attributing additional statements to a person.
 
-Resolve the work from the current branch, PRs, issues, launch, flag, goal, or explicit request. For multiple PRs, group only changes that contribute to the same customer experience and name every included PR. Establish:
+Before drafting, keep a short internal source ledger: each customer statement, rationale, delivery fact, and measure must map to an allowed source. A link to a source outside the boundary proves only that the link exists. If an unsupported source would materially improve the answer, state the missing context instead of using it. Cite the allowed source that supports each attribution.
 
-- intended user or business outcome;
-- affected audience and exposure mechanism;
-- primary outcome, early indicator, and must-not-regress measures;
-- baseline or comparison cohort;
-- expected lag or named review point.
+## 1. Resolve the work and the customer job
 
-Use a saved Novus goal when directly related. Otherwise keep the intended outcome provisional; do not invent a target. Use Linear/Jira intent as planning evidence, not proof of impact.
+Identify one application, product area or customer workflow, delivery period, and outcome window. Use the caller's scope; otherwise use the most recent complete 30 days of delivery and an exposure-appropriate outcome window. Resolve ambiguity from available context before asking. Do not mix applications.
 
-When reporting on a person, distinguish their contribution from team ownership. Tie their exact PRs to the product experience, but do not credit them with an area-wide metric unless the evidence supports that attribution.
+Read [references/evidence-map.md](references/evidence-map.md). Map PRs, completed issues, launches, artifacts, and product memory to the customer experience. Include linked dependencies outside the period when needed to understand it, and label them separately. Preserve each included PR and its release evidence in linked sources.
 
-### 2. Verify the shipping trail
+Treat the current checkout as context, not the release boundary. A feature branch, including one based on another feature branch, can contain work that customers have never received. Verify the target branch and release trail separately. If the named person's work is all unreleased or outside the window, say so; do not substitute team work and call it their impact. For a team report, include all relevant contributors without requiring separate personal runs.
 
-Read [references/evidence-map.md](references/evidence-map.md). Stop at the last proven state:
+Establish:
 
-1. **Proposed** — code or a plan exists.
-2. **Merged** — it entered the target branch.
-3. **Exposed** — the relevant audience could encounter it.
-4. **Measured** — trustworthy outcome evidence exists after exposure and the expected lag.
+- who has the problem and what they are trying to accomplish;
+- what became possible, easier, faster, or more reliable;
+- the stated reason for the work, from a goal, issue, customer feedback, or the caller;
+- the intended outcome, early indicator, guardrails, and baseline or comparison;
+- who could encounter the changes and when a benefit could reasonably appear.
 
-Do not infer exposure from merge, issue completion, or flag existence. Resolve rollout percentage, targeting, app, version, start time, and competing releases when material.
+Use related saved goals as intent, not proof of impact. If the rationale or target was never recorded, label the reconstructed reasoning as a hypothesis. Do not invent a goal, success threshold, customer request, or business commitment. Check whether customer-feedback sources are available before claiming what customers asked for.
 
-Keep the complete trail in the analysis. In a weekly Slack report, render one release date: when the final required change made the described experience available. Add one short exposure note only when rollout or audience limits materially change the interpretation.
+## 2. Explain what the improvements add up to
 
-### 3. Establish measurement trust
+Group work by a shared customer job or dependency, rather than by contributor, folder, or date. Explain the connection in plain language: **changes → different customer experience → expected benefit**.
 
-**REQUIRED MEASUREMENT CHECK:** When the conclusion depends on Pendo behavioral data and no current instrumentation verdict exists for the measured surface, use `verify-instrumentation` when it is available. Otherwise perform the same read-only trust-chain check from [references/evidence-map.md](references/evidence-map.md): arrival, recognition, definition, continuity, audience, and decision-critical coverage.
+Distinguish improvements that remove separate annoyances from those that complete a workflow or make it consistent across surfaces. Look for a remaining step that prevents the combined benefit. If the work does not form a coherent experience, say so and report the supported benefits separately.
 
-Carry its `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` verdict into this decision. A degraded measurement may support a bounded directional conclusion when the limitation cannot reverse it. An untrusted or unknown primary outcome yields `CANNOT VERIFY`, not `DID NOT WORK`.
+Explain why the benefit matters to the affected customers. Reduced effort, fewer errors, reliability, and completing a task can be valuable even when usage does not grow. Treat customer requests as evidence of a problem, not proof that the solution worked. Do not jump from adoption to satisfaction, retention, or revenue without evidence for each link.
 
-Never infer an instrumentation verdict from aggregate metrics or invent validation findings. If neither the sub-skill nor the direct trust-chain check can establish a current verdict, use `UNKNOWN`. Use `TOO EARLY` only when exposure and measurement are trustworthy but the outcome window is incomplete; otherwise use `CANNOT VERIFY`.
+Keep these judgments distinct throughout the report:
 
-### 4. Compare the right populations
+- **Product rationale:** why the work could help, and whose stated intent or evidence supports that explanation.
+- **Observed outcome:** what customers actually did or reported.
+- **Attribution:** how strongly the comparison supports assigning that result to the changes, including competing explanations.
 
-Prefer a concurrent eligible treatment/control or staged-rollout comparison. Otherwise use matched pre/post windows anchored on verified exposure and disclose seasonality, audience shifts, internal/test traffic, overlapping releases, sample size, and adoption lag.
+A useful product rationale can be reported while measured impact remains unverified. It can also be weak, contradicted, or incomplete. Do not write a justification merely because the work shipped.
 
-Separate:
+## 3. Verify release and measurement
 
-- **Observed movement** — what changed after exposure;
-- **Attributed impact** — what the design supports assigning to this change;
-- **Alternative explanations** — other credible causes.
+Stop at the last proven state: **proposed**, **merged**, **exposed**, or **measured**. A merge, closed issue, or existing flag does not prove exposure. Resolve deployment/version, targeting, rollout start, and competing releases when material.
 
-Use exact lift, confidence intervals, or thresholds only when the underlying data supports them.
+For several changes, preserve their separate exposure dates and eligible populations. A common date is appropriate when exposure on that date is verified for every included change. If one benefit required several changes released at different times, evaluate that combined benefit from the final required exposure date without applying it retroactively to earlier adoption. Never sum overlapping account or user counts across features to claim total reach.
 
-Search relevant Novus signals before choosing the next action. Use a current signal to explain what to watch next, especially when the outcome is too early to judge. Prefer a concrete behavior loop, cohort, or guardrail over a generic request to "keep monitoring."
+When a conclusion depends on Pendo behavioral data, reuse a current `verify-instrumentation` verdict or run that skill when available. Otherwise perform the same read-only check from the evidence map: arrival, recognition, definition, continuity, audience, and decision-critical coverage. Carry `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` for each decision-critical measure. Aggregate metrics alone cannot establish trust.
 
-### 5. Return one verdict and action
+An unknown or untrusted primary outcome yields `CANNOT VERIFY`. A degraded measure supports only a conclusion its limitations cannot reverse. Missing instrumentation is missing evidence, not zero use. Keep measurement confidence separate from causal confidence; do not invent a numeric confidence score.
 
-Read [references/output-contract.md](references/output-contract.md) immediately before responding. Choose exactly one:
+Check visitor/account-ID migrations and changes to organization or event definitions. An identity migration can make existing people appear new and inflate unique counts, acquisition, or retention. Omit invalidated growth headlines; a later caveat does not make them usable. Compare stable post-change windows or a verified reconciliation, and disclose when neither is available. Check account metrics independently rather than assuming they survived a visitor-ID change.
 
-- **WORKED** — expected outcome improved after verified exposure with trustworthy measurement and acceptable guardrails.
-- **PARTIAL** — evidence supports a real but incomplete, segmented, or guardrail-constrained benefit.
-- **DID NOT WORK** — trustworthy evidence after the expected window shows the intended outcome did not improve or a decisive guardrail failed.
-- **TOO EARLY** — exposure or the outcome window is incomplete.
-- **CANNOT VERIFY** — exposure, instrumentation, comparison, or outcome evidence is not trustworthy enough.
+## 4. Interpret the outcome
 
-Recommend exactly one next action: `expand`, `continue`, `modify`, `rollback`, or `repair measurement`. Name the evidence that would change the verdict and the next review condition. Use the Slack-first report shape when the request is about a builder's recent work, a weekly update, or a Slack delivery.
+Answer what adoption means using a matching denominator: eligible customer accounts or users who had access and an opportunity to encounter the relevant workflow during the same window. Keep units consistent. Show counts with percentages and distinguish this denominator from all active app users. If eligibility is unknown, report the count and the gap without grading adoption as good or bad.
 
-## Degraded behavior
+Select the measures that reflect the intended benefit: adoption, successful completion, repeat use, time or effort, errors, reliability, or customer feedback. For repeat use, include only cohorts with enough follow-up. Interpret frequency against the natural frequency of the task; a rarely needed feature need not be used weekly to be valuable.
 
-- **Novus unavailable:** verify shipping and intended outcome from repository and planning context, but do not claim customer impact.
-- **No GitHub or rollout evidence:** do not infer exposure; use `CANNOT VERIFY` or `TOO EARLY`.
-- **No Linear/Jira:** use the PR, launch, goal, or caller's stated intent and disclose missing roadmap context only when material.
-- **No saved goal:** preserve a provisional outcome; impact verification can still proceed.
-- **Broken instrumentation:** identify the smallest exact repair, use `verify-instrumentation` when available, and keep the impact verdict unverified.
-- **Conflicting evidence:** show the conflict and choose the more conservative verdict.
+Compare with a saved target, relevant baseline, or comparable exposed cohort when available. Without one, describe the evidence and its limits rather than inventing a benchmark. More clicks may mean more effort, and fewer clicks may mean a task became easier.
 
-## Scope boundary
+Prefer a credible concurrent treatment/control or staged-rollout comparison. Otherwise use matched, exposure-anchored windows and disclose material differences in audience, internal/test/bot traffic, seasonality, sample size, instrumentation, or overlapping releases. A clean measure does not establish causation. Label descriptive post-release movement as an association.
 
-Do not use this skill to choose the next unrelated build, allocate a portfolio, design a pre-ship experiment, or generate instrumentation from scratch. Use `whats-next` or `build-investment` for the adjacent decisions they cover.
+Search relevant Novus signals and available customer feedback to explain the result and select the next check. Several summaries of one source are one source. Small qualitative samples can explain a problem but do not establish prevalence.
+
+## 5. Give the supported conclusion
+
+Read [references/output-contract.md](references/output-contract.md) immediately before writing. For a Build Value report, lead with the product benefit or unresolved problem, then state what is and is not supported. Do not force one verdict over unrelated improvements. Use the following gates for each material outcome claim and for the single verdict in a specific-change decision:
+
+- **WORKED:** verified exposure, elapsed outcome window, trustworthy improvement in the intended outcome, and acceptable guardrails. State whether attribution is causal or observational.
+- **PARTIAL:** the same exposure and measurement checks support a real benefit, but scope, outcome, or guardrails limit it.
+- **DID NOT WORK:** trustworthy evidence after exposure and the expected window shows no intended improvement or a decisive guardrail failure.
+- **TOO EARLY:** exposure and decision-fit measurement are verified; only the outcome window is incomplete.
+- **CANNOT VERIFY:** exposure, measurement, comparison, or outcome evidence is insufficient. This includes a merged change with no verified exposure.
+
+For Build Value, choose one useful next check or action without prescribing portfolio allocation. For a specific-change decision, recommend one of `expand`, `continue`, `modify`, `rollback`, or `repair measurement`, explain why, and name the review condition and evidence that would change the verdict. If exposure is unknown, `continue` can mean verify rollout before making a rollout recommendation; it must not imply continuing an unverified deployment.
+
+## Audience and delivery
+
+Team reports explain customer value and what the team learned. Investment tradeoffs belong in a separate leadership review with `build-investment`. Prepare individual reports privately and let the recipient decide whether to share; do not broadcast recognition or infer permission to send anything.
+
+A Slack-shaped response does not create a schedule or send a message. If an authorized recurring workflow invokes the skill, prefer a short spotlight when new outcome evidence, a material anomaly, or a named review point warrants it. Avoid repeating unchanged findings when prior reports are available. Do not promise monitoring or persistent memory that the host has not configured.
+
+## Missing evidence and boundaries
+
+- **Novus unavailable:** reconstruct delivery and intent from available sources. Label the customer-value explanation as provisional and identify the evidence needed to evaluate it.
+- **No rollout evidence:** stop at the verified shipping state and use `CANNOT VERIFY` for impact.
+- **No planning or feedback source:** use available intent, disclose the gap, and keep unrecorded rationale provisional.
+- **Broken measurement:** identify the smallest exact repair and proof needed before interpreting the outcome.
+- **Conflicting evidence:** show the conflict and limit the conclusion to what remains supported.
+
+Do not choose unrelated work, allocate a portfolio, design a pre-ship experiment, or add instrumentation. Use `whats-next`, `build-investment`, or `usage-brief` for those adjacent questions as appropriate.

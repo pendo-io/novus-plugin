@@ -1,101 +1,57 @@
 # Build Impact output contract
 
-Produce one impact decision, not an analytics recap. Default to a compact, Slack-scannable report when the request concerns a builder's recent PRs, a weekly update, or Slack delivery.
+## Tiffany writing style
 
-## Choose one lens
+When `tiffany-style` is available, read and apply it before drafting. The rules here remain usable when that personal skill is not installed. Write for an engineering reader who wants to understand the product consequence. Lead with what customers can do, what became easier, or what remains unresolved. Use complete sentences, short paragraphs, and the report headings below.
 
-- **Product-builder lens (default for weekly reports):** lead with the customer problem, improved experience, and observed outcome. Use PRs as evidence.
-- **Engineering lens:** lead with the system behavior, invariant, reliability, correctness, or performance improvement, then connect it to the customer outcome.
+Describe changes before citing PRs or issues. Use concrete verbs and keep technical detail only when it explains the outcome. Avoid em dashes, decorative emoji, canned praise, dramatic fragments, and phrases such as "value unlock," "transformative impact," or "this isn't X, it's Y." Do not announce that an insight matters; explain its consequence. Keep caveats beside the claims they qualify.
 
-Render exactly one lens. Do not provide both unless the user explicitly asks to compare them.
+Before returning the report, make one read-aloud pass. Replace analytical labels with what happened to the customer: “the number and explanation can disagree” rather than “decision consistency is degraded.” Say “we have not confirmed customers received the fix” rather than “production exposure remains unverified.” Keep each material limitation to a direct sentence beside its claim; retain supporting detail in sources. Leave unusable numbers out of the main report rather than listing and retracting them. Remove repeated conclusions and sentences that do not explain the benefit, evidence, or next check.
 
-## Weekly Slack report
+Read [examples.md](examples.md) when calibrating a product-area report. The examples are synthetic and cannot supply evidence for a live report.
 
-Use exactly this four-part shape:
+## Build Value: default product-area report
 
-```markdown
-🔎 **Your code in the wild · <person>**
+Title the report **Build Value · <product area or team scope> · <period>**. Directly below it, add **What the team built and why it matters to customers.** Keep the title and purpose inside the reusable report, not only in the surrounding chat. Aim for 180–260 words; a short Slack spotlight can be 100–160 words. Expand when the caller requests detail and honor a requested audience format.
 
-*<One plain-language sentence describing what is better for customers.>*
+Use these three headings (bold labels in short Slack reports). The first sentence under **What changed** states the supported customer benefit or remaining problem; a separate executive-summary paragraph is unnecessary:
 
-**What your work adds up to**
+1. **What changed:** connect the team's improvements to the customer job. Explain who benefits and how, with the source of the rationale. Mark an inferred benefit as provisional. Use short bullets when several changes are easier to scan that way.
+2. **What we know so far:** select one to three measures or observations that help judge the benefit. Interpret adoption with counts, matching units, eligible population, and window. Distinguish customer statements from measured behavior. If impact is unknown, state the reason directly without replacing the report with an instrumentation audit.
+3. **What to check next:** give the supported conclusion and one useful next check. A plausible rationale is useful even when impact cannot be verified. State weak reasoning or an incomplete workflow directly.
 
-- <Customer-facing improvement>. ([PR #123](stable-url))
-- <Customer-facing improvement>. ([PR #456](stable-url))
+When a caller requests another format, preserve the title, purpose, and these three questions within it.
 
-**Released:** <Month D, YYYY> · <release/version link when available>
-<Optional one-sentence exposure note when audience or rollout limits matter.>
+State the last verified shipping state, relevant exposure date(s) or missing exposure evidence, audience, outcome window, and measurement limitation compactly in the prose or a source note. Put the instrumentation verdict before interpreting behavioral measures. For example, `Measurement: trusted for eligible accounts and filter use; completion is not tracked.` This does not imply that causality is established.
 
-**What customers are doing**
+Use a common release date when exposure on that date is verified for all included changes. For staggered releases, show the relevant range or dates and keep per-change details in sources. If a benefit required all changes, state when the final dependency became available and evaluate the combined benefit from that point. Keep every included PR, issue, release, artifact, signal, and metric window traceable through inline links or a compact source list. Link detailed evidence when a long list would overwhelm the spotlight; never invent a source URL.
 
-**Data confidence:** <TRUSTED | DEGRADED | UNTRUSTED | UNKNOWN> · <One short scope or limitation note>.
+Apply the verdict gates in `SKILL.md` to measured impact claims. Express the conclusion naturally, such as `Repeat use supports a recurring need; faster completion is still unproven.` Do not attach one success label to a mix of unrelated changes or claim retention or revenue benefit from adoption alone.
 
-- <Surface> reached **X% more people**, across **Y% more accounts**, with **Z% more activity** than <comparison window>.
-- <Second decision-relevant movement in the same sentence form>.
-- <One retention, completion, quality, or guardrail measure when available>.
+Choose one next check or action the audience can use. Team reports should not tell builders to abandon agreed priorities. If the finding raises an allocation question, recommend a separate leadership review without inventing the displaced work.
 
-**The read:** **<Plain-language verdict>.** <One short sentence separating observed movement from attributable impact.>
+## Specific-change decision
 
-**Watch next:** <One current signal and the behavior, cohort, or guardrail it makes decision-relevant>. **Next: <plain-language action>.** **Review:** <One anchored condition and the evidence that would change the verdict>.
-```
+For a named change, rollout, rollback, or experiment evaluation, title the response **Build Impact · <change>** and lead with one verdict. Follow with the proof, intended outcome, attribution limits, and one action: `expand`, `continue`, `modify`, `rollback`, or `repair measurement`.
 
-Render the single verdict and action in natural Slack language:
+Include the purpose line **Did this change deliver the intended customer outcome?** Use **Result**, **Evidence**, and **Next step** as short headings.
 
-| Decision value | Slack wording |
-| --- | --- |
-| `WORKED` | **It worked.** |
-| `PARTIAL` | **Partly.** |
-| `DID NOT WORK` | **It didn't work.** |
-| `TOO EARLY` | **Too early.** |
-| `CANNOT VERIFY` | **Not proven yet.** |
-| `expand` | **Expand it.** |
-| `continue` | **Keep watching.** |
-| `modify` | **Change it.** |
-| `rollback` | **Roll it back.** |
-| `repair measurement` | **Fix the measurement.** |
+Use the same release, measurement, population, and citation requirements as Build Value. Name the review condition and evidence that would change the decision. Do not force an expansion or rollback recommendation when rollout itself is unverified; identify that missing proof as the next check. The action is a recommendation, not authorization to change production.
 
-### Slack shape rules
+## Individual contribution: explicit request only
 
-- Aim for 130–180 words and never exceed 220 words, excluding link targets and a compact source line.
-- Use only the four content blocks in the template; do not add headings or sections. Fold confidence, action, and review into those blocks.
-- Use two to four improvement bullets and name the exact PRs inline.
-- Group PRs by customer experience, not by file or commit chronology.
-- Render shipping as exactly one `Released` line: the date the final required change made the described experience available. Preserve earlier per-PR dates in the analysis or linked sources.
-- Add at most one exposure note. Include it only when a flag, audience, or rollout boundary changes how the metrics should be read.
-- Put the affected audience in the opening sentence or exposure note; do not add a separate "Who this helps" section.
-- Write customer movement as complete sentences. Prefer "reached 71% more people" to a table or a row of unlabeled percentages.
-- Put the instrumentation verdict in the one-line `Data confidence` note before interpreting product metrics. Never infer it from an aggregate or invent a validation result; use `UNKNOWN` when no current check exists.
-- Keep the read to the verdict plus one sentence. Put detailed caveats into the evidence selection, not a long audit paragraph.
-- Use a relevant Novus signal in `Watch next` to support the action. If the read is early, prefer the behavior that would demonstrate repeat value over another top-line reach count.
-- Keep stable PR, issue, release, artifact, flag, rollout, signal, and metric-window identifiers as inline links or a compact source line.
+Title the report **Build Impact · <person>**. Aim for 130–180 words. Explain the customer experience their exact contributions helped enable, then the supported outcome and next check. Keep the broader team contribution visible. Do not infer personal productivity, rank people, or assign a shared outcome to one person.
 
-## Decision brief
+Include the purpose line **How this person's work contributed to the customer experience.** Use **Contribution**, **What we know so far**, and **Next check** as short headings.
 
-When the user explicitly asks for a rollout, rollback, experiment, or audit decision rather than a weekly builder report, keep the same order—verdict, proof, outcome, reason, action—but expand only the evidence needed for that decision. Use a comparison table only when four or more measures genuinely need row-by-row comparison.
-
-Always state the last verified shipping state, affected audience, exposure start, measurement window, and instrumentation verdict somewhere in the response. Compress these into the release line, exposure note, metric sentences, and read when using the Slack format.
-
-## Verdict gates
-
-| Verdict | Required gate |
-| --- | --- |
-| WORKED | Exposed + elapsed window + trusted measurement + improved intended outcome + acceptable guardrails. |
-| PARTIAL | Credible benefit, but limited audience/outcome or a material caveat prevents WORKED. |
-| DID NOT WORK | Exposed + elapsed window + trusted measurement + no intended improvement or decisive guardrail failure. |
-| TOO EARLY | Exposure or expected outcome window is incomplete. |
-| CANNOT VERIFY | Exposure, primary measurement, or comparison is too weak to decide. |
-
-`UNKNOWN` or `UNTRUSTED` primary measurement requires `CANNOT VERIFY`. Reserve `TOO EARLY` for verified exposure with `TRUSTED` or decision-fit `DEGRADED` measurement when only the outcome window is incomplete.
+Prepare this as a private response. A request for analysis does not authorize posting it or sending a DM. Use the shared evidence requirements and qualify the opening benefit when it has not been observed.
 
 ## Final check
 
-- The response answers “did it work?” without making the reader parse an audit.
-- Merge, exposure, and measurement are not conflated.
-- An instrumentation verdict appears before product metrics are interpreted.
-- Observed movement and attributable impact are separate.
-- The result does not hide internal/test traffic or competing changes.
-- Weekly reports name exact PRs and use one release date for the completed experience.
-- Weekly reports are scannable in Slack and use no metric table.
-- The next action is supported by a current signal when one exists.
-- Exactly one next action and one review condition are present.
-- No external or live-user change occurs without authority.
+- The report uses the requested scope and explains who benefits and how.
+- The combined benefit follows from connected work, not a forced story.
+- Reported demand, product rationale, observed outcome, and causal attribution are distinguishable.
+- Counts, denominators, windows, and follow-up opportunities match; overlapping populations are not added together.
+- Measurement confidence does not stand in for causal confidence.
+- A missing exposure record yields `CANNOT VERIFY`; `TOO EARLY` means only the outcome window is incomplete.
+- The next check follows from the finding, and the report claims no delivery or automation that has not occurred.

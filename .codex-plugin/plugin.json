@@ -1,6 +1,6 @@
 {
   "name": "novus",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Novus skills for Codex: UX review and evidence-backed next-work and portfolio investment decisions.",
   "skills": "./skills/"
 }

@@ -1,53 +1,36 @@
 # Usage Brief evidence map
 
-Novus MCP tool prefixes vary by host (Claude Code exposes `getArtifactMetrics` as `mcp__novus__getArtifactMetrics`). Match on the capability suffix, not the full name.
+Novus tool prefixes vary by host. Resolve available capabilities by suffix, such as `getArtifactMetrics`. Fetch only evidence that informs current usage, the proposed benefit, or its measurement.
 
-## The rule that matters
+## Resolve surfaces and intent
 
-**Lead with current usage, then read whether the change can grow it — and pull only the numbers that inform those two things.** The temptation is to fetch every metric for every artifact and narrate it back. A number earns its place only when it describes current usage of the touched area or the change's potential to move it. "This page has 500 visitors" on its own is not a brief.
-
-## Resolve surfaces
-
-| Need | Capabilities | Guidance |
+| Need | Preferred evidence | Interpretation |
 | --- | --- | --- |
-| What does Novus model here? | `listArtifactsByType` (`PAGE`, `FEATURE`, `TRACK_EVENT`, `FUNNEL`) | Match artifacts to the areas the diff/ticket changes, by name and route. |
-| Novus IDs for metrics | `getExternalIds`, `getFilterVocabulary` | Metrics calls take resolved IDs; resolve once. |
-| Is the surface gated? | flag reads, `listFlags` | A flag or partial rollout caps who can reach the surface — it bounds the reachable population, so it bounds the growth ceiling. |
+| Surface | `listArtifactsByType`, `getArtifact`, product-area membership, PR/diff/issue | Match the customer behavior, not only a filename or title. |
+| Metric identity | `getExternalIds`, `getFilterVocabulary`, event definitions | Resolve IDs and confirm semantics before comparing data. |
+| Access and exposure | flags, deployment/version, targeting, upstream workflow | Establish who can encounter it; flag existence alone is insufficient. |
+| Intended benefit | caller context, issue, goal, relevant product/leadership decision | Preserve the intended audience and current strategy, including future needs. Mark inferred intent. |
 
-## Current usage — the headline
+## Usage and outcome evidence
 
-Fill the first block with these.
-
-| Question | Capabilities | Notes |
+| Question | Capabilities when available | Interpretation |
 | --- | --- | --- |
-| Reach now / trend | `getArtifactMetrics` (`days: 7` and `days: 30`, `dayRange`) | Unique visitors, accounts, and adoption %; include the period-over-period trend. |
-| Share of active users | app-usage / MAU reads | Convert raw reach into a share — 40 visitors means nothing without the base. |
-| Who uses it | `getArtifactTopUsers` (`kind: visitors` and `kind: accounts`) | Top accounts and visitors; separate internal / test / researcher traffic by name. |
-| The touched control's own use | `getArtifactMetrics` on that Feature/Track Event | When the specific control the change touches is instrumented, report its own usage too. |
+| Reach and trend | `getArtifactMetrics`, app usage, weekly data | Unique customer users/accounts in comparable windows. Keep active-app reach separate from eligible adoption. |
+| Eligibility | segments, targeting, upstream workflow metrics | Match numerator and denominator by unit, window, and access. Do not invent the eligible base. |
+| Who benefits | `getArtifactTopUsers`, account activity, reliable exclusion filters | Account concentration and customer cohorts; do not infer customer identity from a name alone. |
+| Successful completion | `getFunnelAnalysis`, completion events | Use the relevant workflow and required steps, not general activity. |
+| Repeat value | `getRetentionCohorts`, `getPageRetention`, `daysActive` | Match follow-up opportunity and the task's natural frequency. A weekly aggregate is not cohort retention. |
+| Efficiency or reliability | verified time-to-complete, errors, retries, operational evidence | Less activity can be good when the task still completes reliably. Do not invent telemetry the host lacks. |
+| Customer problem | `listSignals`, replay, available feedback or linked issues | Check whether the proposed change addresses the observed problem. Qualitative evidence alone does not establish prevalence. |
 
-## Can this change grow usage?
+## Measurement trust
 
-An **estimate**, grounded in evidence — never a predicted number.
+Reuse a current `verify-instrumentation` verdict or run it when available. Otherwise check event arrival, artifact recognition, semantic definition, continuity, audience fit, and required flow coverage with available raw events, artifact/ID definitions, targeting, and funnel evidence. Carry `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` for decision-critical measures. Do not infer trust from aggregates.
 
-- **Headroom** — is usage low or declining (room to grow) or high and saturated (little room)? `getArtifactMetrics` reach + trend. Low usage on a live area means high headroom, not "no potential".
-- **Lever** — which way does the change grow usage: **new users**, **deeper use** for people already here, or **neither**? Read it from the growth shape and separate it from the surface's own trajectory:
-  - *new users* → account count climbing, new-vs-returning skewing new, a weekly ramp (`getArtifactMetrics` `weekly`, account-count trend, new-vs-returning app reads);
-  - *deeper use* → the same users returning (`getRetentionCohorts`; `getArtifactTopUsers` `daysActive`; `getPageRetention` when the host exposes it — some do not, so fall back to `daysActive` + the weekly ramp rather than treating its absence as no retention).
-  An in-flow enhancement usually deepens use for existing users even when its surface is being adopted; it rarely acquires new users on its own.
-- **Reachable population** — the ceiling: who could adopt this if it works (upstream reach / entry points; the flag gate above). A change capped to a small gated group has a small ceiling regardless of headroom.
-- **The number that would show it worked** — name the metric this change could move and its value now; run `verify-instrumentation` on it. If it is not cleanly measurable (missing denominator/completion event), say so and where the number would come from instead.
-- **Known friction it addresses** — `listSignals` / `getFunnelAnalysis`: if Novus already flags a problem here (low conversion, a broken step, frustration), closing it raises the potential; cite the signal.
+Check visitor/account-ID migrations, renamed events, changed organization definitions, and release boundaries before interpreting growth or retention. If a migration splits one person into several identities, affected unique counts and new/returning measures are not comparable without a verified reconciliation. Use comparable post-migration windows or say the trend is unavailable. Do not assume account metrics remain valid when account identity also changed.
 
-## Resolve the post target
+A genuinely low-use surface may have limited demand or exposure rather than high opportunity. Missing events, warnings, or an absent artifact are evidence gaps. Confirm a meaningful need and reachable audience before estimating potential. Never infer a usage ceiling or target from a low count alone.
 
-- **Pull request first** — a PR for the current branch, via the git host tools the agent has (GitHub / Bitbucket). Post the comment there.
-- **Otherwise the ticket** — the linked Linear/Jira issue (native Novus integration, a direct connector, or the id in the branch/PR).
-- **Confirm before posting**, always. If neither resolves, or there is no write access, return the comment for manual paste and say it was not posted. Never guess a target.
+## Comment target
 
-## Reading results honestly
-
-- **Zero is not proof of nothing.** A zero-activity result carries a `warnings` array; report the caveat or drop the claim. A genuinely unused surface has *more* headroom, not less — say that, don't render zero as "no potential".
-- **No data is not a finding.** If the artifact does not exist in Novus, give a code-only scope; do not report the absence of data as usage.
-- **Internal, test, and researcher traffic inflate reach.** Separate it by segment or account name; a ramp that is mostly internal or bug-bounty traffic is not proven customer usage or proven potential.
-- **A share needs a denominator.** Never state reach as a share without the active-user base it is a share of, and the window.
-- **Say it in product language.** Report every number the way a product person would — "about 118 people / 79 accounts a month, and slipping" — not "numVisitors 118, −15% period-over-period". The metric name, window, and trend math belong in your reasoning, not in the brief.
+Prefer the PR for the current branch, then its linked Linear/Jira issue through a native or direct connector. Resolve the exact target and show the exact comment. Post only after confirmation. If neither target resolves, provide the brief for manual use.
