@@ -1,164 +1,99 @@
 ---
 name: build-investment
-description: Use when a leader asks whether engineering investment is going to the right goals or product areas, where to invest more or less, or needs a roadmap-versus-reality, planning-cycle, quarterly allocation, or post-ship portfolio review. Not for choosing one builder's next task or designing an experiment for an already selected outcome.
+description: Use when a leader asks whether engineering investment is going to the right goals or product areas, whether to sustain or change that investment, or needs a planning-cycle or portfolio review. Explaining the value of a team's shipped improvements belongs to build-impact.
 ---
 
 # Build Investment
 
-Answer one portfolio question: **Are we investing engineering effort where it can create the most customer and business value?** Lead with the largest meaningful mismatch and recommend one investment bet.
+Answer one portfolio question: **Are we investing engineering effort where it can create the most customer and business value?** Lead with the most consequential conclusion the evidence supports: **sustain, increase, redirect, reduce, or defer judgment**. A supported decision to stay the course is a useful result. Do not require a mismatch or invent work to delay.
 
-## Voice and narrative
+## Voice and audience
 
-Write like an engineer briefing another engineer who needs to make a scope and sequencing decision. Make the investment takeaway obvious immediately:
+Write for an engineering or product leader making a scope and sequencing decision. Lead with the recommendation and explain who benefits, what the work enables, why the evidence supports it, and what could change the decision. Use plain sentences and short paragraphs. Avoid em dashes, decorative emoji, canned praise, dramatic fragments, abstract framework language, and manufactured contrasts such as "this isn't X, it's Y."
 
-1. **Where customers are struggling:** name the product path and concrete failure mode.
-2. **Where the team is investing instead:** name the material current work and what it builds.
-3. **What should change:** name one focus shift, what moves later, and what remains protected.
-4. **Why this focus wins:** compare it briefly with the strongest alternative.
-
-The default response is a **180–260 word focus brief**, capped at **300 words**. The first paragraph or claim-first headline must say what to focus on and what to delay or sustain. Within the first 100 words, state both sides of the allocation gap: customers are struggling in one place while movable engineering investment is going somewhere else.
-
-Use two or three plain focus-area headings when they improve scanning, such as `Where investment is misaligned`, `What should change`, and `Why this focus`. Do not use `Bottom line` as a required label. Do not turn the brief into a specification, implementation plan, methodology recap, or evidence dump.
-
-Describe work before citing its record. Write `stop builder rebuilds from deleting unmodeled fields (INT-376)`, not `finish INT-376`. Treat issue keys, PR numbers, artifact IDs, and links as supporting references in parentheses; the brief must remain understandable when no planning tool is open.
-
-Prefer concrete engineering language: `workstream`, `product path`, `dependency`, `failure mode`, `merged`, `exposed`, `measured`, `rework`, and `acceptance criteria`. Avoid consultancy language, abstract framework labels, throat-clearing, and phrases such as `generated thesis`, `decision surface`, `value unlock`, `the seam`, or `bounded tranche`.
-
-Use only the one to three metrics that carry the decision. Give enough context to understand what current work builds, why it does not close the customer gap, and what capacity should move. Keep success criteria to one sentence unless they change the sequencing decision.
+Describe work before citing its record. Keep PRs and issue keys as supporting references; the brief should make sense without opening a planning tool. Use one to three measures that carry the decision. Aim for 180–260 words, at most 300 unless the caller asks for detail. Read [references/output-contract.md](references/output-contract.md) before writing.
 
 ## Operating rules
 
-- Use real evidence. Never invent allocation, pain, metrics, roadmap intent, shipping state, or causality.
-- Keep external systems read-only. Offer drafts, but do not edit issues, projects, goals, PRs, code, deployments, or production without separate authorization.
-- Estimate investment only at team or product-area level. Never assess individual productivity.
-- Never use lines, commits, raw PR counts, or hours as investment proxies. Use scope and complexity bands, connected work, contributors involved, rework, and maintenance/feature/platform classification.
-- Do not recommend a capacity percentage unless an authoritative capacity plan supports it. Otherwise name one bounded tranche, workstream, or sequencing tradeoff.
-- Treat platform, reliability, compliance, strategy, and ahead-of-demand work as deliberate bets when evidence supports the intent.
-- Account for rollout and adoption lag. Mark recent work `too early to tell`.
-- Treat missing instrumentation as a coverage gap, not zero impact.
-- Apply reliable employee, test, bot, and system-traffic filters; otherwise disclose the limitation.
-- Carry an explicit instrumentation-trust verdict for every behavioral measure capable of changing the investment decision. Use a qualifying impact verdict before classifying shipped work as paying off or failing.
+- Use real evidence. Never invent allocation, pain, strategy, roadmap intent, shipping state, targets, or causality.
+- Keep connected systems read-only. This skill recommends a decision; it does not change issues, goals, code, deployments, or production.
+- Assess investment at team or product-area level, never individual productivity. Use connected scope, complexity, rework, and maintenance/feature/platform context rather than lines, commits, raw PR or issue counts, or hours as effort proxies.
+- Use allocation percentages only with a credible estimate or capacity denominator. Keep planned capacity separate from completed-scope share, state coverage, and preserve unmapped work. With weak coverage, name the material workstreams qualitatively. Do not prescribe capacity percentages without an authoritative plan.
+- Respect platform, reliability, compliance, strategy, and ahead-of-demand work when evidence supports their intent. A leader's rationale is strategic context to test; it does not prove customer impact.
+- Account for rollout, adoption lag, measurement trust, and employee/test/bot traffic. Missing instrumentation is missing evidence, not zero demand.
 
-## Workflow
+## 1. Set scope and evidence coverage
 
-### 1. Set scope and coverage
+Resolve one application, portfolio scope, planning period, and customer-experience window. Accept a product area, goal, initiative, team, quarter, or cycle. Otherwise use the most recent complete 30 days for customer experience and the current cycle or quarter for planned and built work. Do not combine applications.
 
-Identify one application, one portfolio scope, one planning period, and one customer-experience window. Accept an application, product area, goal, initiative, team, quarter, or planning cycle from the caller. Default to the most recent complete 30 days for customer experience and the current cycle or quarter for planned and built work. Do not combine applications.
+Read [references/evidence-map.md](references/evidence-map.md). Check Novus coverage and both Novus-native and direct Linear/Jira connectors. Deduplicate the same issue by stable ID or key. If Novus is unavailable, give a preliminary planning-and-delivery view and the customer evidence needed; do not conclude that customer-value alignment is right or wrong.
 
-Check Novus coverage and connected Linear/Jira sources before analysis. Resolve both Novus-native integrations and direct Linear/Jira connectors exposed to the coding agent. If both paths describe the same issue, deduplicate by stable issue ID or key rather than treating them as independent corroboration. If Novus is unavailable, do not claim that investment is right or wrong. Return a clearly labeled planning-and-delivery-only preliminary view and the smallest customer-evidence step required to reach a portfolio conclusion.
+## 2. Map areas, goals, and customer needs
 
-### 2. Establish the product-area map
+Use Novus product areas, product memory, goals, launches, and artifact relationships to map roadmap work, repositories, surfaces, and customer language. Keep an unmapped bucket with reasons rather than forcing platform or cross-cutting work into an area.
 
-Use Novus product areas, product memory, goals, launches, signals, and artifact relationships as the normalization spine. Map roadmap projects, repositories, directories, pages, features, journeys, and customer language to a small set of stable areas. Keep an `unmapped` bucket and record why each mapping is credible.
+For each relevant goal, record intended outcome, target or direction, deadline, related areas and launches, current trajectory, and measurement quality. A saved goal establishes intent, not impact. If no saved goal fits, keep the outcome provisional without creating one.
 
-Build a goal map alongside the product-area map. For each active goal, record its intended outcome, target or direction, deadline, related areas and launches, current trajectory, and measurement quality. Goals establish strategic intent; they do not prove that shipped work is effective.
+Read strategic context supplied by the caller or available in relevant initiative documents and recent product or leadership decisions. Use a bounded set tied to this investment question; if the caller names a period of meetings, use that period. Record the intended audience, strategic shift, effective date, fixed commitments, and which targets it supersedes. Reconcile stale tracker dates and statuses against current decisions rather than treating every dated project as current intent. An expired native integration can fall back to an available direct connector.
 
-### 3. Gather a broad portfolio view
+When a current audience differs from the intended future audience, do not optimize only the old cohort's metrics. State what the strategy intends to change and what future evidence would test it. If missing context could reverse the recommendation, name the assumption and ask one focused question or defer the affected judgment while completing the supported analysis. When the user supplies a correction, revise the conclusion and state what changed; do not claim the correction is saved for future runs unless the host actually preserves it.
 
-Read [references/evidence-map.md](references/evidence-map.md). For each product area, gather:
+Identify which customer jobs each investment serves. Where UI, agent, and MCP investments compete, examine actual audience needs, task completion, migration readiness, commercial commitments, and shared dependencies. These populations may overlap. Current UI use does not settle future strategy, and growing agent use does not make UI work wasteful.
 
-1. **Planned:** initiatives, projects, active issues, estimates, priorities, cycles, goals, and intended capacity.
-2. **Built:** completed scope, complexity, planned-versus-interrupt work, rework, and feature/maintenance/platform classification.
-3. **Experienced:** signals, adoption, funnels, journeys, retention, frustration, feedback, account reach, reliability, and outcome movement.
-4. **Shipping:** whether material work is proposed, merged, exposed, or measured.
+## 3. Compare planned, built, and experienced work
 
-Collect a broad inexpensive view first. Deepen only the strongest one to three candidate mismatches.
+Gather a broad inexpensive view, then deepen the strongest one to three investment questions:
 
-For every decision-critical behavioral measure, assign an explicit `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` verdict. Check live arrival, artifact matching, definitions, continuity, audience, and required flow coverage with available Novus evidence. An untrusted zero cannot establish low demand, impact failure, or over-investment.
+- **Planned:** active initiatives, projects, priorities, estimates, intended capacity, and commitments. Distinguish backlog from planned or in-flight work.
+- **Built:** completed scope, complexity, planned-versus-interrupt work, rework, and feature/maintenance/platform classification.
+- **Experienced:** adoption, completion, efficiency, reliability, frustration, feedback, account reach, and outcome movement.
+- **Shipping:** proposed, merged, exposed, or measured. Stop at the last proven state.
 
-Before classifying material shipped work as **paying off** or **impact failure**, verify exposure, elapsed outcome window, measurement trust, outcome movement, guardrails, and plausible competing changes. Stop at the last verified shipping state when any gate is missing.
+Keep unreleased feature-branch work visible as planned or in-flight scope without attributing production outcomes to it. Verify release state separately from the active checkout, including branches based on other feature branches. Separate the next movable decision from a locked release commitment; a portfolio review can affirm the release plan and inform the next open decision.
 
-### 4. Compare investment with burden and outcomes
+Group related small improvements by the customer job they jointly support. Use a current Build Value report from `build-impact` when available and verify that its scope and evidence are still applicable. Distinguish completing a workflow from adding isolated conveniences. Low growth does not imply low value when the goal is less effort, fewer errors, or reliable completion.
 
-Estimate planned investment, built investment, customer problem burden, and outcome trend with evidence and confidence—not false precision. Compare highest friction with highest reachable impact; they may differ.
+Assign `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` to each decision-critical behavioral measure. Reuse a current `verify-instrumentation` check when available; otherwise inspect arrival, recognition, definition, continuity, audience, and required flow coverage. Before judging shipped work successful or failed, verify exposure, elapsed outcome window, trustworthy measurement, outcome movement, guardrails, and competing changes. A trusted metric alone does not establish causality.
 
-Compare investment against active goals in both directions:
+Check changes to visitor IDs, account IDs, organization definitions, and event semantics before interpreting trends. Exclude invalidated growth and retention comparisons from the recommendation, rather than leading with them and adding a disclaimer. Use a verified reconciliation or stable comparable windows; otherwise state the limitation and defer any allocation claim that depends on those measures.
 
-- Which goals receive meaningful planned and built investment?
-- Which goals lack delivery support despite material customer or business importance?
-- Which product areas absorb effort without a clear goal, deliberate-bet rationale, or measured outcome?
-- Which goals conflict, overlap, or rely on the same constrained engineering surface?
+Compare in both directions:
 
-Classify each area as:
+- Which goals and customer needs receive meaningful investment?
+- Which important goals lack delivery support?
+- Which work lacks recorded intent, and could missing strategic context explain it?
+- Which investments reinforce each other, duplicate effort, or compete for the same constrained capacity?
 
-- **planning drift** — intended and actual investment diverged;
-- **investment misalignment** — burden or opportunity is high while investment is low, or investment is high without supported intent;
-- **impact failure** — the team invested in a real problem, shipped, and the expected outcome did not improve after the lag window;
-- **paying off** — shipped investment is followed by credible improvement;
-- **deliberate bet** — strategy, platform, reliability, compliance, or future demand justifies the investment;
-- **too early / insufficient evidence** — rollout lag, weak coverage, or broken measurement prevents a conclusion.
+Useful conclusions include planning drift, investment misalignment, paying off, impact failure, deliberate bet, and insufficient evidence. Do not force every area into a problem category. Use paying off or impact failure only after the exposure and measurement gates; describe observational relationships as associations. Missing exposure or measurement cannot establish impact failure.
 
-Apply an exposure gate to outcome classifications:
+## 4. Reach one investment conclusion
 
-- Use **impact failure** only when the material investment is verified as exposed to the relevant audience, the expected outcome window has elapsed, measurement is trustworthy, and the expected outcome did not improve.
-- Use **paying off** only when verified exposure precedes credible improvement after the expected lag; call the relationship correlation unless stronger causal evidence exists.
-- When merge, exposure, lag, or measurement is missing, use **planning drift**, **investment misalignment**, or **too early / insufficient evidence** instead.
+Select the question with the strongest combination of material customer consequence, reachable audience, evidence quality, and a real planning decision. Do not select solely by the largest percentage drop, signal count, or busiest code area.
 
-### 5. Select and diagnose one mismatch
+Explain what customers experience, what the work enables, why current investment fits or misses the need, and the uncertainty most likely to change the conclusion. Separate facts, customer statements, strategic intent, and hypotheses. Preserve stable issue, PR, artifact, release, and metric-window references.
 
-Choose the area where an investment change has the best combination of material impact, reachable coverage, multi-source confidence, an actionable surface, and a meaningful Planned/Built/Experienced mismatch. Do not select by the largest percentage drop, signal count, or busiest code area alone.
+Choose one direction:
 
-Diagnose:
+- **Sustain:** explain why the current focus remains justified and what would cause reconsideration. Do not require displaced work.
+- **Increase or redirect:** name the next coherent workstream, protected work, and the actual planned or movable work that would fund it. Compare with the strongest supported alternative.
+- **Reduce:** explain what outcome no longer justifies the next increment of work, what would be reduced, and what commitments remain protected. Do not imply that removing an investment is free.
+- **Defer judgment:** identify the unresolved evidence or strategic choice and the smallest step to resolve it. Do not disguise uncertainty as an allocation recommendation.
 
-1. what customers experience;
-2. who is affected and how broadly;
-3. what the team planned and built;
-4. why the mismatch persists;
-5. the smallest validating planning, instrumentation, investigation, or delivery step.
+When a change is supported but no funding source is visible, state that the direction is supported and the exact displacement remains a leadership decision. Lower confidence accordingly. For sustain or defer judgment, do not invent an alternative or a tradeoff to fill a template.
 
-Separate facts, correlations, and Novus hypotheses. Preserve issue keys, PRs, artifact IDs, metric windows, and links for material claims.
+Name the outcome or goal, next action, review condition, and evidence that would reverse the conclusion. Use a supported planning checkpoint or outcome lag; never invent a cadence or exact duration. Frame allocation as a leadership decision rather than a broadcast instruction for builders to switch tasks.
 
-### 6. Recommend one investment bet
+## 5. Write the brief
 
-State:
+Read [references/output-contract.md](references/output-contract.md) immediately before writing. Default to a response-only focus brief that can be included in an existing product-meeting pre-read or leadership workflow. When the caller requests an artifact, document, or different audience format, use that format and preserve the evidence and decision limits. Do not create files, publish, or schedule delivery merely because the skill ran. Keep experiment design, detailed plan review, and individual impact evaluation outside this skill.
 
-- what should receive more, less, or sustained investment;
-- what planning-cycle work should move later or remain protected;
-- which customer or business outcome should move;
-- why this beats the strongest alternative;
-- the first validation or delivery step;
-- the outcome window and invalidation condition.
+## Missing evidence
 
-Use a named planning checkpoint or evidence-based outcome lag. Do not invent exact cycle counts, dates, or durations when cadence and expected lag are unknown.
+- **No planning source:** compare Built with Experienced and say roadmap intent is unconfirmed. Do not infer planned investment from repository activity.
+- **No GitHub:** use completed issues and PR provenance already in Novus; lower confidence in delivery scope and release state.
+- **Sparse area mapping:** disclose provisional mappings and unmapped work.
+- **Broken analytics:** identify the smallest exact measurement repair and the proof needed before interpreting the measure.
+- **Sparse or conflicting evidence:** show the material gap or contradiction, prefer direct current evidence, and defer judgment when it could reverse the recommendation.
+- **Tool failure:** retry a failed read once, then use remaining evidence and disclose the limitation.
 
-Support the tradeoff with an actual planned or uncommitted tranche, workstream, or sequencing choice from the authoritative planning context. If no credible displacement candidate is visible, do not invent one. State that the portfolio direction is supported but the exact funding source remains a planning decision, and lower confidence accordingly.
-
-Name the goal advanced by the recommended bet. If no saved goal fits, state the provisional outcome and recommend deciding whether it should become a goal; do not create one automatically.
-
-For this skill, goals define the intended portfolio. Evaluate them in both directions: underfunded goals and effort without a credible goal or deliberate-bet rationale. A goal's existence, status, or target never proves impact; delivery, exposure, and outcome evidence must support that conclusion separately.
-
-Respect active work and deliberate bets. Frame tradeoffs as planning-cycle choices, not automatic reprioritization.
-
-### 7. Write the recommendation
-
-Read [references/output-contract.md](references/output-contract.md) immediately before writing.
-
-Return a response-only focus brief. Do not create an HTML report, standalone file, steering JSON record, or internal execution plan. If the caller explicitly requests detailed analysis, put the focus brief first and add a Markdown appendix after it.
-
-Before sending the response, check its length and structure:
-
-- The focus change appears in the first paragraph or headline.
-- The response is 180–260 words and never exceeds 300 words unless the caller explicitly requests detail.
-- The first 100 words name both sides: customer struggle and current movable investment.
-- It answers four questions: where investment is misaligned, what should change, what stays protected, and why this focus beats the alternative.
-- Every issue or PR reference follows a short plain-language description.
-- It uses no more than three decision-carrying metrics.
-- It does not include the full investment map, evidence ledger, methodology, planning-hygiene review, or a long implementation checklist.
-- Coverage limitations are compressed into one confidence sentence unless one changes the decision.
-
-Keep experiment design, detailed plan review, and post-release impact evaluation outside this skill. Name only the immediate next decision when a handoff is useful; do not turn the brief into a lifecycle menu.
-
-## Degraded behavior
-
-- **Novus unavailable:** provide only a preliminary planning-and-delivery view, state that customer-value alignment cannot be concluded, and name the minimum evidence needed.
-- **No Linear/Jira path:** compare Built versus Experienced and say `cannot confirm this is on the roadmap`. Do not infer planned investment from repository activity.
-- **GitHub unavailable:** use completed issues and PR provenance already present in Novus; lower confidence in built investment.
-- **Sparse taxonomy:** build a provisional map and disclose weak mappings.
-- **Broken analytics:** name the smallest exact instrumentation repair and the observed proof required before interpreting the measure; avoid interpreting zeros.
-- **Sparse evidence:** return a smaller, lower-confidence portfolio conclusion instead of generic advice.
-- **Conflicting evidence:** show the conflict and prefer the most direct current source.
-- **Tool failure:** retry a failed read once, then continue with remaining evidence and disclose the limitation.
-
-## Scope boundary
-
-Do not use this skill for an individual engineer's next task, autonomous plan steering, sprint velocity reporting, individual performance evaluation, code implementation, automatic backlog management, deployment decisions, or detailed experiment design. Use `whats-next` for current-work steering.
+Use `build-impact` for product-area value or post-release outcome review and `whats-next` for one builder's next move. Do not evaluate individual performance, automatically manage a backlog, or make deployment decisions.

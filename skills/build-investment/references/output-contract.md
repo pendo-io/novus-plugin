@@ -1,107 +1,53 @@
 # Build Investment output contract
 
-Produce one portfolio investment decision, not a delivery dashboard. The reader should immediately understand where customers are struggling, where movable engineering investment is going instead, and the focus change that closes that gap.
+Return one leadership recommendation: **sustain, increase, redirect, reduce, or defer judgment**. Lead with the decision supported by the evidence. Do not require a mismatch, displaced work, or a new bet when staying the course is justified.
 
-## Default focus brief
+## Focus brief
 
-Return a response-only engineering brief of **180–260 words**, capped at **300 words**. Do not create an HTML report or standalone file.
+Aim for 180–260 words, at most 300 unless the caller asks for detail. Use two or three short paragraphs, with headings only when they help. Explain:
 
-Lead with a claim-first headline or opening sentence that names the focus change and the work that moves later or remains sustained. Within the first 100 words, state both sides of the allocation gap:
+- the recommended direction and the product area or customer job it concerns;
+- what the team is investing in, who benefits, and what customer or strategic evidence supports the conclusion;
+- the next action, review condition, and uncertainty that could change the decision.
 
-- the product path where customers are struggling and the concrete failure mode;
-- the material workstream currently receiving movable investment and what it builds.
+Make the recommendation clear in the opening paragraph. Within the first 100 words, connect the actual investment to the customer need or intended strategic benefit. For a redirect, explain both sides of the gap. For sustain, explain why the current focus remains justified. For defer judgment, state the evidence or strategic choice that prevents a decision.
 
-Use two or three plain headings when useful:
+Use plain, conversational language. Describe the work before citing tickets or PRs. Keep technical details only when they explain the sequencing decision. Avoid em dashes, unnecessary emoji, canned praise, abstract framework labels, and "this isn't X, it's Y" constructions. Put the limitation beside the claim it qualifies.
 
-1. **Where investment is misaligned** — contrast customer burden with current investment. Do not merely label it a mismatch.
-2. **What should change** — name one focus shift, the direct work involved, what moves later, and what remains protected.
-3. **Why this focus** — explain why it beats the strongest alternative and give one short success check.
+## Adapt to the recommendation
 
-Do not require the phrase `Bottom line`. The recommendation itself should do that work.
+| Direction | Required reasoning |
+| --- | --- |
+| Sustain | Why the current work serves an important need, what remains protected, and what evidence would reopen the decision. No invented displaced work. |
+| Increase or redirect | The next workstream, actual displaced work when known, protected commitments, and why this beats the strongest evidenced alternative. If funding is unresolved, say so. |
+| Reduce | What next increment should shrink or stop, why its expected benefit no longer justifies it, and the obligations or dependencies that remain. |
+| Defer judgment | The missing evidence or unresolved strategic choice, who owns it when known, and the smallest step and condition needed to decide. No forced allocation verdict. |
 
-## Engineer-to-engineer writing rules
+Use one to three decision-carrying measures. Interpret reach against eligible populations and intended outcomes. Completion, reduced effort, and reliability may justify work without usage growth. For UI versus agent/MCP investment, explain who needs each experience and whether shared capabilities benefit both. Do not assume the groups are mutually exclusive or infer commercial value from usage alone.
 
-- Use active, concrete language. Sound like an engineer explaining a sequencing call to another engineer.
-- Describe work before citing it. Write `preserve fields that the builder does not model (INT-376)`, not `finish INT-376`.
-- Put issue keys, PR numbers, artifact IDs, and links in parentheses as supporting evidence. The brief must make sense without Linear, Jira, or GitHub open.
-- Explain what the current investment builds and why it does not address the customer failure.
-- Use only one to three metrics that materially change the decision.
-- Keep implementation detail to the smallest concrete description needed to understand the workstream.
-- Keep validation to one sentence unless measurement confidence changes the recommendation.
-- Avoid methodology, taxonomy, classifications, exhaustive coverage notes, long checklists, and generic portfolio language.
-- Avoid consultancy phrasing such as `value unlock`, `decision surface`, `the seam`, `bounded tranche`, or `close the delta`.
+## Evidence requirements
 
-## Required decision content
+- Use credible estimate or capacity denominators for allocation percentages. Keep planned capacity separate from completed-scope share and state coverage. Never use raw PR, commit, line, issue, or hour counts as effort proxies.
+- Carry a measurement-trust verdict for decision-critical behavior; expose it when it changes the recommendation.
+- Verify exposure, elapsed lag, trustworthy outcome movement, and guardrails before calling shipped work successful or failed. State attribution limits where they qualify the conclusion.
+- Keep goals, customer requests, and leadership rationale distinct from realized impact. Missing strategic context can make an apparent mismatch inconclusive.
+- State a material strategic shift and the intended future audience. Do not judge new-audience investment only by old-audience adoption. Reconcile stale planning dates and locked release scope with current decisions before recommending displacement.
+- Exclude growth or retention comparisons invalidated by visitor/account-ID migrations or changed organization definitions. Do not make them the headline and try to retract them with a caveat.
+- Use real planned or movable work to support a displacement recommendation. If none is visible, identify the remaining planning decision.
+- Keep stable source references and metric windows. Several summaries of one source are not independent evidence.
 
-The brief must cover:
+## Detail and handoff
 
-- **Focus:** what should receive more, less, or sustained investment.
-- **Customer gap:** the observed product path, failure mode, and reachable audience.
-- **Current investment:** the workstream absorbing movable capacity and what it delivers.
-- **Change:** the smallest coherent workstream that should move next.
-- **Tradeoff:** the described work that moves later and the work that remains protected.
-- **Alternative:** the strongest competing focus and why it loses now.
-- **Check:** the outcome to inspect after verified exposure and one supported measurement window.
-- **Confidence:** one sentence naming the limitation most likely to change the decision.
+Default to a brief in the response. It should stand alone as a product-meeting pre-read with source links for deeper review. If the caller requests detail, add the area map, planned/built/experienced/release evidence, and material coverage gaps. If they request an artifact or a format tailored to a named audience, honor that request and retain the same evidence requirements. Do not create, publish, or schedule a report without a request or an existing authorized workflow.
 
-Do not render these as a field-by-field template. Write a short, connected brief.
+When strategy or measurement context is corrected, explain the revised conclusion and its reason. Use context supplied by the calling workflow; do not require a new saved goal or a Novus UI visit to complete the review. Do not claim persistent memory unless the host provides it.
 
-## Reference style
-
-Treat identifiers as citations, not nouns:
-
-> Stop chat edits from clearing step fields the model does not resend (INT-378).
-
-Avoid:
-
-> Complete INT-378.
-
-When several records support one workstream, describe the work once and group the references in parentheses.
-
-## Detailed analysis
-
-Only when the caller explicitly requests detail, put the focus brief first and add a Markdown appendix. The appendix may contain:
-
-- the full product-area investment map;
-- planned, built, experienced, and shipping-state evidence;
-- the selected-area investigation;
-- the goal audit;
-- the evidence ledger and coverage limitations.
-
-Do not create a separate report file. Do not let appendix detail change the singularity of the recommendation.
-
-## Evidence and trust
-
-- Use a credible estimate or capacity denominator before stating allocation percentages.
-- Never use raw PR, commit, line, issue, or hour counts as effort proxies.
-- Use qualitative workstream concentration when estimate coverage is weak.
-- Carry `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` internally for decision-critical behavior; expose the verdict only when it changes the recommendation.
-- Do not call shipped work successful or failed without verified exposure, elapsed lag, and trustworthy outcome measurement.
-- Treat missing instrumentation as missing evidence, not zero demand or impact.
-
-## Goal-to-experiment handoff
-
-When the caller asks to continue into experiment design, pass:
-
-- `selectedOutcome`: the exact portfolio bet or provisional outcome;
-- `goalId`: the directly related saved goal, or null;
-- `decisionSource`: `build-investment`;
-- `whySelected`: why this focus beat the strongest alternative;
-- `evidence`: stable IDs and windows for decisive evidence;
-- `constraints`: protected investments, deferred scope, and must-not-regress conditions;
-- `validationWindow`: when to evaluate after exposure;
-- `invalidationCondition`: what would reverse or revise the bet.
-
-Show this only when requested. Do not make it a second portfolio recommendation.
+When the caller asks to continue into experiment design, pass the selected outcome, related goal or provisional outcome, reason selected, source evidence and windows, protected and deferred scope, validation window, and invalidation condition. Do not manufacture a selected bet when the recommendation is to defer judgment.
 
 ## Final check
 
-- The opening names the focus change.
-- Customer struggle and current movable investment are both clear within the first 100 words.
-- The recommendation answers “are we investing in the right place?” rather than summarizing product health.
-- Work descriptions come before ticket or PR references.
-- The displaced and protected work are explicit.
-- The strongest alternative is named.
-- No more than three decision-carrying metrics appear.
-- The default response is 180–260 words and at most 300.
-- No HTML or standalone report is produced.
+- The recommendation follows from the evidence and can be sustain or defer judgment.
+- The reader can explain who benefits and why the investment fits or misses the need.
+- Any displaced work and competing alternative come from actual planning evidence.
+- The brief contains a useful next action and review condition without automatic reprioritization.
+- Uncertainty is explicit where it could change the decision.

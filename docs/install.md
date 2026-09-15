@@ -93,10 +93,17 @@ what to build, what to defer, and how to validate it. The skill uses Novus-nativ
 available to the coding agent, or a clearly disclosed fallback when neither exists.
 
 For `build-investment`, ask: `Compare what we planned, built, and customers experienced this quarter. Are we investing
-in the right places?` You should receive a short focus brief that contrasts customer struggle with current engineering
-investment, recommends one sequencing change, preserves the strongest alternative, and describes tickets before citing
-their IDs. It resolves Novus-native or direct Linear/Jira planning sources without double-counting matching issues; when
-neither exists, it discloses that roadmap intent is unconfirmed.
+in the right places?` You should receive a short leadership brief recommending sustain, increase, redirect, reduce, or
+defer judgment. It considers current strategy and describes work before citing tickets. A proposed shift names actual
+movable work when known; a sustain recommendation does not invent displacement. It resolves native or direct Linear/Jira
+sources without double-counting matching issues and discloses missing roadmap context.
+
+For `build-impact`, ask: `Give me a Build Value report for the Analytics improvements our team shipped last month.`
+You should receive a product-area explanation of who benefits, how the changes fit together, and what the evidence
+supports. Individual reports require an explicit request. The command remains `/build-impact`.
+
+For `usage-brief`, ask: `How is this area used today, and what would show that my proposed change made it easier?`
+The brief should use a success measure that fits the benefit. Lower effort or fewer errors can matter without growth.
 
 If the report opens with `Running without Novus data — code-observable findings only.`, the skill loaded but the MCP
 server did not connect. The review is still valid; it just has no analytics behind it. It will close with a one-line

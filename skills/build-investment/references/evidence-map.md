@@ -16,6 +16,10 @@ Novus MCP tool names are namespaced differently by each host. Match on the tool-
 
 Start with the active goal portfolio. Record each goal's outcome, target or direction, deadline, related artifacts, current trajectory, and measurement quality. Treat a saved goal as evidence of strategy, not evidence that the investment is paying off.
 
+Also read caller-supplied strategy and the relevant initiative documents or recent product/leadership decisions available through connected sources. Bound retrieval to the portfolio question and any period the caller specifies. Record strategic changes, intended future customers, superseded targets, effective dates, and fixed release commitments. A stale issue date is weaker evidence of current priority than an explicit current decision. If sources conflict, show the conflict rather than silently picking the plan that supports the recommendation.
+
+Low use by current customers cannot by itself invalidate investment for a new audience. Preserve the strategic hypothesis and identify evidence that would test it. If the caller corrects missing context, revise the conclusion and explain the change without claiming persistent memory or rewriting planning records.
+
 Resolve Linear or Jira roadmap access before querying:
 
 1. Call Novus `listConnectedIntegrations` to discover native Jira or Linear connections. Treat expired or reauthentication-required connections as unavailable.
@@ -58,6 +62,8 @@ For each decision-relevant PR, record:
 
 If a later state is unavailable, stop the trail at the last verified state. Do not infer exposure from merge or measurement from exposure.
 
+The active checkout may be a feature branch based on another feature branch. Verify the target branch and release separately; include unreleased scope as planned/in-flight work, not realized customer impact. Group linked changes by the customer job they enable. A current Build Value report can supply that mapping when its scope and evidence still apply.
+
 Estimate effort with relative scope/complexity bands and delivery context. Never use raw PR count, commits, lines changed, or individual activity as productivity or investment.
 
 ## Experienced layer
@@ -75,6 +81,10 @@ Estimate effort with relative scope/complexity bands and delivery context. Never
 
 Use the narrowest metric that answers the investment question. Do not narrate every available metric.
 
+Use successful completion, reduced effort, time, errors, or reliability when those reflect the intended benefit better than activity growth. Check which customer jobs UI, agent, and MCP investments serve, and whether common capabilities support several of them. Do not double-count overlapping customer groups.
+
+Check visitor/account-ID migrations and changes to organization or event definitions. Exclude affected before/after growth and retention comparisons without a verified reconciliation or stable comparable windows. Do not assume account continuity from visitor continuity, or the reverse. A caveat after an invalid growth headline does not make the recommendation evidence-based.
+
 Attach an explicit `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` instrumentation verdict to every behavioral measure capable of changing allocation. For material claims that shipped work paid off or failed, verify exposure, elapsed outcome window, trusted measurement, outcome movement, guardrails, and competing changes. Several metrics derived from one untrusted artifact do not become trustworthy through repetition.
 
 ## Efficient query order
@@ -85,8 +95,8 @@ Attach an explicit `TRUSTED`, `DEGRADED`, `UNTRUSTED`, or `UNKNOWN` instrumentat
 4. Inventory active initiatives/projects and recently completed work by normalized product area.
 5. Build a provisional goal/planned/built/experienced comparison.
 6. Verify measurement and prior impact only for evidence capable of changing the portfolio conclusion.
-7. Deepen only the strongest one to three candidate mismatches with metrics, issue detail, PR evidence, audience, or feedback.
-8. Verify the final recommendation and named tradeoff against the strongest alternative, goal conflicts, and other strategic or platform bets.
+7. Deepen only the strongest one to three investment questions with metrics, issue detail, PR evidence, audience, feedback, or relevant strategic decisions.
+8. Verify whether to sustain, increase, redirect, reduce, or defer judgment. For a proposed shift, compare real alternatives and movable work; for sustain or defer judgment, do not invent displacement. Respect locked release scope and identify the next open planning decision.
 
 ## Evidence honesty
 

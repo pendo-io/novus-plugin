@@ -2,6 +2,15 @@
 
 ## 0.4.0 — unreleased
 
+- `build-impact` now defaults to **Build Value**, a product-area report connecting related team contributions to
+  customer benefit. Specific-change decisions and explicitly requested individual reports remain available under
+  the same command. Added examples and guidance for eligible adoption, staggered releases, and incomplete workflows.
+- `build-investment` can recommend sustaining investment or deferring judgment. It now considers strategic shifts,
+  future audiences, stale planning dates, and fixed release commitments, and supports requested audience formats.
+- Build and usage reports check identity migrations before interpreting growth, distinguish unreleased branch work
+  from customer exposure, and recognize efficiency and reliability benefits without requiring usage growth.
+- Updated report instructions to use direct sentences, concrete customer outcomes, and nearby evidence limits.
+
 - `usage-brief` refocused on product usage. It now leads with the current usage
   of the area a change touches (reach as a share of active users, top accounts,
   internal/test/researcher traffic separated out), then reads whether the change

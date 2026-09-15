@@ -1,62 +1,51 @@
 ---
 name: usage-brief
-description: Use when a builder wants to understand how much a product area is actually used today, and whether the PR or feature they are working on has potential to grow that usage — backed by real Pendo numbers. It leads with current usage, then reads the growth potential and the numbers that would show it worked, and can post the brief as a comment on the PR or the linked Linear/Jira ticket. The at-PR counterpart to build-impact — it reads the ground a change touches, not whether shipped work paid off.
+description: Use when a builder wants current usage for the product area a PR, ticket, or proposed feature touches, and an evidence-based read of the customer benefit it could create. Can prepare a PR or ticket comment and post it after confirmation. Use build-impact to evaluate shipped outcomes.
 ---
 
 # Usage Brief
 
-Show a builder how much the product area a change touches is used **today**, and whether the change has room to **grow** that usage — leading with real numbers. Then offer to post the brief to the PR or ticket. Do not judge shipped impact, choose the next task, or review UX.
+Show a builder how the relevant product area is used today, who could benefit from the proposed change, and what would demonstrate that benefit. Lead with available usage evidence and explain the intended outcome in plain language. Do not judge shipped impact or choose the next task.
 
-Your reader is a builder without deep product-analytics fluency. Lead with the usage numbers, keep metric jargon and internal labels out of the way, and write in plain product language.
+## Core rules
 
-## Core rule
+- Potential is a hypothesis grounded in customer need, the change's mechanism, and the population it can reach. Low usage alone does not establish high potential, and high usage does not rule out gains in completion, efficiency, or reliability.
+- Use the benefit the change intends to create: reach, successful completion, less effort, fewer errors, reliability, or repeat value. More activity is not always better.
+- Keep reads read-only. Posting a comment to a PR or ticket requires confirmation of the exact text and target. Do not change code, planning records, rollout, or production.
 
-**Lead with what's actually used.** The first thing the reader wants is the real usage of this area — show that before anything else. Then read whether this change can move it, and never present growth "potential" as a prediction: it is an estimate from the headroom in current usage, the lever the change pulls, and the population it can reach. Say so honestly.
+## 1. Resolve the surfaces and intent
 
-Reads stay read-only — Novus, GitHub, Linear/Jira, flags, and production are never mutated. The **one** exception is the final step: posting the brief as a comment, and only after the user confirms the exact text. This is the only skill in this plugin that writes anything; the others never do.
+Resolve the work from a description, issue, PR, branch, or diff. Read [references/evidence-map.md](references/evidence-map.md). Map the user-visible or operational behavior to Novus pages, features, events, or funnels. If no artifact resolves, describe the code-supported scope and missing Novus coverage. Use trustworthy caller-supplied or other available evidence when it maps to the same surface, audience, and window; otherwise disclose that usage is unavailable.
 
-## Workflow
+Read the intended outcome from the caller, PR, issue, or related goal. Keep inferred intent provisional. Establish which audience has the need and can reach the change; do not treat every active app user as a potential adopter. Keep current usage separate from an intended future audience or unreleased branch.
 
-### 1. Resolve the associated surfaces
+## 2. Establish current usage
 
-Resolve the work from a description, a Linear/Jira ticket, or a PR/branch/diff. Identify the **user-visible surfaces** the change touches — the Pages, Features, Track Events, and funnels it reaches, not the files. Read [references/evidence-map.md](references/evidence-map.md). Map code to Novus artifacts by area. If nothing resolves to a Novus artifact, say so and give a code-only scope — do not invent usage.
+Use the last 7 days for recent usage and complete, comparable 30-day windows for trend, unless the caller or release history requires a different window. Inspect:
 
-### 2. Current usage — the headline
+- unique customer users and accounts, with a matching active-user or account denominator for overall reach;
+- the specific control or flow and the eligible population that could encounter it;
+- account concentration and relevant audience differences;
+- internal, test, bot, and researcher traffic, excluded using reliable filters or disclosed when unresolved.
 
-For the associated surfaces, over the last 7 days ("now") and 30 days (trend):
+Keep units, eligibility, and windows consistent. Do not add overlapping feature audiences. Distinguish all-app reach from adoption among eligible users. Show only measures that help assess this change, with counts beside percentages.
 
-- **reach** — unique visitors and accounts, and reach as a **share of active users** (a count means nothing without the base);
-- **who** — the top accounts and visitors, with internal, test, and researcher traffic **separated out**, not folded into customer reach;
-- **the specific control or flow this change touches** — its own usage, when it is measurable on its own.
+Before interpreting decision-critical behavioral data, reuse a current `verify-instrumentation` verdict or run that skill when available. If unavailable, use the equivalent trust check in the evidence map. Unknown or untrusted measurement cannot support a usage or potential conclusion; report the gap. A limitation that invalidates a headline belongs before that headline, not after it.
 
-This is the block the brief leads with. Report every number in plain product language.
+## 3. Explain the possible benefit
 
-### 3. Can this change grow usage?
+- **Need and opportunity:** is there evidence of demand, failure, effort, or a planned strategic need? Low activity may reflect narrow demand, poor discovery, limited exposure, or a data problem. Check which explanation fits before calling it headroom.
+- **Mechanism:** explain what the change would let customers do better. Separate the surface's existing trend from the proposed change's contribution.
+- **Reach:** identify who could benefit under current access and rollout conditions. A reachable population bounds possible adoption; it is not a forecast of uptake or business value.
+- **Success measure:** name one outcome appropriate to the intended benefit, its trustworthy baseline when available, and a target only if supported by evidence or supplied by the user. Do not invent an adoption benchmark or require a growth ceiling for an efficiency fix.
+- **Known friction:** use a relevant Novus signal or customer evidence when available. Confirm that the proposed change actually addresses it.
 
-Read whether the change has room to move those numbers, honestly labelled as an estimate:
+Missing usage for a future audience does not disprove a strategic rationale. State what is known today and what evidence would test that rationale later. Fewer clicks or less time can indicate success if the task is completed with acceptable quality.
 
-- **Headroom** — is usage low or declining (room to grow) or high and saturated (little room)? Low usage on a live area is where potential is highest, not lowest.
-- **Lever** — does the change bring **new users**, **deepen use** for people already here, or **neither**? Say which, in one plain sentence, and separate it from the surface's own trajectory (an in-flow enhancement rarely acquires new users even on a growing surface).
-- **The number that would show it worked** — name the one metric this change could move, its value now, and a realistic ceiling. Call `verify-instrumentation` for that surface; if the metric is not cleanly measurable yet, say so and where the number would have to come from instead.
-- **Known friction it addresses** — if a Novus signal already flags a problem here (low conversion, frustration, a broken step), cite it; closing a known gap raises the potential.
+## 4. Write and share
 
-### 4. Share the brief
+Read [references/output-contract.md](references/output-contract.md) immediately before composing. Return a brief the reader can use without translating analytics jargon. Offer the current branch's PR as the comment target, or the linked Linear/Jira issue if there is no PR. Show the exact text and target, then post only after confirmation. Never guess a target or auto-post.
 
-Read [references/output-contract.md](references/output-contract.md) immediately before composing. Build the comment (the two blocks above, plain language). Then:
+If no target or write access exists, return the brief for manual use and state that it was not posted. If usage or a trustworthy success measure is unavailable, give the supported scope, proposed benefit, and exact evidence needed without inventing numbers.
 
-- **Find the target** — a pull request for the current branch first (post to GitHub/the git host); if there is none, the linked Linear/Jira ticket.
-- **Confirm, then post** — show the exact comment and the target, and post only after the user confirms. Never auto-post.
-- **Degrade** — if no PR or ticket resolves, or there is no write access, output the comment for the user to paste and say why it was not posted. Never fail silently, and never post to the wrong target when unsure.
-
-## Degraded behavior
-
-- **Novus unavailable:** you cannot fill the usage block — say so plainly. Still name the surfaces and the likely lever from code, marked as un-evidenced. Do not invent numbers.
-- **No matching artifact:** the surface is not modeled in Novus. Say so; describe the area from code, not from an invented reach.
-- **Zero or sparse activity:** report it honestly — a genuinely low-usage area is exactly where growth headroom is largest, so say that rather than rendering zero events as "no potential".
-- **Internal/test/researcher-heavy traffic:** separate it; a ramp that is mostly internal or researcher traffic is not proven customer usage or proven potential.
-- **Instrumentation untrusted:** carry the `verify-instrumentation` verdict into "the number that would show it worked"; do not claim a growth metric the measurement cannot support.
-- **No PR or ticket / no write access:** output the comment for manual paste; do not treat inability to post as a failure of the brief.
-
-## Scope boundary
-
-This skill reads current usage and growth potential and shares the brief. It does not decide whether shipped work created value (`build-impact`), choose the next task (`whats-next`), allocate a portfolio (`build-investment`), review UX (`ux-review`), or add tracking (a dedicated `add-instrumentation` skill is planned but not yet available). Use `verify-instrumentation` as its measurement sub-check. Posting is unique to this skill and always confirmed; do not add write behavior to the others, and do not expand this skill into their decisions.
+Use `build-impact` for shipped outcomes, `build-investment` for portfolio decisions, `whats-next` for task selection, and `ux-review` for UX review. Do not add tracking or expand posting permission beyond the confirmed comment.
