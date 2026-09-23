@@ -107,5 +107,6 @@ The brief should use a success measure that fits the benefit. Lower effort or fe
 
 If the report opens with `Running without Novus data — code-observable findings only.`, the skill loaded but the MCP
 server did not connect. The review is still valid; it just has no analytics behind it. It will close with a one-line
-prompt to connect — offering to sign you in if the server is installed but signed out, or pointing you here if it is
-not installed at all.
+prompt to connect. A server that is installed but signed out looks the same to the skill as one that is missing — an
+unauthenticated Novus MCP advertises no tools — so sign in through your agent's own MCP flow first (`/mcp` in Claude
+Code), and come back here only if the `novus` server is not configured at all.

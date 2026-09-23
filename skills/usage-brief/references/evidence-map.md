@@ -18,8 +18,8 @@ Novus tool prefixes vary by host. Resolve available capabilities by suffix, such
 | Reach and trend | `getArtifactMetrics`, app usage, weekly data | Unique customer users/accounts in comparable windows. Keep active-app reach separate from eligible adoption. |
 | Eligibility | segments, targeting, upstream workflow metrics | Match numerator and denominator by unit, window, and access. Do not invent the eligible base. |
 | Who benefits | `getArtifactTopUsers`, account activity, reliable exclusion filters | Account concentration and customer cohorts; do not infer customer identity from a name alone. |
-| Successful completion | `getFunnelAnalysis`, completion events | Use the relevant workflow and required steps, not general activity. |
-| Repeat value | `getRetentionCohorts`, `getPageRetention`, `daysActive` | Match follow-up opportunity and the task's natural frequency. A weekly aggregate is not cohort retention. |
+| Successful completion | `getFunnelAnalytics`, completion events | Use the relevant workflow and required steps, not general activity. |
+| Repeat value | `getRetentionCohorts` (including `mode: "returnRate"`), `daysActive` | Match follow-up opportunity and the task's natural frequency. A weekly aggregate is not cohort retention. |
 | Efficiency or reliability | verified time-to-complete, errors, retries, operational evidence | Less activity can be good when the task still completes reliably. Do not invent telemetry the host lacks. |
 | Customer problem | `listSignals`, replay, available feedback or linked issues | Check whether the proposed change addresses the observed problem. Qualitative evidence alone does not establish prevalence. |
 

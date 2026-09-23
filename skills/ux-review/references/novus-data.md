@@ -16,21 +16,20 @@ problem.
 
 | Question | Tool | Notes |
 | --- | --- | --- |
-| What does Novus know about this area? | `listArtifactsByType` | Types worth checking: `PAGE`, `FEATURE`, `TRACK_EVENT`, `FUNNEL`. Match artifacts to the areas the diff changes. |
-| What is this artifact's Novus ID? | `getExternalIds` | Takes an artifact UUID. Required before any metrics call — the metrics tools take Novus IDs, not artifact IDs. |
+| What does Novus know about this area? | `listArtifactsByType` | Types worth checking: `PAGE`, `FEATURE`, `TRACK_EVENT`, `FUNNEL`. Match artifacts to the areas the diff changes. Every tool below takes the artifact UUIDs this returns. |
 | Is there a known problem here already? | `listSignals`, `getSignal` | Signals flagging frustration, declining usage, or UX issues are the most relevant. `listSignals` filters by domain (`product` / `guide`). |
-| How much is this used? | `getPageMetrics`, `getFeatureMetrics`, `getTrackEventMetrics` | Visitors, accounts, events, adoption rates, trend against the previous period. |
-| Does this break a flow? | `getFunnelAnalysis` | For changes that remove or reorder a step in a tracked funnel. |
-| Do people come back? | `getPageRetention` | Useful when a change restructures a landing or entry point. |
-| Are people already frustrated here? | `listReplays` | Rage clicks, dead clicks, U-turns. Filterable by date range, duration, activity, frustration type. |
+| How much is this used? | `getArtifactMetrics` | One tool for `PAGE`, `FEATURE`, and `TRACK_EVENT` artifacts; pass the artifact UUID as `artifactId`. Visitors, accounts, events, adoption rates, trend against the previous period. |
+| Does this break a flow? | `getFunnelAnalytics` | Pass the `FUNNEL` artifact UUID as `funnelArtifactId`. Visitors per step, conversion and drop-off between steps, time to complete. For changes that remove or reorder a step in a tracked funnel. |
+| Do people come back? | `getRetentionCohorts` | Pass the page or feature artifact UUID as `artifactId`. `mode: "returnRate"` gives a single week-over-week return rate; the default gives first-visit weekly cohorts. Useful when a change restructures a landing or entry point. |
+| Are people already frustrated here? | `listReplays` | Rage clicks, dead clicks, U-turns. Filterable by page/feature/track-event artifact UUIDs, date range, duration, frustration type. |
 | Has Novus flagged this before? | `listUxReviews` | Past UX findings on this app's pull requests, newest first, with severity and resolution state. Use it to avoid repeating a concern the team has already litigated. |
+| What is this artifact's Pendo ID? | `getExternalIds` | Only for cross-referencing the Pendo MCP server or the Pendo UI. The Novus tools above take artifact UUIDs directly, so this is never a prerequisite. |
 
 ## Order of operations
 
 1. `listArtifactsByType` to find the artifacts matching the changed areas.
-2. `getExternalIds` on the ones that matter, to get Novus IDs.
-3. `listSignals` — cheap, and often tells you the problem is already known.
-4. Metrics, funnel, retention, or replays — **only** for the specific suspicion you are testing.
+2. `listSignals` — cheap, and often tells you the problem is already known.
+3. Metrics, funnel, retention, or replays — **only** for the specific suspicion you are testing.
 
 ## Reading results honestly
 
@@ -51,8 +50,8 @@ Say so once, in one line, at the top of the review. Then:
 - Work only from the code-observable half of `heuristics.md`.
 - Do not speculate about traffic, adoption, or frustration.
 - Close the report with the connect prompt from `report-format.md` — one line, at the very end, after the findings.
-  Distinguish "signed out" from "not installed" first; they need different prompts, and `SKILL.md` step 3 says how to
-  tell them apart.
+  One prompt covers both a signed-out server and a missing one; `SKILL.md` step 3 explains why the tool list cannot tell
+  them apart.
 
 Raise it in the footer and nowhere else. Not in a finding, not mid-review, and never as a reason to stop — a
 code-observable review is a useful review, and the prompt is an offer, not a precondition.

@@ -52,20 +52,21 @@ this step, report no UX concerns and stop.
 ### 3. Check whether Novus data is available
 
 Look for the Novus MCP tools in your available toolset. Hosts prefix MCP tool names differently (Claude Code exposes
-them as `mcp__novus__listArtifactsByType`), so match on the suffix. There are three states, and they are not the same:
+them as `mcp__novus__listArtifactsByType`), so match on the suffix. There are two states:
 
 | What you can see | State | What it means |
 | --- | --- | --- |
-| `listArtifactsByType` | **Connected** | Do both halves of the review. |
-| `authenticate`, but no `listArtifactsByType` | **Declared, not signed in** | The server is installed and reachable; nobody has completed OAuth yet. |
-| Neither | **Not installed** | No Novus MCP server is configured for this agent. |
+| `listArtifactsByType` or `listApps` | **Connected** | Do both halves of the review. |
+| Neither | **Not connected** | Skip the data-backed steps. |
 
-In both of the unconnected states, print one line at the top — `Running without Novus data — code-observable findings
-only.` — skip every data-backed step below, and close with the prompt described in
-[references/report-format.md](references/report-format.md).
+The tool list cannot tell you _why_ the server is not connected. Novus MCP uses OAuth, and a server that is configured
+but not signed in advertises no tools at all, exactly like one that was never configured. There is no `authenticate`
+tool to call — signing in belongs to the host (`/mcp` in Claude Code, or the agent's MCP settings), never to the review.
 
-Never confuse the last two. Telling someone whose server is merely signed out to go install it sends them to add a
-second, user-scoped server that silently overrides the plugin's own.
+When not connected, print one line at the top — `Running without Novus data — code-observable findings only.` — skip
+every data-backed step below, and close with the prompt described in
+[references/report-format.md](references/report-format.md). That prompt covers both causes, so it never sends someone
+who is merely signed out to add a second, user-scoped server that silently overrides the plugin's own.
 
 Do not block on this, do not retry, and do not interrupt the review to raise it. The findings come first; the prompt to
 connect goes at the end, after the user has what they asked for.

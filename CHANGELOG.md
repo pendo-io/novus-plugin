@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.1 — unreleased
+
+- Realign every skill with the tool names the Novus MCP server actually serves. Novus retired `getPageMetrics`,
+  `getFeatureMetrics`, `getTrackEventMetrics`, `getFunnelAnalysis`, and `getPageRetention` on 2026-08-19 (they were
+  segment-blind); the skills now name their replacements `getArtifactMetrics`, `getFunnelAnalytics`, and
+  `getRetentionCohorts`, all of which take Novus artifact UUIDs directly, so `getExternalIds` is no longer a
+  prerequisite for metrics.
+- `ux-review`: the connection check has two states, connected or not. The old "declared but not signed in" state keyed
+  off an `authenticate` tool that has never existed — Novus MCP signs in through the host's OAuth flow and an
+  unauthenticated server advertises no tools — so the footer now covers both a signed-out and a missing server in one
+  line without steering a signed-out user to install a second server.
+
 ## 0.5.0 — unreleased
 
 - `build-impact` now defaults to **Build Value**, a product-area report connecting related team contributions to
