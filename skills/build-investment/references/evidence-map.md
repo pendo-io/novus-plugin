@@ -71,9 +71,9 @@ Estimate effort with relative scope/complexity bands and delivery context. Never
 | Question | Preferred capabilities |
 | --- | --- |
 | What problems or opportunities are already synthesized? | `listSignals`, `getSignal` |
-| What is used and adopted? | `getArtifactMetrics`, `getPageMetrics`, `getFeatureMetrics`, `getTrackEventMetrics`, `getAppUsageMetrics` |
-| Where do users fail or abandon? | `getFunnelAnalysis`, `getFunnelAnalytics`, `getJourney` |
-| Do users return? | `getPageRetention`, `getRetentionCohorts` |
+| What is used and adopted? | `getArtifactMetrics`, `getAppUsageMetrics` |
+| Where do users fail or abandon? | `getFunnelAnalytics`, `getJourney` |
+| Do users return? | `getRetentionCohorts` |
 | Is frustration observable? | `listReplays`, `getSessionReplayEvents`, `listUxReviews` |
 | What do users say? | `getGuideFeedback`, `getNps`, `listAgentIssues`, `clusterAgentConversations`, `getAgentConversations` |
 | Who and how many are affected? | `listAccounts`, `listVisitors`, `getArtifactTopUsers`, `getAccountActivityOnArtifact` |

@@ -14,10 +14,10 @@ Each link resolves to `pass` (holds for this decision), `limited` (holds but bou
 | --- | --- | --- | --- | --- |
 | 1 | **Arrival** | Do events for this surface reach Pendo at all? | `getRawEvents`, recording controls, `getArtifactMetrics` (nonzero) | No events in the window and no reason to expect exclusion. |
 | 2 | **Recognition** | Do they map to a defined, synced artifact? | `listArtifactsByType`, `getArtifact`, `getExternalIds` | Traffic exists but no tagged Page/Feature/Track Event — untagged blob. |
-| 3 | **Definition** | Does the artifact/funnel/goal mean what the decision assumes? | `getArtifact`, `getEventProperties`, `getFunnelAnalysis`, goal reads | A renamed or split event; a funnel step tagged to the wrong element; a "count" that is really two behaviors. |
+| 3 | **Definition** | Does the artifact/funnel/goal mean what the decision assumes? | `getArtifact`, `getEventProperties`, `getFunnelAnalytics`, goal reads | A renamed or split event; a funnel step tagged to the wrong element; a "count" that is really two behaviors. |
 | 4 | **Continuity** | Is coverage stable across the whole decision window? | `getArtifactMetrics` (`daily`/`weekly` series), Data Validation when exposed | A rename, retag, or SDK change mid-window that splits or drops the series. |
 | 5 | **Audience** | Does the measured population match the exposed one? | `getArtifactTopUsers`, `listVisitors`/`listAccounts`, segment reads, exclude-list mode | Internal/test/researcher traffic dominates; the exclude list hides or inflates the exposed audience. |
-| 6 | **Decision-critical coverage** | Do the one or two events the decision hinges on exist and fire? | `getFilterVocabulary`, `getTrackEventMetrics`, `getEventProperties` | The denominator or completion event was never instrumented, so the rate the decision needs cannot be computed. |
+| 6 | **Decision-critical coverage** | Do the one or two events the decision hinges on exist and fire? | `getFilterVocabulary`, `getArtifactMetrics`, `getEventProperties` | The denominator or completion event was never instrumented, so the rate the decision needs cannot be computed. |
 
 ## Order of operations
 

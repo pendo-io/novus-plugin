@@ -114,7 +114,7 @@ Stop at the last verified state. Estimate scope with qualitative complexity and 
 | --- | --- |
 | What pain or opportunity is synthesized? | `listSignals`, `getSignal` |
 | What is used? | `getArtifactMetrics`, `getAppUsageMetrics` |
-| Where do users fail? | `getFunnelAnalysis`, `getFunnelAnalytics`, `getJourney` |
+| Where do users fail? | `getFunnelAnalytics`, `getJourney` |
 | Is frustration visible? | `listReplays`, `getSessionReplayEvents`, `listUxReviews` |
 | What do users say? | `getGuideFeedback`, `getNps`, `listAgentIssues`, `getAgentConversations` |
 | Who is affected? | `listAccounts`, `listVisitors`, `getArtifactTopUsers` |

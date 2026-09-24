@@ -57,26 +57,17 @@ Top of the report, before the summary sentence:
 Running without Novus data — code-observable findings only.
 ```
 
-Then close the report with the prompt matching the state from `SKILL.md` step 3.
-
-**Declared but not signed in** — the fix is one action you can take for them, so offer it rather than describing it:
-
-```markdown
----
-Novus isn't signed in, so nothing here is backed by real usage — no traffic, adoption, or frustration data for the
-areas you changed. Want me to connect it?
-```
-
-If they accept, call the `authenticate` tool. Never call it unprompted: it opens a browser, and doing that in the
-middle of a review the user did not ask to be interrupted is worse than the missing data.
-
-**Not installed** — there is nothing you can run for them, so keep it to one line and a destination:
+Then close the report with this prompt. It covers both a server that is configured but signed out and one that was
+never installed, because the tool list cannot tell them apart (`SKILL.md` step 3) — and it must not send someone who is
+merely signed out to add a second, user-scoped server that silently overrides the plugin's own:
 
 ```markdown
 ---
-Novus isn't connected, so nothing here is backed by real usage. Installing the Novus plugin for your agent adds
-traffic, adoption, and frustration data for the areas you changed — https://novus.pendo.io
+Novus isn't connected, so nothing here is backed by real usage. Sign in to the `novus` MCP server in your agent, or
+install the Novus plugin if it isn't there yet — https://novus.pendo.io
 ```
+
+There is nothing to run for them: Novus MCP signs in through the host's own OAuth flow, and no tool triggers it.
 
 Rules for the prompt:
 
@@ -122,12 +113,12 @@ names belong. Keep it to a line or two, and omit it entirely when the body alrea
   components with switches.` (warning)
 - `Removing this page cuts off the main way in for about 1,234 people a week — roughly 65% of visitors. If it's being
   replaced, add a redirect so old bookmarks and links still work.`
-  → detail: `Route deletion in the diff; page artifact shows 1,234 weekly visitors at 65% adoption (getPageMetrics).`
-  (critical)
+  → detail: `Route deletion in the diff; page artifact shows 1,234 weekly visitors at 65% adoption
+  (getArtifactMetrics).` (critical)
 - `This moves "Export" out of the toolbar and into a dropdown menu. About 340 people a week use it directly today, so
   the extra click will likely mean fewer people find and use it.`
   → detail: `Export action relocated from toolbar to dropdown; 340 weekly clicks, 42% feature adoption
-  (getFeatureMetrics).` (warning)
+  (getArtifactMetrics).` (warning)
 - `People are repeatedly clicking the submit button on this page in frustration — 23 times in the last week. Your change
   doesn't touch that button, but it might be worth a separate look.`
   → detail: `23 rage clicks in 7 days concentrated on the submit button (listReplays); outside this diff's scope.`
