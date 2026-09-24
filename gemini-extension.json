@@ -1,6 +1,6 @@
 {
   "name": "novus",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Novus skills for Gemini CLI: UX review and evidence-backed next-work and portfolio investment decisions.",
   "contextFileName": "GEMINI.md",
   "mcpServers": {
