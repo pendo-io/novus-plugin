@@ -12,6 +12,32 @@ actively trains the developer to ignore you.
 A metric earns its place in the report only when it *is* the argument — when the number is the reason the change is a
 problem.
 
+## Team instructions
+
+The rule above does not apply here. Read both sources on every connected run, once, before judging the diff. Issue the
+settings read and the wiki lookup together; they are independent and cheap.
+
+| Source | Calls | Take | Semantics |
+| --- | --- | --- | --- |
+| Product wiki | `listArtifactsByType` with `type: "product_wiki"` (no other params — the signed-in app is the default context; there is one wiki per app, so take the first result), then `getArtifact` with its `id` | `data.userInstructions[]` filtered to `category === "ux-review"`; each is `{ id, category, instruction, createdAt, createdBy }` | Binding — override the heuristics on conflict; never re-raise what one already answers. Some were learned by Novus from developer replies on PR comments, so an instruction may read like a rebuttal. `getMemory` does not return these. |
+| PR Workflows settings | `getPrWorkflowSettings` (no params) | `uxReview.customInstructions` (string or null) | Additional — follow alongside the heuristics. Ignore the rest of the response: the workflow switches, `effectivelySilent`, and `diffAnalysis` are not the review's business, and `severityLevels` is the PR posting threshold, not a filter for this report. |
+
+A failed call, a missing wiki, an empty list, or a null field is skipped silently. Do not retry, do not mention it, do
+not delay the review for it.
+
+### Saving one
+
+Only on the user's explicit request, and only after they confirm the exact text and target (`SKILL.md`, "Saving a
+preference").
+
+| Target | Call | Rules |
+| --- | --- | --- |
+| Product wiki | `saveUserInstruction` with `category: "ux-review"` and `instruction`; leave `createdBy` unset so the server records its default | Append-only: there is no edit or delete over MCP. To "update" an existing wiki preference, save a superseding instruction that says so, or point the user to the wiki in Novus. Only advertised when the app has a wiki. |
+| PR Workflows settings | `getPrWorkflowSettings`, then `updatePrWorkflowSettings` with `uxReviewCustomInstructions` | The field is replaced whole. Send the current text with the new line appended — or the current text with the one line the user asked to change edited — never the new line alone. Maximum 2,000 characters; if the merge exceeds it, show the overflow and ask what to drop rather than truncating. `null` or `""` clears the field, so only send those when the user asked to clear it. The server refuses the write unless the MCP connection is the user's own sign-in; the error names the PR Workflows settings page — relay it and print the text for pasting. |
+
+Confirmation text names the scope plainly: the settings field "applies to every future pull request for everyone on
+the account"; a wiki preference "applies to every UX review of this app, including the pull request ones".
+
 ## Tool map
 
 | Question | Tool | Notes |
@@ -49,6 +75,7 @@ Say so once, in one line, at the top of the review. Then:
 
 - Work only from the code-observable half of `heuristics.md`.
 - Do not speculate about traffic, adoption, or frustration.
+- Do not read, apply, or mention team instructions.
 - Close the report with the connect prompt from `report-format.md` — one line, at the very end, after the findings.
   One prompt covers both a signed-out server and a missing one; `SKILL.md` step 3 explains why the tool list cannot tell
   them apart.

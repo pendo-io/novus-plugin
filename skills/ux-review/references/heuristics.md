@@ -59,3 +59,5 @@ This list exists because the failure mode of a UX reviewer is noise, not blindne
 - Anything you would phrase as "consider whether…" or "it might be worth thinking about…". If you cannot name the user
   impact, there is no finding.
 - Engineering opinions wearing a UX costume: file structure, naming, DRYness, framework choice, performance.
+- Anything a team instruction (`SKILL.md` step 4) calls deliberate or asks you not to flag. The instruction wins over
+  this file.

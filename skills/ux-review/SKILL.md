@@ -3,11 +3,12 @@ name: ux-review
 description: >-
   Reviews uncommitted or branch-local code changes for real UX problems before a PR is opened — wrong visual semantics,
   unpersisted UI state, poor discoverability, missing loading and error states, removal of well-used paths, redundant UI.
-  Backs findings with Novus product analytics when the Novus MCP server is connected, and falls back to code-observable
-  findings when it is not. Use when the user asks for a UX review, a design review, a pre-PR check, or whether their
-  current changes will hurt users.
+  When the Novus MCP server is connected it backs findings with product analytics and applies the team's UX review
+  instructions (PR Workflows settings and product-wiki preferences) so the local pass matches the pull request review;
+  it falls back to code-observable findings when it is not. Use when the user asks for a UX review, a design review, a
+  pre-PR check, whether their current changes will hurt users, or to save or update a UX review preference for the team.
 license: Proprietary
-compatibility: Requires git. Novus analytics enrichment requires the Novus MCP server.
+compatibility: Requires git. Novus analytics enrichment and team review instructions require the Novus MCP server.
 metadata:
   author: pendo-io
   version: "0.1.0"
@@ -71,16 +72,32 @@ who is merely signed out to add a second, user-scoped server that silently overr
 Do not block on this, do not retry, and do not interrupt the review to raise it. The findings come first; the prompt to
 connect goes at the end, after the user has what they asked for.
 
-### 4. Find the code-observable problems
+### 4. Load the team's review instructions
+
+Connected only. The team steers UX reviews from Novus in two places, and the pull request review honours both — so
+must you, or a change that passes here gets flagged on the PR, or the reverse. Read both before you judge the diff:
+
+| Source | Read with | Treat it as |
+| --- | --- | --- |
+| Product wiki UX preferences — brand palette, patterns that are deliberate, corrections developers made on past reviews | `listArtifactsByType` (`type: "product_wiki"`), then `getArtifact`; keep `data.userInstructions` entries with `category: "ux-review"` | Binding. They override the heuristics where the two conflict. Never re-raise a concern an instruction already answers. |
+| Custom instructions — the "Custom instructions" box on the Novus PR Workflows settings page | `getPrWorkflowSettings` → `uxReview.customInstructions` | Additional instructions. Follow them alongside the heuristics. |
+
+[references/novus-data.md](references/novus-data.md) has the exact calls. These are data-backed reads: a call that
+fails or returns nothing is skipped silently and the review continues on the heuristics alone. Do not list the
+instructions you found, and never mention ones you did not — apply them. `severityLevels` in the same response is the
+PR review's posting threshold, not a review rule: report every finding at its real severity.
+
+### 5. Find the code-observable problems
 
 These need no tools at all — you can see them in the diff. Read
 [references/heuristics.md](references/heuristics.md) for the seven categories, the five data-backed ones, and — just as
-important — the list of things that are **not** problems and must not be reported.
+important — the list of things that are **not** problems and must not be reported. A pattern a team instruction calls
+deliberate is not a problem, whatever the heuristics say.
 
 Flag these immediately as you read. A red-coloured active state or a setting held in local component state and never
 persisted is enough on its own.
 
-### 5. Back your suspicions with data
+### 6. Back your suspicions with data
 
 Only for changes where you **already suspect** a problem from the diff. This is not a sweep: do not look up every
 artifact the diff touches, and do not report a metric that is not part of an argument.
@@ -88,7 +105,7 @@ artifact the diff touches, and do not report a metric that is not part of an arg
 [references/novus-data.md](references/novus-data.md) has the tool map — which tool answers which question, in what order,
 and what you may and may not say when a query comes back empty.
 
-### 6. Report
+### 7. Report
 
 Write the report exactly as specified in [references/report-format.md](references/report-format.md): severity buckets,
 a plain-language body that leads with user impact and carries no code identifiers, and optional technical detail
@@ -101,8 +118,30 @@ The single most common failure mode is padding. One real finding stated once bea
 
 End with a one-line offer to apply the fixes. Do not edit any files unless the user accepts.
 
+## Saving a preference
+
+Only when the user explicitly asks to save, remember, or update a UX review preference. Never save on your own
+initiative, and never treat "that's intentional" as a request — when the user rejects a finding as deliberate you may
+offer once, in one line, to save that; wait for a yes.
+
+Pick the store by what the sentence is about:
+
+- **A fact about the product** — "our active colour is orange", "the accordion on the settings page is deliberate" —
+  goes to the product wiki with `saveUserInstruction` (`category: "ux-review"`). The tool is only offered when the app
+  has a product wiki; if it is absent, use the settings text below instead.
+- **A rule for the reviewer** — "always check dark-mode contrast", "don't flag spacing" — goes to the PR Workflows
+  settings with `updatePrWorkflowSettings`. That field replaces the whole text and affects every future pull request
+  for everyone on the account, so read it first and send the existing text plus the new line, never the new line alone.
+
+Before either write, show the exact text and where it will go, then write only after the user confirms — the rule
+`usage-brief` follows for PR comments. If the write is refused, relay the error's pointer to the settings page and
+print the text so they can paste it. When Novus is not connected, say in one line that you cannot save without it,
+print the text, and change nothing else about the review.
+
+[references/novus-data.md](references/novus-data.md) has the parameters, the merge rule, and the length cap.
+
 ## References
 
 - [references/heuristics.md](references/heuristics.md) — what counts as a UX problem, and what does not
-- [references/novus-data.md](references/novus-data.md) — Novus MCP tool map and the no-data contract
+- [references/novus-data.md](references/novus-data.md) — Novus MCP tool map, team instructions, and the no-data contract
 - [references/report-format.md](references/report-format.md) — severity, output shape, worked examples

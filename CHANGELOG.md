@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0 — unreleased
+
+- `ux-review` now applies the team's UX review instructions when Novus is connected, matching the pull request review:
+  the custom instructions from the PR Workflows settings page (`getPrWorkflowSettings`) are followed alongside the
+  heuristics, and the `ux-review` preferences in the product wiki (`listArtifactsByType` + `getArtifact`, including
+  the ones Novus learns from developer replies on PR comments) are binding and suppress concerns they already answer.
+  A finding raised by an instruction says so in its technical detail; a suppressed one is not mentioned. Both reads are
+  skipped silently on failure and the not-connected path is unchanged. Active severity levels are read but not used to
+  filter — they gate what gets posted to a pull request, and a local review is for the developer.
+- `ux-review` can save a UX review preference on explicit request — a durable product fact via `saveUserInstruction`
+  (category `ux-review`), or reviewer steering via `updatePrWorkflowSettings.uxReviewCustomInstructions` (read first,
+  merged with the existing text, 2,000-character cap) — only after the user confirms the exact text and target, the
+  convention `usage-brief` set. It is now the second skill in the plugin that writes; `usage-brief` was the only one.
+
 ## 0.5.1 — unreleased
 
 - Realign every skill with the tool names the Novus MCP server actually serves. Novus retired `getPageMetrics`,

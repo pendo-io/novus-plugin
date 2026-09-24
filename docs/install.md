@@ -86,7 +86,9 @@ For Gemini CLI, add the same server under `mcpServers` in `~/.gemini/settings.js
 ## Verifying it works
 
 For `ux-review`, ask for a UX review in a repo with UI changes in the working tree. You should see either a short report
-anchored to `path:line`, or the single line `No UX concerns in these changes.`
+anchored to `path:line`, or the single line `No UX concerns in these changes.` A connected review also follows the
+team's custom instructions from the Novus PR Workflows settings page and the UX preferences saved in the product wiki,
+so a local pass should agree with the pull request review.
 
 For `whats-next`, ask: `What should I build next?` You should receive one sequence that distinguishes what to finish,
 what to build, what to defer, and how to validate it. The skill uses Novus-native Linear/Jira, direct Linear/Jira tools
