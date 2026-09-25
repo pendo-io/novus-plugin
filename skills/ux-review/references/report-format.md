@@ -98,6 +98,19 @@ A blockquote directly under the finding, for the engineer who wants to dig in: t
 file references), the exact metrics you queried, and your methodology. This is the one place code identifiers and tool
 names belong. Keep it to a line or two, and omit it entirely when the body already covers it.
 
+## When a team instruction shaped a finding
+
+A finding that exists only because of a team instruction carries one clause at the end of its technical detail, naming
+where the instruction lives so the engineer knows where to change it:
+
+> … `Raised by the team's UX review instructions (PR Workflows settings).` — or `(product wiki)`.
+
+That is the whole footprint. A concern an instruction suppressed is not mentioned anywhere — not as a finding, not in
+the summary sentence, not in a footer; surfacing it would undo the instruction. There is no header line saying which
+instructions were loaded: when connected, they are part of the review the same way analytics are.
+
+The body stays about user impact. "Per your custom instructions, …" is process, not impact, and belongs in the detail.
+
 ## Good findings
 
 - `This "on" state is coloured red, which usually means danger or an error. People will think they've broken something
@@ -131,6 +144,8 @@ names belong. Keep it to a line or two, and omit it entirely when the body alrea
   code jargon; the user impact belongs first and this belongs in the detail block.
 - `This modifies the /settings route which is tracked in Pendo.` — Not a UX problem.
 - `This file contains changes to a feature with 200 monthly clicks.` — Having clicks is normal, not a problem.
+- `Per the team's custom instructions, this panel has no dark-mode colour.` — Leads with process. State the impact;
+  the instruction goes in the detail block.
 - `The priority and due date fields look like real task settings, but they're silently thrown away the moment you hit
   Add — nothing gets saved, and neither field ever shows up on the task list or detail page. Users who spend time
   choosing a priority or picking a due date will be confused and frustrated when those values vanish. Either remove

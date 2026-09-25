@@ -40,7 +40,7 @@ It can use relevant strategy documents or product/leadership meeting context sup
 
 Reviews uncommitted or branch-local changes for UX problems before a PR exists: wrong visual semantics, settings that silently fail to persist, buried functionality, missing loading and error states, or well-used paths being removed.
 
-When Novus MCP is connected, it backs findings with real traffic, adoption, funnel, and frustration evidence. Without Novus data it still reports code-observable findings. It never posts to GitHub or Bitbucket.
+When Novus MCP is connected, it backs findings with real traffic, adoption, funnel, and frustration evidence and applies the team's UX review instructions — the custom instructions from the Novus PR Workflows settings page and the durable UX preferences saved in the product wiki — so a local review matches what the pull request review will say. On request, after confirming the exact text and target, it can save a new preference to either place. Without Novus data it still reports code-observable findings. It never posts to GitHub or Bitbucket.
 
 ### `usage-brief`
 
@@ -94,6 +94,8 @@ Ask naturally:
 
 > review the UX of my changes
 
+> remember that our active-state colour is orange — don't flag it in UX reviews
+
 > how used is the area my PR touches, and would this change make the task easier or more reliable?
 
 > is this surface instrumented well enough to trust its numbers?
@@ -107,7 +109,7 @@ skills/
   build-impact/           Build Value area review + specific/individual impact
   whats-next/             current-work steering and validated decision record
   build-investment/       portfolio investment focus brief
-  ux-review/              pre-PR UX review workflow and references
+  ux-review/              pre-PR UX review workflow and references; can save a review preference to Novus
   usage-brief/            current usage + proposed benefit, optional PR/ticket comment
   verify-instrumentation/ measurement-trust check for a surface
 plugin.json  mcp.json     Agent Plugins 1.0 (Cursor, Copilot, VS Code, Kiro, ChatGPT)
